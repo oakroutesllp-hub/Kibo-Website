@@ -79,9 +79,13 @@ export const sampleSiteSettings: SiteSettingsContent = {
     "Backed by a manufacturing network",
     "Built to serve businesses across Africa",
   ],
-  // No commas — owner preference (21 Aug 2026), a deliberate stylistic
-  // tweak to the brief's frozen copy, not an error.
-  footerAddress: "Mumbai Maharashtra India",
+  // Commas reintroduced, 31 Aug 2026 (owner, testing live: "let's do
+  // Mumbai, comma, Maharashtra on one line and India on the second
+  // line") — supersedes the 21 Aug "no commas" preference below, for
+  // this field specifically: Footer.tsx's `formatFooterAddressLines`
+  // now splits on ", " to produce that exact 2-line break, so the
+  // commas are load-bearing punctuation for the split, not just style.
+  footerAddress: "Mumbai, Maharashtra, India",
   // Explicit placeholder per the brief — swap for a @kibo-domain address
   // once one exists; not meant to stay a personal/business Gmail long-term.
   footerEmail: "oakroutesllp@gmail.com",

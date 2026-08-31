@@ -21,6 +21,29 @@ import type { SiteSettingsContent } from "@/lib/content";
 // feedback (21 Aug 2026), its 3-line blurb must never wrap mid-sentence,
 // so it gets extra width rather than being squeezed even with
 // whitespace-nowrap forcing single lines.
+//
+// Address split into (at most) 2 display lines, 31 Aug 2026 (owner,
+// testing live on both mobile and desktop: "Mumbai, Maharashtra, India
+// are all on the same line — I think there should be three lines... I
+// see the problem, it will spill over to 4-5 lines [total, once the
+// address's own 3 lines stack with the email/phone lines below it] and
+// we don't want that — let's do Mumbai, Maharashtra on one line and
+// India on the second line") — `footerAddress` is one plain string
+// (Sanity field), left to the browser's own natural wrap before this,
+// which wraps unpredictably depending on column width rather than at
+// this specific, deliberately-chosen point. Splits on every `, ` except
+// the last, so "Mumbai, Maharashtra, India" → ["Mumbai, Maharashtra",
+// "India"] — a plain single-line address with no commas at all (or any
+// address this doesn't apply to) still renders correctly as one line,
+// nothing crashes if the field's format ever changes.
+function formatFooterAddressLines(address: string): string[] {
+  const parts = address.split(", ");
+  const last = parts.pop();
+  const lines = parts.length > 0 ? [parts.join(", ")] : [];
+  if (last) lines.push(last);
+  return lines;
+}
+
 export function Footer({ settings }: { settings: SiteSettingsContent }) {
   const year = new Date().getFullYear();
   // Blog nav-visibility toggle (31 Aug 2026) — see lib/navigation.ts's
@@ -114,17 +137,17 @@ export function Footer({ settings }: { settings: SiteSettingsContent }) {
               same image-optimization headroom) + responsive className
               Nav uses.
 
-              **Re-matched, 31 Aug 2026** — Nav's own mobile size moved
-              37.57px → 46.96px the same day (owner: nav logo too small
-              on mobile), which this file wasn't updated alongside at
-              the time, quietly breaking the "matches Nav exactly" rule
-              this comment itself states. Caught by the owner noticing
-              the footer logo looked smaller than the top bar's on a
-              live mobile screenshot — same underlying rule, just
-              re-applied after Nav's own value changed. Desktop
-              (`sm:w-[68.51px]`) was never touched by that Nav change,
-              so it stays as-is here too. */}
-          <Logo width={124} className="h-auto w-[46.96px] sm:w-[68.51px]" />
+              **Re-matched twice, 31 Aug 2026** — Nav's own mobile size
+              has moved twice the same day (37.57px → 46.96px, then →
+              54px, see Nav.tsx's own comment for both), neither of
+              which this file was updated alongside at the time, quietly
+              breaking the "matches Nav exactly" rule this comment
+              itself states each time. Caught both times by the owner
+              noticing the footer logo looked smaller than the top bar's
+              on a live mobile screenshot. Desktop (`sm:w-[68.51px]`) has
+              never been touched by any of Nav's mobile-only changes, so
+              it stays as-is here too. */}
+          <Logo width={124} className="h-auto w-[54px] sm:w-[68.51px]" />
           {/* Bumped onto the real type scale, `text-micro` (11px, 30 Aug
               2026, owner: "increase description size bump up" — per the
               standing rule, "bump up" always lands on the next named
@@ -239,7 +262,10 @@ export function Footer({ settings }: { settings: SiteSettingsContent }) {
               explicitly NOT the group headings, which "seem fine") —
               was `text-support` (13px), the next step down. */}
           <div className="flex flex-col gap-2 text-micro text-charcoal/60">
-            {settings.footerAddress && <p>{settings.footerAddress}</p>}
+            {settings.footerAddress &&
+              formatFooterAddressLines(settings.footerAddress).map((line) => (
+                <p key={line}>{line}</p>
+              ))}
             {settings.footerEmail && (
               <a
                 href={`mailto:${settings.footerEmail}`}

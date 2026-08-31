@@ -162,12 +162,20 @@ export function Nav({ showBlogInNav }: { showBlogInNav: boolean }) {
             side of this shrink history went one step too far; 37.57px →
             46.96px (× 1.25, middle of the owner's given range). Desktop
             (`sm:w-[68.51px]`) is unchanged — this complaint was mobile-
-            only. `width={124}` stays the *intrinsic* source size
-            (comfortably above the rendered size at every breakpoint, so
-            nothing is upscaled/blurred); the className is what actually
-            controls the shrink.
+            only.
+
+            Bumped again, same day (owner, comparing it directly against
+            the Hero heading: "the logo looks really tiny as compared to
+            'Men's Apparel for African Market'... increase the logo by
+            10 percent or so," separately also said "15 20 percent" —
+            15%, the middle of the two figures given, landed on) —
+            46.96px → 54px (× 1.15). Desktop unchanged, same reasoning
+            as the pass above. `width={124}` stays the *intrinsic*
+            source size (comfortably above the rendered size at every
+            breakpoint, so nothing is upscaled/blurred); the className
+            is what actually controls the size.
           */}
-          <Logo width={124} priority className="h-auto w-[46.96px] sm:w-[68.51px]" />
+          <Logo width={124} priority className="h-auto w-[54px] sm:w-[68.51px]" />
         </Link>
 
         <nav className="hidden items-center gap-8 sm:flex">
@@ -217,22 +225,29 @@ export function Nav({ showBlogInNav }: { showBlogInNav: boolean }) {
           </button>
         </nav>
 
+        {/* Hit area + icon reduced ~20%, 31 Aug 2026 (owner, testing live
+            mobile: "make the hamburger slightly more compact and
+            smaller") — `h-9 w-9` (36px) → `h-8 w-8` (32px) hit area;
+            bars `w-5` (20px) → `w-4` (16px), positions/translate amounts
+            scaled by the same ~0.8 ratio (`top-[7px]`→`top-[5.5px]`,
+            `top-[14px]`→`top-[11px]`) so the X-shape open state still
+            meets cleanly at the icon's own vertical center. */}
         <button
           type="button"
           onClick={() => setOpen((v) => !v)}
           aria-label={open ? "Close menu" : "Open menu"}
           aria-expanded={open}
-          className="flex h-9 w-9 items-center justify-center sm:hidden"
+          className="flex h-8 w-8 items-center justify-center sm:hidden"
         >
-          <span className="relative block h-4 w-5">
+          <span className="relative block h-[13px] w-4">
             <span
-              className={`absolute left-0 top-0 h-0.5 w-5 bg-charcoal transition-transform ${open ? "translate-y-[7px] rotate-45" : ""}`}
+              className={`absolute left-0 top-0 h-0.5 w-4 bg-charcoal transition-transform ${open ? "translate-y-[5.5px] rotate-45" : ""}`}
             />
             <span
-              className={`absolute left-0 top-[7px] h-0.5 w-5 bg-charcoal transition-opacity ${open ? "opacity-0" : ""}`}
+              className={`absolute left-0 top-[5.5px] h-0.5 w-4 bg-charcoal transition-opacity ${open ? "opacity-0" : ""}`}
             />
             <span
-              className={`absolute left-0 top-[14px] h-0.5 w-5 bg-charcoal transition-transform ${open ? "-translate-y-[7px] -rotate-45" : ""}`}
+              className={`absolute left-0 top-[11px] h-0.5 w-4 bg-charcoal transition-transform ${open ? "-translate-y-[5.5px] -rotate-45" : ""}`}
             />
           </span>
         </button>

@@ -187,12 +187,20 @@ export function WeStartedByListeningSection({
             prop comment above. Sits above the top dash, same position
             Products'/Catalog's own back link takes above their titles. */}
         {showBackToHome && <BackToHomeLink />}
-        {/* Top dash hidden below `sm`, 31 Aug 2026 (owner, testing live:
-            "our story need not have the top horizontal line — that
-            anchoring was more for desktop, I don't think mobile version
-            needs that") — the bottom dash (below) stays at every
-            breakpoint; only this top one is desktop/tablet-only now. */}
-        <span aria-hidden="true" className="hidden h-px w-12 bg-sage-green/60 sm:block" />
+        {/* Top dash removed outright, 31 Aug 2026 — first hidden on
+            mobile only (owner: "our story need not have the top
+            horizontal line — that anchoring was more for desktop"),
+            then removed on desktop too the same day, once the owner
+            reconsidered: "I think the separation is made obvious with
+            that tint that we extended" — CTANudgeSection.tsx's own
+            `bg-sage-green/10` tint runs through the end of "Built for
+            the Long Run"'s section and this one's own plain white
+            background is the very next thing on the page, so the color
+            change itself is already a real visual boundary; the dash on
+            top of that read as redundant everywhere, not just mobile.
+            The bottom dash (below) is unaffected — it still anchors the
+            headline from below, a separate visual job from marking a
+            section boundary. */}
         <h2 className="text-h2 font-bold leading-[1.1] tracking-tight text-charcoal">
           {OUR_STORY_PLAIN}
           <span className="text-sage-green">{OUR_STORY_ACCENT}</span>
@@ -308,10 +316,19 @@ export function WeStartedByListeningSection({
             i.e. flush with the page's own `px-6` edge padding, not the
             viewport edge) below `lg`. Same fix, same reasoning, applied
             to FounderSection.tsx's identical video box. */}
+        {/* `bg-charcoal/10` → `bg-charcoal/20`, 31 Aug 2026 (owner,
+            testing live desktop: "that vertical line between We Started
+            by Listening and the thumbnail is much fainter... make sure
+            the pen width matches with the rest of the accent lines") —
+            the line's own physical thickness already matched (`w-px`,
+            same as every dash accent's `h-px`), but at `/10` it read
+            visibly lighter than the site's other accent lines, most of
+            which sit at `/20` (e.g. this page's own paragraph dash a
+            few lines below). Bumped to match. */}
         <div className="relative lg:pr-16">
           <span
             aria-hidden="true"
-            className="absolute inset-y-0 right-0 hidden w-px bg-charcoal/10 lg:block"
+            className="absolute inset-y-0 right-0 hidden w-px bg-charcoal/20 lg:block"
           />
           <div className="relative mx-auto flex aspect-[16/10] w-full items-center justify-center overflow-hidden rounded-lg border border-charcoal/10 bg-background lg:ml-auto lg:w-[70%]">
             {/* Media slot made Sanity-editable, 30 Aug 2026 — same

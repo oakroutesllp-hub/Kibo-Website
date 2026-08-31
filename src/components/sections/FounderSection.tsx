@@ -225,10 +225,16 @@ export function FounderSection({ media }: { media: Media }) {
             thumbnail... even larger... still seems smaller") — 95% →
             100% (full column width) below `lg`, same as Listening's own
             box. */}
+        {/* `bg-charcoal/10` → `bg-charcoal/20`, 31 Aug 2026 — same fix,
+            same reasoning, as Listening's identical divider (owner,
+            testing live desktop: "the vertical line between... 'What
+            led to KIBO' and the thumbnail [is] much fainter... make
+            sure the pen width matches with the rest of the accent
+            lines"). */}
         <div className="relative lg:pr-16">
           <span
             aria-hidden="true"
-            className="absolute inset-y-0 right-0 hidden w-px bg-charcoal/10 lg:block"
+            className="absolute inset-y-0 right-0 hidden w-px bg-charcoal/20 lg:block"
           />
           <div className="relative mx-auto flex aspect-[16/10] w-full items-center justify-center overflow-hidden rounded-lg border border-charcoal/10 bg-background lg:ml-auto lg:w-[70%]">
             {/* Media slot made Sanity-editable, 30 Aug 2026 — same

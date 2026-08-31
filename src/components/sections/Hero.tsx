@@ -63,7 +63,14 @@ export function Hero({ content }: { content: HomepageContent }) {
             the fluid `text-display` clamp (which maxed at 50.4px). Named
             explicitly as the H1 example in that spec
             ("Men's apparel for African markets"). */}
-        <h1 className="mt-3 max-w-3xl text-h1 font-semibold text-charcoal">
+        {/* `text-h2` (30px) below `sm`, 31 Aug 2026 (owner, testing live
+            mobile, comparing it against the nav logo: "bump the logo up
+            as compared to 'Men's Apparel for African Market'... reduce
+            [this heading] to a smaller text, maybe but only one size
+            small as per our template") — one step down from `text-h1`
+            (40px) on the site's own named scale; `sm:text-h1` restores
+            the original desktop size unchanged. */}
+        <h1 className="mt-3 max-w-3xl text-h2 font-semibold text-charcoal sm:text-h1">
           {content.heroHeading}
         </h1>
 

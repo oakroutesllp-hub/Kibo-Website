@@ -110,15 +110,22 @@ export function CTANudgeSection() {
             Long Run's own bottom padding was trimmed (see that file's
             own comment).
 
-            **Hidden on mobile, 31 Aug 2026** — this exact dash style is
-            also what LongRunSection.tsx uses between ITS OWN two
-            paragraphs, right above this one on the page; on mobile the
-            new shaded-patch background (see this section's own comment
-            above) is the "this is separate" cue instead, so keeping
-            this dash too read as an actual 4th list item continuing
-            Long Run's own two. `sm:block` keeps it exactly as it was at
-            tablet/desktop, where the owner did not ask for a change. */}
-        <span aria-hidden="true" className="hidden h-px w-12 bg-sage-green/50 sm:block" />
+            **Hidden on mobile, then removed outright, 31 Aug 2026** —
+            first hidden below `sm` (this exact dash style is also what
+            LongRunSection.tsx uses between ITS OWN two paragraphs, right
+            above this one on the page, so on mobile it read as an actual
+            4th list item continuing Long Run's own two; the new shaded-
+            patch background became mobile's own "this is separate" cue
+            instead). Brainstormed with the owner on the desktop half of
+            the same complaint ("that horizontal line... looks like it's
+            part of Built for the Long Run, it does not seem right") —
+            removed here too rather than kept "unless mobile said
+            otherwise": the dash is what was creating the echo with Long
+            Run's own paragraph dashes in the first place, at every
+            breakpoint, not just below `sm`; plain whitespace is how
+            every other section-to-section transition on this page
+            already reads (Custom→Supply, Supply→Long Run) with no
+            comparable accent line. */}
         {/* `text-body`/`text-support` (30 Aug 2026, owner: "no other font
             sizes floating around" — every size must come from the 8
             named tokens) replacing raw `text-lg`/`text-sm`.
