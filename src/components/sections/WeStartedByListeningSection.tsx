@@ -259,12 +259,24 @@ export function WeStartedByListeningSection({ media }: { media: Media }) {
             does). Same fix, same technique as the dash: an actual
             `w-px bg-charcoal/10` element instead of a border, which
             paints as a real 1px box regardless of device scaling. */}
+        {/* Mobile centering fix, 31 Aug 2026 (owner, testing live mobile:
+            "the video should be at the center it is not at the center" —
+            plus, separately, "the video thumbnail looks really tiny on
+            mobile") — `ml-auto` was unconditional, so below `lg` (where
+            this column is the only thing on its row, not sharing a grid
+            line with the text column) it still right-hugged the frame
+            instead of centering it; `w-[70%]` was also the *desktop*
+            proportion (sized to look right splitting a row with text
+            next to it), too small once it's the only thing on the row.
+            `mx-auto w-[85%]` below `lg`, `lg:ml-auto lg:w-[70%]` restores
+            the exact original desktop box (position and size both) —
+            only the mobile/tablet state changes. */}
         <div className="relative lg:pr-16">
           <span
             aria-hidden="true"
             className="absolute inset-y-0 right-0 hidden w-px bg-charcoal/10 lg:block"
           />
-          <div className="relative ml-auto flex aspect-[16/10] w-[70%] items-center justify-center overflow-hidden rounded-lg border border-charcoal/10 bg-background">
+          <div className="relative mx-auto flex aspect-[16/10] w-[85%] items-center justify-center overflow-hidden rounded-lg border border-charcoal/10 bg-background lg:ml-auto lg:w-[70%]">
             {/* Media slot made Sanity-editable, 30 Aug 2026 — same
                 image/video/placeholder branching Hero.tsx already uses.
                 Not autoplaying/looping even in video mode (unlike
@@ -324,8 +336,19 @@ export function WeStartedByListeningSection({ media }: { media: Media }) {
             needed `items-end` specifically to right-hug the divider —
             hugging from the LEFT side of a right column is just the
             browser's own default text direction, free). */}
-        <div className="flex flex-col justify-center gap-6 lg:pl-16">
-          <div className="flex flex-col gap-6">
+        {/* Mobile centering fix, 31 Aug 2026, same pass as the video
+            column above (owner: "'We started by listening' is left
+            aligned and it does not really look good") — this column had
+            no alignment override for the stacked (below `lg`) layout at
+            all, so it fell back to the browser's plain left-aligned
+            block flow, inconsistent with the centered eyebrow banner
+            above it and the centered video box next to it.
+            `items-center text-center` below `lg`, `lg:items-start
+            lg:text-left` restores the exact original desktop reading
+            direction (text hugging the divider from the right column's
+            left edge) unchanged. */}
+        <div className="flex flex-col items-center justify-center gap-6 text-center lg:items-start lg:pl-16 lg:text-left">
+          <div className="flex flex-col items-center gap-6 lg:items-start">
             {/* `uppercase` dropped (29 Aug 2026, owner: "sentence case",
                 on a screenshot of this all-caps headline) — the copy in
                 ourStory.ts was already typed sentence-case ("We started

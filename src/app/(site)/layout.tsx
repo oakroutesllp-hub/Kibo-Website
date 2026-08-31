@@ -36,14 +36,11 @@ import { isSanityConfigured } from "@/sanity/client";
 // Persistent CTA, both halves now built (28 Aug 2026, while building
 // `/our-story`): the desktop half is a button inside `Nav.tsx`; the
 // mobile half is `TalkToKiboStickyBar` below — mounted once here so
-// it's on every page, not per-page. The spacer div right after
-// `<Footer />` (mobile-only, ~sticky-bar-height) is what actually keeps
-// the bar from covering the bottom of the footer once a visitor scrolls
-// all the way down — the bar is `fixed bottom-0`, so it overlaps
-// whatever is at the *visual* bottom of the viewport at any given
-// scroll position, which at full scroll is the end of Footer (the last
-// in-flow element), not the top of `<main>`; padding on `<main>` alone
-// wouldn't reach far enough down the page to matter here.
+// it's on every page, not per-page. That component also owns its own
+// mobile-only spacer (moved in 31 Aug 2026, see its own file comment)
+// so the two can't disagree about whether the bar — and therefore the
+// space it needs reserved at the bottom of the page — is showing on a
+// given route; layout.tsx itself no longer renders a separate spacer.
 //
 // `OverscrollBackGuard` removed here (27 Aug 2026) — it was mounted to
 // stop a phone's native "pull down at the top = go back" gesture, but a
@@ -78,7 +75,6 @@ export default async function SiteLayout({ children }: { children: ReactNode }) 
         <Nav showBlogInNav={settings.showBlogInNav} />
         <main className="flex flex-1 flex-col">{children}</main>
         <Footer settings={settings} />
-        <div className="h-20 sm:hidden" aria-hidden="true" />
         <TalkToKiboStickyBar />
       </TalkToKiboProvider>
     </DownloadCatalogProvider>

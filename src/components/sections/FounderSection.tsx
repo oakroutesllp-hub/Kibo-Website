@@ -191,12 +191,20 @@ export function FounderSection({ media }: { media: Media }) {
             prone to that a solid filled box isn't. Kept matching
             Listening's mechanism exactly, per this section's own
             "mirrors Listening's column exactly" rule above. */}
+        {/* Mobile centering + sizing fix, 31 Aug 2026 — identical bug and
+            identical fix as WeStartedByListeningSection's own video
+            column (see that file's own comment for the full reasoning):
+            `ml-auto`/`w-[70%]` were unconditional, so below `lg` (where
+            this is the only thing on its row) the photo box stayed
+            right-hugged and undersized instead of centered and full-
+            width-appropriate. `mx-auto w-[85%]` below `lg`, `lg:ml-auto
+            lg:w-[70%]` keeps the desktop box exactly as it was. */}
         <div className="relative lg:pr-16">
           <span
             aria-hidden="true"
             className="absolute inset-y-0 right-0 hidden w-px bg-charcoal/10 lg:block"
           />
-          <div className="relative ml-auto flex aspect-[16/10] w-[70%] items-center justify-center overflow-hidden rounded-lg border border-charcoal/10 bg-background">
+          <div className="relative mx-auto flex aspect-[16/10] w-[85%] items-center justify-center overflow-hidden rounded-lg border border-charcoal/10 bg-background lg:ml-auto lg:w-[70%]">
             {/* Media slot made Sanity-editable, 30 Aug 2026 — same
                 image/video/placeholder branching as Listening's own
                 column. This is the one section where a real video shoot
@@ -247,8 +255,14 @@ export function FounderSection({ media }: { media: Media }) {
             this project. Plain `lg:pl-16` — text left-aligns by default
             block flow, no flex/items trick needed on the right side of
             a divider, same as Listening's own text column now. */}
-        <div className="flex flex-col justify-center gap-6 lg:pl-16">
-          <div className="flex flex-col gap-6">
+        {/* Mobile centering fix, 31 Aug 2026 — same bug and fix as
+            WeStartedByListeningSection's own text column (owner: "the
+            text is left aligned... does not look good," said about both
+            this section and that one). `items-center text-center` below
+            `lg`, `lg:items-start lg:text-left` restores the exact
+            original desktop reading direction unchanged. */}
+        <div className="flex flex-col items-center justify-center gap-6 text-center lg:items-start lg:pl-16 lg:text-left">
+          <div className="flex flex-col items-center gap-6 lg:items-start">
             {/* Top dash reintroduced (30 Aug 2026, owner: "introduce that
                 same horizontal line anchor, anchoring pattern if you can"
                 — referring to Custom/Tiruppur's dash-above-headline

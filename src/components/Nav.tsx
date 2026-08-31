@@ -154,12 +154,20 @@ export function Nav({ showBlogInNav }: { showBlogInNav: boolean }) {
             without shrinking the logo to match risked the logo crowding
             the now-shorter padding, the same coupling this file's own
             history already established twice before) — 44.2px/80.6px →
-            37.57px/68.51px (× 0.85). `width={124}` stays the *intrinsic*
-            source size (comfortably above the rendered size at every
-            breakpoint, so nothing is upscaled/blurred); the className is
-            what actually controls the shrink.
+            37.57px/68.51px (× 0.85).
+
+            Mobile size increased 25%, 31 Aug 2026 (owner, testing the
+            live mobile site directly: "the KIBO logo is very small. It
+            needs to be bigger, maybe by another 20-30%") — the mobile
+            side of this shrink history went one step too far; 37.57px →
+            46.96px (× 1.25, middle of the owner's given range). Desktop
+            (`sm:w-[68.51px]`) is unchanged — this complaint was mobile-
+            only. `width={124}` stays the *intrinsic* source size
+            (comfortably above the rendered size at every breakpoint, so
+            nothing is upscaled/blurred); the className is what actually
+            controls the shrink.
           */}
-          <Logo width={124} priority className="h-auto w-[37.57px] sm:w-[68.51px]" />
+          <Logo width={124} priority className="h-auto w-[46.96px] sm:w-[68.51px]" />
         </Link>
 
         <nav className="hidden items-center gap-8 sm:flex">

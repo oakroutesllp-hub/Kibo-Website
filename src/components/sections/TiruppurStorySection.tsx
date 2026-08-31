@@ -93,6 +93,30 @@ import {
 // only ever held an ambient background photo, not a click-to-play
 // video.
 export function TiruppurStorySection({ media }: { media?: Media }) {
+  // Sub-blocks + closing statement, pulled into a variable 31 Aug 2026
+  // so the same content can render twice below — once inside the
+  // desktop overlay panel, once as its own plain block under the photo
+  // on mobile (see that split's own comment further down for why).
+  const panelBody = (
+    <>
+      <div className="flex flex-col gap-[1.05rem]">
+        {TIRUPPUR_SUB_BLOCKS.map((block) => (
+          <div key={block.label} className="flex flex-col gap-[0.175rem]">
+            <h3 className="text-h3 font-semibold text-charcoal">{block.label}</h3>
+            <p className="text-support text-charcoal/70">{block.copy}</p>
+          </div>
+        ))}
+      </div>
+
+      <span aria-hidden="true" className="mt-[1.05rem] block h-px w-full bg-charcoal/15" />
+
+      <p className="mt-[1.05rem] text-support text-charcoal">
+        <span className="font-semibold">{TIRUPPUR_CLOSING_BOLD}</span>
+        {TIRUPPUR_CLOSING_REST}
+      </p>
+    </>
+  );
+
   return (
     <section id="tiruppur" className="relative w-full scroll-mt-24 overflow-hidden">
       {/* Standalone banner, matching Supply's own headline treatment
@@ -217,53 +241,61 @@ export function TiruppurStorySection({ media }: { media?: Media }) {
             `to-transparent` at ~55% of the frame width is still where
             "the video becomes important" (the factory-floor detail)
             takes over unobscured, just mirrored. */}
+        {/* Scrim restricted to `lg:block`, 31 Aug 2026 — see the panel
+            split below for the full reasoning. This gradient exists to
+            keep the overlay panel's text legible against the photo
+            behind it; below `lg` there's no overlay panel anymore (it's
+            a plain block under the photo instead), so a right-side
+            darkening with nothing sitting on top of it would just dim
+            part of the photo for no reason. */}
         <div
           aria-hidden="true"
-          className="absolute inset-0 bg-gradient-to-l from-black/75 via-black/35 via-45% to-transparent to-55%"
+          className="absolute inset-0 hidden bg-gradient-to-l from-black/75 via-black/35 via-45% to-transparent to-55% lg:block"
         />
 
-        {/* Translucent panel — a full-height rectangle, not a floating
-            rounded card (30 Aug 2026, owner: "extend to the top edge of
-            the video and the bottom edge of the video... remove the
-            rounded boxing"). `rounded-2xl` dropped. Content stays
-            vertically centered via `flex-col justify-center` on the
-            panel itself.
+        {/* Translucent overlay panel — `lg` and up only, 31 Aug 2026 (see
+            file comment on `panelBody` above). Original design, unedited
+            at this breakpoint: a full-height rectangle (not a floating
+            card, 30 Aug 2026 — "extend to the top edge of the video and
+            the bottom edge of the video... remove the rounded boxing"),
+            pinned to the right edge (30 Aug 2026 — "move this text box
+            to the right edge of the screen"), text-right, translucent +
+            blurred so the photo reads through it.
 
-            **Moved from the left edge to the right edge, same day**
-            (owner, on a screenshot: "move this text box to the right
-            edge of the screen instead of keeping it left aligned...
-            the text doesn't have to change, the text box remains as
-            is, just align it to the right") — `absolute inset-y-0
-            left-0` → `absolute inset-y-0 right-0` (`left` unset instead
-            of `right`, panel's own width still comes from `max-w`, not
-            a stretched-to-fill box). Text itself stays exactly as it
-            was (`text-right`, both sub-blocks and the closing
-            statement) — the owner was explicit this move is position-
-            only, not a text-alignment change, so nothing else in this
-            panel touched. The scrim gradient (previous div) was flipped
-            to match — see that div's own comment. */}
-        <div className="absolute inset-y-0 right-0 flex w-full max-w-[17.64rem] flex-col justify-center bg-background/70 p-[1.4rem] text-right backdrop-blur-md sm:max-w-[20.16rem] sm:p-[1.75rem] lg:p-[2.1rem]">
-          {/* Sub-blocks — icon circles removed (30 Aug 2026, owner:
-              "the symbols on the left of a long heritage specialized
-              ecosystems... they can go don't need them"); label + copy
-              only now, no leading icon. `text-h3`/`text-support` sizes
-              unchanged from before. */}
-          <div className="flex flex-col gap-[1.05rem]">
-            {TIRUPPUR_SUB_BLOCKS.map((block) => (
-              <div key={block.label} className="flex flex-col gap-[0.175rem]">
-                <h3 className="text-h3 font-semibold text-charcoal">{block.label}</h3>
-                <p className="text-support text-charcoal/70">{block.copy}</p>
-              </div>
-            ))}
-          </div>
-
-          <span aria-hidden="true" className="mt-[1.05rem] block h-px w-full bg-charcoal/15" />
-
-          <p className="mt-[1.05rem] text-support text-charcoal">
-            <span className="font-semibold">{TIRUPPUR_CLOSING_BOLD}</span>
-            {TIRUPPUR_CLOSING_REST}
-          </p>
+            Below `lg` this panel is `hidden` outright, not just resized
+            — found while checking the live site on mobile (owner: "we
+            just see like a tiny vertical of the video" — a screenshot of
+            "Where apparel runs deep" on a phone). Root cause: this
+            panel's width was already capped at a fixed `max-w-[17.64rem]`
+            (282px) with no smaller mobile value, plus the dark scrim
+            behind it — together those covered the photo almost
+            completely on a ~375px-wide phone (282px panel + the scrim's
+            own darkened region past it), leaving only a thin strip of
+            actual photo visible, which is exactly the "tiny vertical"
+            description. A photo-with-side-panel composition doesn't
+            have a smaller version that still works once the panel's own
+            readable width (this content doesn't compress much smaller
+            without becoming illegible) is most of the available screen
+            width — so below `lg` this becomes a plain full-width block
+            *under* the photo instead (see `panelBody`'s second render,
+            just below this section), the same "stack instead of
+            overlay" fix already applied to Supply's row and Listening's
+            two-column split earlier this same pass. */}
+        <div className="absolute inset-y-0 right-0 hidden w-full max-w-[20.16rem] flex-col justify-center bg-background/70 p-[2.1rem] text-right backdrop-blur-md lg:flex">
+          {panelBody}
         </div>
+      </div>
+
+      {/* Mobile/tablet stacked panel, 31 Aug 2026 — `lg:hidden` mirror of
+          the overlay panel above, see that div's own comment. Plain
+          in-flow block below the photo, not translucent/blurred (nothing
+          underneath it to blend with), full width, centered rather than
+          right-aligned — this is no longer hugging a shared edge with
+          anything, so there's no reason to keep the desktop's
+          right-alignment, and centered matches how every other stacked
+          mobile section on this page (Listening, Founder) now reads. */}
+      <div className="flex w-full flex-col items-center gap-[1.05rem] bg-background px-6 py-8 text-center sm:px-10 lg:hidden">
+        {panelBody}
       </div>
     </section>
   );
