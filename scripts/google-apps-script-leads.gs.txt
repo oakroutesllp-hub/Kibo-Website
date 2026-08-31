@@ -1,0 +1,50 @@
+/**
+ * KIBO website — lead webhook receiver.
+ *
+ * Paste this into a Google Sheet's Apps Script editor (Extensions >
+ * Apps Script), then deploy it as a Web App (see the setup steps the
+ * assistant gave you). Every POST from the website's /api/leads route
+ * lands here and gets appended as one new row.
+ *
+ * Expected JSON body (matches src/app/api/leads/route.ts exactly):
+ *   { timestamp, source, name, email, phone, productInterest }
+ *
+ * `source` is either "enquiry" (Talk to KIBO) or "catalog_download"
+ * (Download Catalog).
+ */
+function doPost(e) {
+  try {
+    var data = JSON.parse(e.postData.contents);
+    var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+
+    // First-run convenience: if the sheet is completely empty, add a
+    // header row before the first real lead so the columns are labeled.
+    if (sheet.getLastRow() === 0) {
+      sheet.appendRow([
+        "Timestamp",
+        "Source",
+        "Name",
+        "Email",
+        "Phone",
+        "Product Interest",
+      ]);
+    }
+
+    sheet.appendRow([
+      data.timestamp || new Date().toISOString(),
+      data.source || "",
+      data.name || "",
+      data.email || "",
+      data.phone || "",
+      data.productInterest || "",
+    ]);
+
+    return ContentService.createTextOutput(
+      JSON.stringify({ ok: true }),
+    ).setMimeType(ContentService.MimeType.JSON);
+  } catch (err) {
+    return ContentService.createTextOutput(
+      JSON.stringify({ ok: false, error: String(err) }),
+    ).setMimeType(ContentService.MimeType.JSON);
+  }
+}
