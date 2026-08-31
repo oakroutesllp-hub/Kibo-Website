@@ -285,7 +285,21 @@ export function CustomSection({ media }: { media: CustomSectionMediaContent }) {
             was the one breakpoint with LESS breathing room here than
             tablet/desktop, not a deliberate choice, just an oversight
             from the cut above. `sm:gap-8` itself is unchanged. */}
-        <div className="mx-auto flex w-full max-w-[986px] flex-col gap-8 sm:gap-8">
+        {/* `lg:max-w-[1209px]` — desktop-only widen, 31 Aug 2026 (owner,
+            testing live desktop: "the text description seems too
+            closely spaced with each other... reduce the left and right
+            padding by maybe thirty percent... such that the six column
+            widths increase") — the flanking whitespace either side of
+            this box is really just "however much of the outer
+            max-w-[1728px] container this narrower box doesn't use," so
+            "reduce it 30%" was computed against that same 1728px
+            reference this whole file's own tuning history already uses:
+            margin per side at 986px = (1728−986)/2 = 371px; 371×0.7 ≈
+            260px → new width = 1728−520 ≈ 1209px. `max-w-[986px]` stays
+            the base (mobile/tablet, below `lg`) value unchanged — the
+            complaint was specifically about the 6-column desktop grid
+            reading cramped, not the stacked mobile layout. */}
+        <div className="mx-auto flex w-full max-w-[986px] flex-col gap-8 sm:gap-8 lg:max-w-[1209px]">
           {/* Tracker-to-photo-grid gap cut the same way, same request
               ("reduce whitespace vertically here as well" — a follow-up
               screenshot showed this exact gap, between the tracker labels
@@ -335,7 +349,18 @@ export function CustomSection({ media }: { media: CustomSectionMediaContent }) {
                 const stepMedia = media[STEP_MEDIA_KEY[step.number]];
                 return (
                 <div key={step.number} className="flex flex-col gap-4">
-                  <div className="mx-auto w-[80%]">
+                  {/* `lg:w-[90%]` — desktop-only, same pass as the
+                      container widen above (owner: "widen the thumbnail
+                      to align with the maximum width of the text" —
+                      each column's now-wider track leaves more room
+                      than the original 80% cap was tuned for; 90% closes
+                      most of that gap between the image's own edge and
+                      the caption text's wrapped width without needing
+                      per-column measurement (captions are all similar
+                      length, so a single shared fraction reads as
+                      "matching" in practice). `w-[80%]` stays the
+                      mobile/tablet value, unchanged. */}
+                  <div className="mx-auto w-[80%] lg:w-[90%]">
                     <div className="relative aspect-[4/5] overflow-hidden rounded-lg">
                       {stepMedia ? (
                         <Image src={stepMedia.url} alt={stepMedia.alt || step.imageAlt} fill className="object-cover" />
@@ -533,7 +558,9 @@ export function CustomSection({ media }: { media: CustomSectionMediaContent }) {
                 <p className="flex-1 text-support text-charcoal/70 sm:text-micro">
                   {attr.blurb}
                 </p>
-                <div className="mx-auto mt-1 w-[80%]">
+                {/* `lg:w-[90%]` — same desktop-only bump as the process
+                    photos above, same reasoning. */}
+                <div className="mx-auto mt-1 w-[80%] lg:w-[90%]">
                   <div className="relative aspect-[4/5] overflow-hidden rounded-lg">
                     {attrMedia ? (
                       <Image src={attrMedia.url} alt={attrMedia.alt || attr.imageAlt} fill className="object-cover" />
