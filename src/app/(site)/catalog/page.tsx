@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { CatalogCtaSection } from "@/components/sections/CatalogCtaSection";
 import { BackToHomeLink } from "@/components/BackToHomeLink";
+import { getCatalog } from "@/lib/content";
 
 export const metadata: Metadata = {
   title: "Catalog — KIBO",
@@ -35,7 +36,12 @@ export const metadata: Metadata = {
 // the heading restyle above — see that component's own file for the two
 // rounds of feedback (chevron icon, mobile text size) already folded
 // into it since it first existed on `/products`.
-export default function CatalogPage() {
+// `getCatalog()` (31 Aug 2026) — see catalogType.ts's own comment. This
+// page fetches it for the thumbnail specifically (the PDF link itself
+// lives in the modal, wired via `(site)/layout.tsx`'s own provider,
+// since that needs to work from every page, not just this one).
+export default async function CatalogPage() {
+  const catalog = await getCatalog();
   return (
     <div className="mx-auto flex w-full max-w-2xl flex-1 flex-col items-center gap-4 px-6 pt-10 text-center sm:px-10 sm:pt-14">
       <div className="flex flex-col items-center gap-5">
@@ -46,7 +52,7 @@ export default function CatalogPage() {
       <p className="text-body text-charcoal/70">
         Our full range and specs, in one downloadable catalog.
       </p>
-      <CatalogCtaSection />
+      <CatalogCtaSection thumbnail={catalog.thumbnail} />
     </div>
   );
 }

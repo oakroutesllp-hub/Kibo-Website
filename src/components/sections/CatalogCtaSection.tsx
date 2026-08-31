@@ -1,7 +1,9 @@
 "use client";
 
+import Image from "next/image";
 import { useTalkToKibo } from "@/components/TalkToKiboProvider";
 import { useDownloadCatalog } from "@/components/DownloadCatalogProvider";
+import type { ContentImage } from "@/lib/content";
 
 // Catalog page's own footer: a "Download PDF" placeholder card, then two
 // CTAs side by side — "Download Catalog" and "Talk to KIBO," deliberately
@@ -18,7 +20,11 @@ import { useDownloadCatalog } from "@/components/DownloadCatalogProvider";
 // a fake file, that gets swapped for the real asset later with no
 // structural change (once a real PDF exists, this card can link/preview
 // it directly instead of just opening the gate).
-export function CatalogCtaSection() {
+// `thumbnail` (31 Aug 2026) — see catalogType.ts's own comment. `null`
+// (no cover uploaded yet) keeps this exact placeholder card, unchanged;
+// once the owner sets one in Sanity, it replaces the hairline-pattern
+// box with the real cover photo, same "Download PDF" tap target.
+export function CatalogCtaSection({ thumbnail }: { thumbnail: ContentImage }) {
   const { open: openTalkToKibo } = useTalkToKibo();
   const { open: openDownloadCatalog } = useDownloadCatalog();
 
@@ -35,25 +41,31 @@ export function CatalogCtaSection() {
           real content yet" reads as intentional rather than broken) but
           purpose-built for a document rather than a photo/video slot,
           so it carries its own document icon instead of a generic
-          label badge. */}
+          label badge. Replaced entirely by the real cover photo once
+          `thumbnail` is set in Sanity — same button/tap target either
+          way. */}
       <button
         type="button"
         onClick={openDownloadCatalog}
         aria-label="Download Catalog"
-        className="flex aspect-[3/4] w-full max-w-[220px] flex-col items-center justify-center gap-3 overflow-hidden rounded-lg border border-charcoal/10 bg-charcoal/[0.04] bg-[repeating-linear-gradient(135deg,color-mix(in_srgb,var(--color-charcoal)_8%,transparent)_0,color-mix(in_srgb,var(--color-charcoal)_8%,transparent)_1px,transparent_1px,transparent_14px)] transition-colors hover:bg-charcoal/[0.07]"
+        className="relative flex aspect-[3/4] w-full max-w-[220px] flex-col items-center justify-center gap-3 overflow-hidden rounded-lg border border-charcoal/10 bg-charcoal/[0.04] bg-[repeating-linear-gradient(135deg,color-mix(in_srgb,var(--color-charcoal)_8%,transparent)_0,color-mix(in_srgb,var(--color-charcoal)_8%,transparent)_1px,transparent_1px,transparent_14px)] transition-colors hover:bg-charcoal/[0.07]"
       >
-        <svg
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth={1.5}
-          className="h-10 w-10 text-charcoal/50"
-          aria-hidden="true"
-        >
-          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-          <path d="M14 2v6h6" />
-          <path d="M12 18v-6M9.5 15.5 12 18l2.5-2.5" />
-        </svg>
+        {thumbnail ? (
+          <Image src={thumbnail.url} alt={thumbnail.alt} fill className="object-cover" />
+        ) : (
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={1.5}
+            className="h-10 w-10 text-charcoal/50"
+            aria-hidden="true"
+          >
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+            <path d="M14 2v6h6" />
+            <path d="M12 18v-6M9.5 15.5 12 18l2.5-2.5" />
+          </svg>
+        )}
         <span className="rounded-full bg-background/85 px-3 py-1 text-micro font-medium text-charcoal/60">
           Download PDF
         </span>

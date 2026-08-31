@@ -1,6 +1,30 @@
 import Image from "next/image";
 import { CustomAttributeIcon } from "@/components/CustomAttributeIcon";
+import { MediaPlaceholder } from "@/components/MediaPlaceholder";
 import { CUSTOM_PROCESS_STEPS, CUSTOM_ATTRIBUTES } from "@/lib/customSection";
+import type { CustomSectionMediaContent } from "@/lib/content";
+
+// Maps each process step's fixed `number`/attribute's fixed `icon` to
+// its Sanity field key, 31 Aug 2026 (see customSectionMediaType.ts's
+// own comment) — the copy/order in customSection.ts stays fixed code
+// data; only which image renders per slot is now Sanity-editable, via
+// this lookup.
+const STEP_MEDIA_KEY: Record<string, keyof CustomSectionMediaContent> = {
+  "01": "processReference",
+  "02": "processDevelopment",
+  "03": "processCutting",
+  "04": "processSample",
+  "05": "processProduction",
+  "06": "processFinished",
+};
+const ATTR_MEDIA_KEY: Record<string, keyof CustomSectionMediaContent> = {
+  fabric: "swatchFabric",
+  colour: "swatchColour",
+  fit: "swatchFit",
+  construction: "swatchConstruction",
+  print: "swatchPrint",
+  finish: "swatchFinish",
+};
 
 // Custom / Made to Specification — KIBO_Brand_and_Copy_Direction.md,
 // section 3 ("From Reference to Finished Garment"). Built 26 Aug 2026
@@ -165,7 +189,11 @@ import { CUSTOM_PROCESS_STEPS, CUSTOM_ATTRIBUTES } from "@/lib/customSection";
 // grid — NOT part of the shared `ProductsGridSection` the Home→Products
 // scroll handoff previews, since that preview is deliberately scoped to
 // just the grid for the seam-matching the scroll transition depends on.
-export function CustomSection() {
+// `media` (31 Aug 2026) — see customSectionMediaType.ts's own comment.
+// Fetched by the parent page (Home) via `getCustomSectionMedia()` and
+// passed down, same pattern as every other Sanity-editable media slot
+// on this site.
+export function CustomSection({ media }: { media: CustomSectionMediaContent }) {
   return (
     <section className="w-full bg-background">
       {/* Bottom padding split from the top (28 Aug 2026, owner: "this
@@ -303,11 +331,17 @@ export function CustomSection() {
                 its column and centered (`mx-auto w-[80%]`), horizontal
                 gap collapsed to 0 at `lg` (see file comment, point 3–4). */}
             <div className="grid grid-cols-2 gap-x-8 gap-y-8 sm:grid-cols-3 lg:grid-cols-6 lg:gap-x-0 lg:gap-y-6">
-              {CUSTOM_PROCESS_STEPS.map((step) => (
+              {CUSTOM_PROCESS_STEPS.map((step) => {
+                const stepMedia = media[STEP_MEDIA_KEY[step.number]];
+                return (
                 <div key={step.number} className="flex flex-col gap-4">
                   <div className="mx-auto w-[80%]">
                     <div className="relative aspect-[4/5] overflow-hidden rounded-lg">
-                      <Image src={step.image} alt={step.imageAlt} fill className="object-cover" />
+                      {stepMedia ? (
+                        <Image src={stepMedia.url} alt={stepMedia.alt || step.imageAlt} fill className="object-cover" />
+                      ) : (
+                        <MediaPlaceholder label={step.imageAlt} className="h-full w-full" />
+                      )}
                     </div>
                   </div>
                   {/* `text-micro` (11px, 30 Aug 2026, owner, on a
@@ -344,7 +378,8 @@ export function CustomSection() {
                     {step.caption}
                   </p>
                 </div>
-              ))}
+                );
+              })}
             </div>
           </div>
 
@@ -431,7 +466,9 @@ export function CustomSection() {
               same row-relative position regardless of how many lines its
               own blurb took. */}
           <div className="grid grid-cols-2 gap-x-8 gap-y-10 sm:grid-cols-3 sm:gap-y-14 lg:grid-cols-6 lg:gap-x-0">
-            {CUSTOM_ATTRIBUTES.map((attr) => (
+            {CUSTOM_ATTRIBUTES.map((attr) => {
+              const attrMedia = media[ATTR_MEDIA_KEY[attr.icon]];
+              return (
               <div key={attr.label} className="flex h-full flex-col items-center gap-4 text-center">
                 <CustomAttributeIcon name={attr.icon} className="h-9 w-9 text-sage-green" />
                 {/* `text-h3` (18px, 29 Aug 2026) — "Fabric/Colour/Fit/
@@ -498,11 +535,16 @@ export function CustomSection() {
                 </p>
                 <div className="mx-auto mt-1 w-[80%]">
                   <div className="relative aspect-[4/5] overflow-hidden rounded-lg">
-                    <Image src={attr.image} alt={attr.imageAlt} fill className="object-cover" />
+                    {attrMedia ? (
+                      <Image src={attrMedia.url} alt={attrMedia.alt || attr.imageAlt} fill className="object-cover" />
+                    ) : (
+                      <MediaPlaceholder label={attr.imageAlt} className="h-full w-full" />
+                    )}
                   </div>
                 </div>
               </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </div>

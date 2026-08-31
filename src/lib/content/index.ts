@@ -8,6 +8,8 @@ import {
   sampleArticles,
   sampleSiteSettings,
 } from "./sampleContent";
+import { PRODUCT_CATEGORIES } from "@/lib/productCategories";
+import { CUSTOM_PROCESS_STEPS, CUSTOM_ATTRIBUTES } from "@/lib/customSection";
 import type {
   ContentImage,
   Media,
@@ -15,6 +17,9 @@ import type {
   OurStoryContent,
   ArticleContent,
   SiteSettingsContent,
+  ProductCategoryContent,
+  CustomSectionMediaContent,
+  CatalogContent,
   Seo,
 } from "./types";
 
@@ -326,11 +331,186 @@ export async function getSiteSettings(): Promise<SiteSettingsContent> {
   }
 }
 
+// Product Categories (31 Aug 2026) — see productCategoryType.ts's own
+// comment. Falls back to the existing PRODUCT_CATEGORIES code data
+// (lib/productCategories.ts) — not sampleContent.ts's usual placeholder
+// pattern, since that file's data IS the current real, live content,
+// not a placeholder standing in for something better; converting it to
+// this content type's shape keeps the grid unchanged until real
+// documents exist in Sanity.
+type RawProductCategory = {
+  name: string;
+  specs?: { label: string; value: string }[];
+  note?: string;
+  gallery?: { label: string; image?: Image }[];
+};
+
+const productCategoriesQuery = `*[_type == "productCategory"] | order(order asc){
+  name, specs, note, gallery[]{label, image}
+}`;
+
+function fallbackProductCategories(): ProductCategoryContent[] {
+  return PRODUCT_CATEGORIES.map((category) => ({
+    name: category.name,
+    specs: category.specs,
+    note: category.note,
+    gallery: category.gallery.map((frame) => ({
+      label: frame.label,
+      image: frame.image ? { url: frame.image, alt: frame.label } : null,
+    })),
+  }));
+}
+
+export async function getProductCategories(): Promise<ProductCategoryContent[]> {
+  const fallback = fallbackProductCategories();
+  if (!isSanityConfigured) return fallback;
+
+  try {
+    const docs = await sanityClient.fetch<RawProductCategory[]>(
+      productCategoriesQuery,
+      {},
+      { cache: "no-store" },
+    );
+    if (!docs.length) return fallback;
+
+    return docs.map((doc) => ({
+      name: doc.name,
+      specs: doc.specs ?? [],
+      note: doc.note,
+      gallery: (doc.gallery ?? []).map((frame) => ({
+        label: frame.label,
+        image: resolveImage(frame.image, frame.label),
+      })),
+    }));
+  } catch {
+    return fallback;
+  }
+}
+
+// Custom Section images (31 Aug 2026) — see customSectionMediaType.ts's
+// own comment. Per-field fallback to lib/customSection.ts's current
+// local image paths, same pattern as every other media slot in this
+// file — a document that exists but has some fields still empty keeps
+// showing the current image in just those slots, not a broken/blank box.
+type RawCustomSectionMedia = {
+  processReference?: Image;
+  processDevelopment?: Image;
+  processCutting?: Image;
+  processSample?: Image;
+  processProduction?: Image;
+  processFinished?: Image;
+  swatchFabric?: Image;
+  swatchColour?: Image;
+  swatchFit?: Image;
+  swatchConstruction?: Image;
+  swatchPrint?: Image;
+  swatchFinish?: Image;
+};
+
+const customSectionMediaQuery = `*[_type == "customSectionMedia"][0]{
+  processReference, processDevelopment, processCutting,
+  processSample, processProduction, processFinished,
+  swatchFabric, swatchColour, swatchFit, swatchConstruction, swatchPrint, swatchFinish
+}`;
+
+function fallbackCustomSectionMedia(): CustomSectionMediaContent {
+  const step = (number: string): ContentImage => {
+    const found = CUSTOM_PROCESS_STEPS.find((s) => s.number === number);
+    return found ? { url: found.image, alt: found.imageAlt } : null;
+  };
+  const attr = (icon: string): ContentImage => {
+    const found = CUSTOM_ATTRIBUTES.find((a) => a.icon === icon);
+    return found ? { url: found.image, alt: found.imageAlt } : null;
+  };
+  return {
+    processReference: step("01"),
+    processDevelopment: step("02"),
+    processCutting: step("03"),
+    processSample: step("04"),
+    processProduction: step("05"),
+    processFinished: step("06"),
+    swatchFabric: attr("fabric"),
+    swatchColour: attr("colour"),
+    swatchFit: attr("fit"),
+    swatchConstruction: attr("construction"),
+    swatchPrint: attr("print"),
+    swatchFinish: attr("finish"),
+  };
+}
+
+export async function getCustomSectionMedia(): Promise<CustomSectionMediaContent> {
+  const fallback = fallbackCustomSectionMedia();
+  if (!isSanityConfigured) return fallback;
+
+  try {
+    const doc = await sanityClient.fetch<RawCustomSectionMedia | null>(
+      customSectionMediaQuery,
+      {},
+      { cache: "no-store" },
+    );
+    if (!doc) return fallback;
+
+    return {
+      processReference: resolveImage(doc.processReference, "Reference / specification") ?? fallback.processReference,
+      processDevelopment: resolveImage(doc.processDevelopment, "Development") ?? fallback.processDevelopment,
+      processCutting: resolveImage(doc.processCutting, "Cutting / sewing") ?? fallback.processCutting,
+      processSample: resolveImage(doc.processSample, "Sample / inspection") ?? fallback.processSample,
+      processProduction: resolveImage(doc.processProduction, "Production") ?? fallback.processProduction,
+      processFinished: resolveImage(doc.processFinished, "Finished garment") ?? fallback.processFinished,
+      swatchFabric: resolveImage(doc.swatchFabric, "Fabric") ?? fallback.swatchFabric,
+      swatchColour: resolveImage(doc.swatchColour, "Colour") ?? fallback.swatchColour,
+      swatchFit: resolveImage(doc.swatchFit, "Fit") ?? fallback.swatchFit,
+      swatchConstruction: resolveImage(doc.swatchConstruction, "Construction") ?? fallback.swatchConstruction,
+      swatchPrint: resolveImage(doc.swatchPrint, "Print") ?? fallback.swatchPrint,
+      swatchFinish: resolveImage(doc.swatchFinish, "Finish") ?? fallback.swatchFinish,
+    };
+  } catch {
+    return fallback;
+  }
+}
+
+// Catalog (31 Aug 2026) — see catalogType.ts's own comment. No sample
+// fallback needed beyond "nothing uploaded yet" (`pdfUrl: undefined,
+// thumbnail: null`) — CatalogCtaSection.tsx already has its own
+// placeholder-card UI for exactly that state, unchanged from before
+// this content type existed.
+type RawCatalog = { pdfUrl?: string; thumbnail?: Image };
+
+const catalogQuery = `*[_type == "catalog"][0]{
+  "pdfUrl": pdf.asset->url, thumbnail
+}`;
+
+export async function getCatalog(): Promise<CatalogContent> {
+  const empty: CatalogContent = { pdfUrl: undefined, thumbnail: null };
+  if (!isSanityConfigured) return empty;
+
+  try {
+    const doc = await sanityClient.fetch<RawCatalog | null>(
+      catalogQuery,
+      {},
+      { cache: "no-store" },
+    );
+    if (!doc) return empty;
+
+    return {
+      pdfUrl: doc.pdfUrl,
+      thumbnail: resolveImage(doc.thumbnail, "KIBO Catalog"),
+    };
+  } catch {
+    return empty;
+  }
+}
+
 export type {
   HomepageContent,
   OurStoryContent,
   ArticleContent,
   SiteSettingsContent,
+  ProductCategoryContent,
+  ProductSpecContent,
+  ProductGalleryFrameContent,
+  CustomSectionMediaContent,
+  CatalogContent,
   ContentImage,
   Media,
   Seo,

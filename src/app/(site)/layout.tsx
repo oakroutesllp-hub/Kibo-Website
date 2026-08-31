@@ -4,7 +4,7 @@ import { Footer } from "@/components/Footer";
 import { TalkToKiboProvider } from "@/components/TalkToKiboProvider";
 import { TalkToKiboStickyBar } from "@/components/TalkToKiboStickyBar";
 import { DownloadCatalogProvider } from "@/components/DownloadCatalogProvider";
-import { getSiteSettings } from "@/lib/content";
+import { getSiteSettings, getCatalog } from "@/lib/content";
 import { isSanityConfigured } from "@/sanity/client";
 
 // Wraps every public-facing page (Home, Products, Articles, style guide)
@@ -57,9 +57,17 @@ import { isSanityConfigured } from "@/sanity/client";
 // handler, even though it didn't fully resolve the original issue either.
 export default async function SiteLayout({ children }: { children: ReactNode }) {
   const settings = await getSiteSettings();
+  // `getCatalog()` (31 Aug 2026) — see catalogType.ts's own comment.
+  // Fetched here alongside Site Settings for the same reason: this
+  // provider wraps the whole site, not just `/catalog`, since the
+  // "download the catalog" cross-offer can be tapped from any page.
+  const catalog = await getCatalog();
 
   return (
-    <DownloadCatalogProvider requireGate={settings.requireCatalogGate}>
+    <DownloadCatalogProvider
+      requireGate={settings.requireCatalogGate}
+      pdfUrl={catalog.pdfUrl ?? null}
+    >
       <TalkToKiboProvider>
         {/* Dev-only diagnostic banner, deliberately left off the type scale
             (30 Aug 2026, owner: "no other font sizes floating around") —

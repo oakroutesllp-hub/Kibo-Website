@@ -8,7 +8,7 @@ import { CTANudgeSection } from "@/components/sections/CTANudgeSection";
 import { WeStartedByListeningSection } from "@/components/sections/WeStartedByListeningSection";
 import { TiruppurStorySection } from "@/components/sections/TiruppurStorySection";
 import { FounderSection } from "@/components/sections/FounderSection";
-import { getHomepage, getOurStory } from "@/lib/content";
+import { getHomepage, getOurStory, getProductCategories, getCustomSectionMedia } from "@/lib/content";
 
 export async function generateMetadata(): Promise<Metadata> {
   const homepage = await getHomepage();
@@ -70,11 +70,19 @@ export default async function Home() {
   // components (see this file's own comment above on why that sharing
   // matters).
   const ourStory = await getOurStory();
+  // `getProductCategories()`/`getCustomSectionMedia()`, 31 Aug 2026 —
+  // both became Sanity-editable the same day (owner: "product cards
+  // need to be editable... all the images... need to be editable").
+  // Fetched here (not inside ProductsGridSection/CustomSection
+  // themselves) because both of those stay Client Components — same
+  // fetch-in-the-parent-then-prop-drill pattern as Hero/OurStory above.
+  const productCategories = await getProductCategories();
+  const customSectionMedia = await getCustomSectionMedia();
   return (
     <>
       <Hero content={homepage} />
-      <ProductsGridSection headingLevel="h2" />
-      <CustomSection />
+      <ProductsGridSection headingLevel="h2" categories={productCategories} />
+      <CustomSection media={customSectionMedia} />
       <SupplySection />
       <LongRunSection />
       <CTANudgeSection />

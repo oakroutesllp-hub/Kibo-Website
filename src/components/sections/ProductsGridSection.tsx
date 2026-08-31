@@ -3,8 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import { ProductCategoryCard } from "@/components/ProductCategoryCard";
 import { BackToHomeLink } from "@/components/BackToHomeLink";
-import { PRODUCT_CATEGORIES } from "@/lib/productCategories";
 import { useTalkToKibo } from "@/components/TalkToKiboProvider";
+import type { ProductCategoryContent } from "@/lib/content";
 
 // Extracted from /products/page.tsx (26 Aug 2026) so the exact same markup
 // can be reused wherever this grid needs to appear — originally built for
@@ -53,12 +53,21 @@ import { useTalkToKibo } from "@/components/TalkToKiboProvider";
 // ("Download Catalog" / "Talk to KIBO", side by side) instead of this
 // section's own single "Get in touch" nudge, which would otherwise read
 // as a redundant, differently-styled third CTA right above them.
+// `categories` (31 Aug 2026) — was a direct import of the fixed
+// PRODUCT_CATEGORIES array (lib/productCategories.ts); now passed down
+// from whichever Server Component page renders this (Home,
+// `/products`), each of which fetches it via `getProductCategories()`.
+// This component itself stays a Client Component (owns the open/flip
+// state below), so it can't fetch Sanity data itself — same
+// fetch-in-the-parent-then-prop-drill pattern Hero/OurStory already use.
 export function ProductsGridSection({
+  categories,
   headingLevel = "h1",
   showBackToHome = false,
   heading = "Products",
   showGetInTouch = true,
 }: {
+  categories: ProductCategoryContent[];
   headingLevel?: "h1" | "h2";
   showBackToHome?: boolean;
   heading?: string;
@@ -277,7 +286,7 @@ export function ProductsGridSection({
           107.6% ratio on the third-pass 420px.
       */}
       <div className="mx-auto grid w-full grid-cols-1 gap-8 sm:max-w-[920px] sm:grid-cols-2 sm:gap-4 lg:max-w-[887px] lg:grid-cols-3 lg:gap-4">
-        {PRODUCT_CATEGORIES.map((category) => (
+        {categories.map((category) => (
           <div
             key={category.name}
             ref={(el) => {

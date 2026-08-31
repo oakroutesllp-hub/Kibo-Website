@@ -16,8 +16,17 @@ import { getStoredLead, storeLead } from "@/lib/leadStorage";
 // download or linking to a broken file. `CATALOG_PDF_URL` below is the
 // one line to fill in once that file exists; until then it stays
 // `null` and the confirmation copy reflects that.
-const CATALOG_PDF_URL: string | null = null;
 
+// `CATALOG_PDF_URL` removed, 31 Aug 2026 — was a hardcoded `null`
+// constant right in this file, the "one line to fill in" per the
+// comment that used to sit here. Now a real Sanity-editable slot (see
+// catalogType.ts) — `pdfUrl` is a prop instead, threaded down from
+// `(site)/layout.tsx` → `DownloadCatalogProvider` → here, same pattern
+// as `requireGate`. `null`/`undefined` (no PDF uploaded yet) keeps the
+// exact same honest "being finalized" copy this always showed; once the
+// owner uploads a real file in Sanity, this becomes an actual working
+// download link with zero further code changes.
+//
 // "Already known" skip, per owner spec ("on a later visit... skip
 // re-showing a gate/field already filled") — if `getStoredLead()` has a
 // name + email already (from a previous Download Catalog OR Talk to
@@ -49,9 +58,11 @@ const CATALOG_PDF_URL: string | null = null;
 export function DownloadCatalogModal({
   onClose,
   requireGate,
+  pdfUrl,
 }: {
   onClose: () => void;
   requireGate: boolean;
+  pdfUrl: string | null;
 }) {
   const knownLead = getStoredLead();
   // Lazy initializers, not mount effects — starting `submitted` true
@@ -134,12 +145,12 @@ export function DownloadCatalogModal({
           <h2 id="download-catalog-heading" className="text-h3 font-semibold text-charcoal">
             Thanks!
           </h2>
-          {/* Honest placeholder copy — see file comment on `CATALOG_PDF_URL`.
-              Once a real file exists, this branch becomes an actual
-              download link/button instead. */}
-          {CATALOG_PDF_URL ? (
+          {/* Honest placeholder copy when no PDF exists yet — see file
+              comment on the `pdfUrl` prop. Real link once one's uploaded
+              in Sanity. */}
+          {pdfUrl ? (
             <a
-              href={CATALOG_PDF_URL}
+              href={pdfUrl}
               download
               className="mt-2 rounded-full bg-charcoal px-4 py-2 text-support font-semibold text-background transition-colors hover:bg-green-gray"
             >

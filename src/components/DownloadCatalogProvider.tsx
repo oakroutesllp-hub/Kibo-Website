@@ -34,12 +34,18 @@ export function useDownloadCatalog() {
 // renders — not part of the context value itself, since no consumer of
 // `useDownloadCatalog()` needs to read it, only this provider needs to
 // hand it to the one component that cares.
+// `pdfUrl` (31 Aug 2026) — same pattern as `requireGate` just above:
+// owner-uploaded in Sanity (Catalog document), fetched in
+// `(site)/layout.tsx` via `getCatalog()`, threaded straight through to
+// the one component that needs it.
 export function DownloadCatalogProvider({
   children,
   requireGate,
+  pdfUrl,
 }: {
   children: ReactNode;
   requireGate: boolean;
+  pdfUrl: string | null;
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const open = useCallback(() => setIsOpen(true), []);
@@ -49,7 +55,7 @@ export function DownloadCatalogProvider({
   return (
     <DownloadCatalogContext.Provider value={value}>
       {children}
-      {isOpen && <DownloadCatalogModal onClose={close} requireGate={requireGate} />}
+      {isOpen && <DownloadCatalogModal onClose={close} requireGate={requireGate} pdfUrl={pdfUrl} />}
     </DownloadCatalogContext.Provider>
   );
 }

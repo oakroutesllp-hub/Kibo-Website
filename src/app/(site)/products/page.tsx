@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { ProductsGridSection } from "@/components/sections/ProductsGridSection";
+import { getProductCategories } from "@/lib/content";
 
 // `description` added (30 Aug 2026, part of the same canonical-URL
 // discussion that trimmed this page down to just the grid) — this page
@@ -49,6 +50,11 @@ export const metadata: Metadata = {
 // (not folded back into Home), so the same reasoning that added it
 // still holds: scrolling up here has nothing above it to reveal, since
 // this genuinely is a different page, not a section of Home.
-export default function ProductsPage() {
-  return <ProductsGridSection showBackToHome />;
+// Made an async Server Component, 31 Aug 2026, to fetch
+// `getProductCategories()` — see ProductsGridSection.tsx's own comment
+// on why the fetch has to happen here rather than inside that
+// (Client) component.
+export default async function ProductsPage() {
+  const categories = await getProductCategories();
+  return <ProductsGridSection categories={categories} showBackToHome />;
 }

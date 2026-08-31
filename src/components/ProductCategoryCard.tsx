@@ -3,7 +3,7 @@
 import { useState, type KeyboardEvent, type MouseEvent } from "react";
 import Image from "next/image";
 import { MediaPlaceholder } from "@/components/MediaPlaceholder";
-import type { ProductCategory } from "@/lib/productCategories";
+import type { ProductCategoryContent } from "@/lib/content";
 
 // Each of the 6 Products-grid cards shows a title, a multi-image gallery
 // (tap the image, or the arrow buttons, to cycle pattern/color variants +
@@ -72,7 +72,7 @@ export function ProductCategoryCard({
   animateFlip,
   onToggleFlip,
 }: {
-  category: ProductCategory;
+  category: ProductCategoryContent;
   flipped: boolean;
   animateFlip: boolean;
   onToggleFlip: () => void;
@@ -223,7 +223,7 @@ export function ProductCategoryCard({
               // hidden rounded-lg`, above) already clips the slide, no
               // extra wrapper needed here.
               key={imageIndex}
-              src={currentFrame.image}
+              src={currentFrame.image.url}
               alt={`${category.name} — ${currentFrame.label}`}
               fill
               className={`object-cover ${

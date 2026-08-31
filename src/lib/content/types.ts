@@ -106,3 +106,51 @@ export type SiteSettingsContent = {
   // until the owner has real content and flips this on herself.
   showBlogInNav: boolean;
 };
+
+// Product Categories (31 Aug 2026) — see productCategoryType.ts's own
+// comment for why this reverses the 25 Aug "fixed, code-level, not
+// Sanity-editable" call lib/productCategories.ts's own file comment
+// still documents. Same field names/shapes as that file's own
+// `ProductCategory`/`ProductSpec`/`GalleryFrame` types (deliberately —
+// ProductCategoryCard.tsx and ProductsGridSection.tsx consume whichever
+// one is passed down without needing to know which source it came
+// from), except `GalleryFrame.image` is a resolved `ContentImage` here
+// instead of a raw local path string.
+export type ProductSpecContent = { label: string; value: string };
+export type ProductGalleryFrameContent = { label: string; image: ContentImage };
+export type ProductCategoryContent = {
+  name: string;
+  specs: ProductSpecContent[];
+  note?: string;
+  gallery: ProductGalleryFrameContent[];
+};
+
+// Custom Section images (31 Aug 2026) — see customSectionMediaType.ts's
+// own comment. Only the 12 images became Sanity-editable; the section's
+// copy (captions, headline, attribute labels/blurbs) stays fixed in
+// lib/customSection.ts, unchanged. Each field falls back to that file's
+// current local image path when unset — see getCustomSectionMedia's own
+// per-field fallback in lib/content/index.ts.
+export type CustomSectionMediaContent = {
+  processReference: ContentImage;
+  processDevelopment: ContentImage;
+  processCutting: ContentImage;
+  processSample: ContentImage;
+  processProduction: ContentImage;
+  processFinished: ContentImage;
+  swatchFabric: ContentImage;
+  swatchColour: ContentImage;
+  swatchFit: ContentImage;
+  swatchConstruction: ContentImage;
+  swatchPrint: ContentImage;
+  swatchFinish: ContentImage;
+};
+
+// Catalog (31 Aug 2026) — see catalogType.ts's own comment. `pdfUrl`
+// undefined means no real PDF has been uploaded yet — CatalogCtaSection
+// keeps showing its existing placeholder-card/gated-modal behavior in
+// that case, unchanged from before this type existed.
+export type CatalogContent = {
+  pdfUrl?: string;
+  thumbnail: ContentImage;
+};

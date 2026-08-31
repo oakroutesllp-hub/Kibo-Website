@@ -45,8 +45,23 @@ export const articleType = defineType({
       name: "category",
       title: "Category",
       description:
-        "Powers the filter tabs on the Blog page — whatever categories actually exist across your published posts become the tabs shown, automatically, no code change needed. Keep the wording short and consistent between posts (e.g. always \"Company News\", not sometimes \"News\" and sometimes \"Company Updates\") so posts that should share a tab actually do. Leave empty to file the post under \"Uncategorized\".",
+        "Powers the filter tabs on the Blog page — whatever categories actually exist across your published posts become the tabs shown, automatically, no code change needed. Pick one of the two already in use, or type a new one to start a new tab (keep wording short and consistent — e.g. always \"Company News\", not sometimes \"News\" — so posts that should share a tab actually do). Leave empty to file the post under \"Uncategorized\".",
       type: "string",
+      // Dropdown of known values added 31 Aug 2026 (owner, looking at
+      // Studio: "I see like three bifurcations [on the live site]... I
+      // don't see any of that on Sanity, so how will we know how to
+      // publish... not very clear") — a plain text field gave no hint
+      // that "Company News" and "Sourcing & Manufacturing" were the two
+      // real tabs already live (the visible "third" is the always-
+      // present "All" tab, generated automatically, not a category
+      // anyone sets). This list is suggestions, not a hard constraint —
+      // Sanity's string `options.list` still allows typing any other
+      // value, which is required here since a new category should
+      // still be possible without a code/schema change (per this
+      // field's own next line).
+      options: {
+        list: ["Company News", "Sourcing & Manufacturing"],
+      },
     }),
     defineField({
       name: "body",
