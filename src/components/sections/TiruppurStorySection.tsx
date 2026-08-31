@@ -97,20 +97,30 @@ export function TiruppurStorySection({ media }: { media?: Media }) {
   // so the same content can render twice below — once inside the
   // desktop overlay panel, once as its own plain block under the photo
   // on mobile (see that split's own comment further down for why).
+  // Sub-block copy and the closing statement bumped `text-body` (15px),
+  // `lg:text-support` (13px, back to the original desktop-overlay size),
+  // 31 Aug 2026 (owner, testing live: "it kind of looks out of whack...
+  // that small text does not make sense because everything is now
+  // vertically placed") — 13px reads fine packed into a narrow ~282px
+  // side panel (its whole design constraint), but the same size in the
+  // new full-width mobile block (see the split below) has much more
+  // room per line and reads as disproportionately small next to it. The
+  // breakpoint is `lg` (not `sm`), matching where this content actually
+  // switches from the mobile block to the desktop overlay panel.
   const panelBody = (
     <>
       <div className="flex flex-col gap-[1.05rem]">
         {TIRUPPUR_SUB_BLOCKS.map((block) => (
           <div key={block.label} className="flex flex-col gap-[0.175rem]">
             <h3 className="text-h3 font-semibold text-charcoal">{block.label}</h3>
-            <p className="text-support text-charcoal/70">{block.copy}</p>
+            <p className="text-body text-charcoal/70 lg:text-support">{block.copy}</p>
           </div>
         ))}
       </div>
 
       <span aria-hidden="true" className="mt-[1.05rem] block h-px w-full bg-charcoal/15" />
 
-      <p className="mt-[1.05rem] text-support text-charcoal">
+      <p className="mt-[1.05rem] text-body text-charcoal lg:text-support">
         <span className="font-semibold">{TIRUPPUR_CLOSING_BOLD}</span>
         {TIRUPPUR_CLOSING_REST}
       </p>
@@ -293,8 +303,25 @@ export function TiruppurStorySection({ media }: { media?: Media }) {
           right-aligned — this is no longer hugging a shared edge with
           anything, so there's no reason to keep the desktop's
           right-alignment, and centered matches how every other stacked
-          mobile section on this page (Listening, Founder) now reads. */}
-      <div className="flex w-full flex-col items-center gap-[1.05rem] bg-background px-6 py-8 text-center sm:px-10 lg:hidden">
+          mobile section on this page (Listening, Founder) now reads.
+
+          `pb-0` (was `py-8`, i.e. 32px on both sides), 31 Aug 2026 (owner,
+          testing live: "the gap between 'KIBO works within ecosystems...'
+          and the top edge of the [Founder section's] video thumbnail...
+          is large, that gap needs to reduce") — FounderSection.tsx's own
+          top padding (`pt-[5.4rem]`, 86.4px) was deliberately calibrated
+          as the ENTIRE Tiruppur→Founder gap, back when Tiruppur
+          contributed zero bottom spacing of its own (see that file's own
+          comment: "since Tiruppur is full-bleed with zero padding of its
+          own, this section's bottom alone has to carry that FULL value").
+          This new mobile block breaks that assumption by existing at
+          all — its own bottom padding was stacking on top of Founder's
+          already-complete 86.4px, not sharing it. Dropping this block's
+          bottom padding to 0 restores the original single-source-of-gap
+          design Founder's own spacing already assumes, rather than
+          shrinking Founder's own carefully-tuned value to compensate for
+          an unrelated new element. */}
+      <div className="flex w-full flex-col items-center gap-[1.05rem] bg-background px-6 pt-8 pb-0 text-center sm:px-10 lg:hidden">
         {panelBody}
       </div>
     </section>

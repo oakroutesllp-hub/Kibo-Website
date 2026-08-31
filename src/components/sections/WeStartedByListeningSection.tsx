@@ -268,15 +268,22 @@ export function WeStartedByListeningSection({ media }: { media: Media }) {
             instead of centering it; `w-[70%]` was also the *desktop*
             proportion (sized to look right splitting a row with text
             next to it), too small once it's the only thing on the row.
-            `mx-auto w-[85%]` below `lg`, `lg:ml-auto lg:w-[70%]` restores
-            the exact original desktop box (position and size both) —
-            only the mobile/tablet state changes. */}
+            `mx-auto` below `lg`, `lg:ml-auto lg:w-[70%]` restores the
+            exact original desktop box (position and size both) — only
+            the mobile/tablet state changes.
+
+            Widened again, same day, same conversation, on a second live
+            pass (owner: "We started by listening and What led to KIBO
+            video thumbnails... need to be larger, I think they are
+            show-stealers and right now not getting enough focus") —
+            85% → 95% below `lg`. Same fix, same reasoning, applied to
+            FounderSection.tsx's identical video box. */}
         <div className="relative lg:pr-16">
           <span
             aria-hidden="true"
             className="absolute inset-y-0 right-0 hidden w-px bg-charcoal/10 lg:block"
           />
-          <div className="relative mx-auto flex aspect-[16/10] w-[85%] items-center justify-center overflow-hidden rounded-lg border border-charcoal/10 bg-background lg:ml-auto lg:w-[70%]">
+          <div className="relative mx-auto flex aspect-[16/10] w-[95%] items-center justify-center overflow-hidden rounded-lg border border-charcoal/10 bg-background lg:ml-auto lg:w-[70%]">
             {/* Media slot made Sanity-editable, 30 Aug 2026 — same
                 image/video/placeholder branching Hero.tsx already uses.
                 Not autoplaying/looping even in video mode (unlike

@@ -161,15 +161,6 @@ export function ProductsGridSection({
   // identical `py-4 sm:py-5` half-value in this same pass.
   return (
     <div className="relative mx-auto flex w-full max-w-[1728px] flex-1 flex-col gap-10 px-6 pt-8 pb-4 sm:px-10 sm:pt-10 sm:pb-5">
-      {showBackToHome && (
-        <Link
-          href="/"
-          className="absolute left-6 top-6 inline-flex items-center gap-1.5 text-micro font-semibold uppercase tracking-[0.14em] text-charcoal/50 transition-colors hover:text-charcoal sm:left-10"
-        >
-          <span aria-hidden="true">←</span> Home
-        </Link>
-      )}
-
       {/* Centered (29 Aug 2026, owner: "center this") — was left-aligned
           by default (a plain block heading in a flex-col container with
           no alignment set).
@@ -189,6 +180,30 @@ export function ProductsGridSection({
           it a nice horizontal line treatment. It kind of looks
           unanchored"). */}
       <div className="flex flex-col items-center gap-5">
+        {/* Back-to-Home link moved in-flow and enlarged, 31 Aug 2026
+            (owner, testing live, on both mobile and desktop: "the icon
+            is very tiny and misplaced... should be at the center and
+            maybe even larger... not very obvious") — was `absolute
+            left-6 top-6`, tucked in the page's own top-padding corner at
+            `text-micro` (11px), deliberately kept out of flow so this
+            component's heading lands at the identical y-position whether
+            or not this link is showing (see this div's own original
+            comment on why — the Home-page-embedded copy of this same
+            component never shows the link). That pixel-matching only
+            ever mattered for comparing two different pages against each
+            other, which nobody actually does — worth giving up for a
+            link that's now easy to actually see and tap: in normal flow,
+            centered with the heading below it (same `items-center`
+            column), `text-support` (13px, up from 11px). Still the same
+            arrow + "Home" wording, same hover treatment. */}
+        {showBackToHome && (
+          <Link
+            href="/"
+            className="inline-flex items-center gap-1.5 text-support font-semibold uppercase tracking-[0.14em] text-charcoal/50 transition-colors hover:text-charcoal"
+          >
+            <span aria-hidden="true">←</span> Home
+          </Link>
+        )}
         <Heading className="text-center text-h2 font-bold leading-[1.1] tracking-tight text-charcoal">
           {heading}
         </Heading>

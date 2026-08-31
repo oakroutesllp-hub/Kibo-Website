@@ -96,14 +96,35 @@ export function Footer({ settings }: { settings: SiteSettingsContent }) {
             side only. */}
         <div className="grid grid-cols-1 gap-y-10 gap-x-10 px-6 py-10 sm:px-10 md:grid-cols-2 lg:flex lg:flex-row lg:justify-between lg:gap-x-10 lg:gap-y-8 lg:px-0">
         {/* Brand */}
-        <div className="flex flex-col gap-3 md:col-span-2 lg:col-span-2">
+        {/* Centered below `lg`, 31 Aug 2026 (owner, testing live mobile:
+            "the KIBO logo is... left aligned. I think it should be
+            aligned at the center... this looks kind of weird") — this
+            was the one column with no alignment override at all (every
+            other column already uses `items-center text-center`), so it
+            fell back to plain left-aligned block flow on the stacked
+            mobile/tablet layout, inconsistent with its four siblings.
+            `lg:items-start lg:text-left` keeps this column's original,
+            unedited desktop reading (a left-anchored first column in the
+            row) — this is a sub-`lg` change only. */}
+        <div className="flex flex-col items-center gap-3 text-center md:col-span-2 lg:col-span-2 lg:items-start lg:text-left">
           {/* Sized to match Nav.tsx's logo exactly (30 Aug 2026, owner,
               on a screenshot of this column: "reduce logo size to match
               with top bar") — was a flat, non-responsive `width={112}`;
               now the identical `width={124}` (intrinsic/source size,
               same image-optimization headroom) + responsive className
-              Nav uses (37.57px mobile / 68.51px desktop). */}
-          <Logo width={124} className="h-auto w-[37.57px] sm:w-[68.51px]" />
+              Nav uses.
+
+              **Re-matched, 31 Aug 2026** — Nav's own mobile size moved
+              37.57px → 46.96px the same day (owner: nav logo too small
+              on mobile), which this file wasn't updated alongside at
+              the time, quietly breaking the "matches Nav exactly" rule
+              this comment itself states. Caught by the owner noticing
+              the footer logo looked smaller than the top bar's on a
+              live mobile screenshot — same underlying rule, just
+              re-applied after Nav's own value changed. Desktop
+              (`sm:w-[68.51px]`) was never touched by that Nav change,
+              so it stays as-is here too. */}
+          <Logo width={124} className="h-auto w-[46.96px] sm:w-[68.51px]" />
           {/* Bumped onto the real type scale, `text-micro` (11px, 30 Aug
               2026, owner: "increase description size bump up" — per the
               standing rule, "bump up" always lands on the next named

@@ -144,7 +144,13 @@ export const CUSTOM_PROCESS_STEPS: CustomProcessStep[] = [
   {
     number: "04",
     trackerLabel: "Sample / inspection",
-    caption: "We check every sample for fit and finish",
+    // "every sample" → "samples" (31 Aug 2026, owner, testing live: "this
+    // text needs to change to we check samples for fit and finish not
+    // every sample that would be a false claim") — "every" reads as a
+    // guarantee that literally every single unit gets inspected, which
+    // isn't the actual claim; "samples" (the pre-production samples this
+    // step's own photo and tracker label are both about) is accurate.
+    caption: "We check samples for fit and finish",
     // Upscaled 27 Aug 2026 — see file header comment (step 5): no
     // higher-res source of this exact photo exists, so this is a
     // Lanczos3 resample + sharpen of the same original crop rather than

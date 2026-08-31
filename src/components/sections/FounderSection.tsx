@@ -197,14 +197,20 @@ export function FounderSection({ media }: { media: Media }) {
             `ml-auto`/`w-[70%]` were unconditional, so below `lg` (where
             this is the only thing on its row) the photo box stayed
             right-hugged and undersized instead of centered and full-
-            width-appropriate. `mx-auto w-[85%]` below `lg`, `lg:ml-auto
-            lg:w-[70%]` keeps the desktop box exactly as it was. */}
+            width-appropriate. `mx-auto` below `lg`, `lg:ml-auto
+            lg:w-[70%]` keeps the desktop box exactly as it was.
+
+            Widened again, same day (owner: "We started by listening and
+            What led to KIBO video thumbnails... need to be larger...
+            show-stealers... not getting enough focus") — 85% → 95%
+            below `lg`, same change, same reasoning, as that file's
+            identical video box. */}
         <div className="relative lg:pr-16">
           <span
             aria-hidden="true"
             className="absolute inset-y-0 right-0 hidden w-px bg-charcoal/10 lg:block"
           />
-          <div className="relative mx-auto flex aspect-[16/10] w-[85%] items-center justify-center overflow-hidden rounded-lg border border-charcoal/10 bg-background lg:ml-auto lg:w-[70%]">
+          <div className="relative mx-auto flex aspect-[16/10] w-[95%] items-center justify-center overflow-hidden rounded-lg border border-charcoal/10 bg-background lg:ml-auto lg:w-[70%]">
             {/* Media slot made Sanity-editable, 30 Aug 2026 — same
                 image/video/placeholder branching as Listening's own
                 column. This is the one section where a real video shoot

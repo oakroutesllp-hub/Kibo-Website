@@ -307,8 +307,18 @@ export function CustomSection() {
                       sentence") — was `text-support` (13px), the next
                       step down on the scale; trailing full stops
                       removed from all six captions in
-                      customSection.ts. */}
-                  <p className="line-clamp-3 text-center text-micro text-charcoal/70">{step.caption}</p>
+                      customSection.ts.
+
+                      **Bumped back up on mobile only, 31 Aug 2026**
+                      (owner, testing live: "this text is really small,
+                      we need to bump it up just on the mobile display
+                      of it") — `text-support` below `sm`, back to the
+                      original `text-micro` at `sm` and up, so desktop
+                      (where this was actually a deliberate, reviewed
+                      choice) is unaffected. */}
+                  <p className="line-clamp-3 text-center text-support text-charcoal/70 sm:text-micro">
+                    {step.caption}
+                  </p>
                 </div>
               ))}
             </div>
@@ -347,8 +357,23 @@ export function CustomSection() {
 
                 `text-body` (15px, 30 Aug 2026, owner, on a screenshot of
                 this exact line: "bump up font size") — was `text-support`
-                (13px), the next step up on the scale. */}
-            <h3 className="text-body font-semibold text-sage-green">
+                (13px), the next step up on the scale.
+
+                **`text-center` added + bumped again on mobile, 31 Aug
+                2026** (owner, testing live: "'built around your
+                requirements' that text is not centered at all and I
+                think its size also needs to be bumped up") — this line
+                wraps to 2 lines at mobile widths, and with no
+                `text-center` a wrapped `<h3>` falls back to plain
+                left-aligned block text by default, which reads as
+                off-center between its two flanking dash accents (the
+                ROW itself was already `justify-center`, but that only
+                centers the row as a whole — it says nothing about how
+                text wraps *inside* the h3's own box). `text-h3` (18px)
+                below `sm`, back to the original `text-body` (15px) at
+                `sm` and up — desktop, where this was already a
+                specifically-tuned size, is unaffected. */}
+            <h3 className="text-center text-h3 font-semibold text-sage-green sm:text-body">
               Built around your requirements
             </h3>
             <span aria-hidden="true" className="h-px w-8 bg-charcoal/25 sm:w-16" />
@@ -423,8 +448,16 @@ export function CustomSection() {
                     the FABRIC/COLOUR/etc labels above are explicitly
                     NOT touched, only this description text) — was
                     `text-support` (13px), the next step down on the
-                    scale. */}
-                <p className="flex-1 text-micro text-charcoal/70">
+                    scale.
+
+                    **Bumped back up on mobile only, 31 Aug 2026**
+                    (owner, testing live, same request/reasoning as the
+                    process captions above: "all of this" — the process
+                    captions and these attribute blurbs, named together
+                    — "needs to be bumped up," mobile-only) — same
+                    `text-support`-below-`sm` mechanism, desktop
+                    unchanged. */}
+                <p className="flex-1 text-support text-charcoal/70 sm:text-micro">
                   {attr.blurb}
                 </p>
                 <div className="mx-auto mt-1 w-[80%]">

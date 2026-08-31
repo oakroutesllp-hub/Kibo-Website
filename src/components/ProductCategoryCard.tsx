@@ -300,7 +300,16 @@ export function ProductCategoryCard({
               real click target. */}
           <span
             aria-hidden="true"
-            className="flex h-8 shrink-0 items-center gap-1.5 rounded-full bg-green-gray px-3 text-background transition-colors group-hover:bg-charcoal"
+            // `group-active:bg-charcoal` added 31 Aug 2026 (owner, testing
+            // live mobile: "the specs button does not change color") —
+            // `group-hover:bg-charcoal` alone never fires on a touchscreen
+            // (there's no cursor to hover with), so this pill's black-on-
+            // interaction feedback simply never happened on mobile — the
+            // one place most visitors will actually tap it. `:active`
+            // covers the touch-and-hold moment a tap produces, which
+            // hover can't; `group-hover` stays too, unchanged, for
+            // desktop's actual mouse-hover case.
+            className="flex h-8 shrink-0 items-center gap-1.5 rounded-full bg-green-gray px-3 text-background transition-colors group-hover:bg-charcoal group-active:bg-charcoal"
           >
             {/* Sentence case, not uppercase (29 Aug 2026, font case
                 1.png: "'Specs' → button label, sentence case") — the
