@@ -326,7 +326,13 @@ export function CustomSection() {
 
           {/* Divider */}
           <div className="flex items-center justify-center gap-4 sm:gap-6">
-            <span aria-hidden="true" className="h-px w-8 bg-charcoal/25 sm:w-16" />
+            {/* `w-8` (32px) → `w-16` (64px) below `sm`, 31 Aug 2026 (owner,
+                testing live: "those [dashes] have to be a little longer,
+                right now they are very tiny, tiny lines") — matches
+                what `sm:w-16` already was, so mobile now gets the same
+                length desktop already had; `sm:w-16` itself is
+                unchanged. */}
+            <span aria-hidden="true" className="h-px w-16 bg-charcoal/25" />
             {/* Reclassified as a micro label, not H2 (29 Aug 2026, font
                 case 1.png: "'Built around your requirements.' → I would
                 make this a micro label, not H2, because visually and
@@ -376,7 +382,13 @@ export function CustomSection() {
             <h3 className="text-center text-h3 font-semibold text-sage-green sm:text-body">
               Built around your requirements
             </h3>
-            <span aria-hidden="true" className="h-px w-8 bg-charcoal/25 sm:w-16" />
+            {/* `w-8` (32px) → `w-16` (64px) below `sm`, 31 Aug 2026 (owner,
+                testing live: "those [dashes] have to be a little longer,
+                right now they are very tiny, tiny lines") — matches
+                what `sm:w-16` already was, so mobile now gets the same
+                length desktop already had; `sm:w-16` itself is
+                unchanged. */}
+            <span aria-hidden="true" className="h-px w-16 bg-charcoal/25" />
           </div>
 
           {/* Attribute grid — same columns/gaps as the photo grid above

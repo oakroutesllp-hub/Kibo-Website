@@ -219,13 +219,18 @@ export function FounderSection({ media }: { media: Media }) {
             What led to KIBO video thumbnails... need to be larger...
             show-stealers... not getting enough focus") — 85% → 95%
             below `lg`, same change, same reasoning, as that file's
-            identical video box. */}
+            identical video box.
+
+            **Widened a third time, same day** (owner: "I want the
+            thumbnail... even larger... still seems smaller") — 95% →
+            100% (full column width) below `lg`, same as Listening's own
+            box. */}
         <div className="relative lg:pr-16">
           <span
             aria-hidden="true"
             className="absolute inset-y-0 right-0 hidden w-px bg-charcoal/10 lg:block"
           />
-          <div className="relative mx-auto flex aspect-[16/10] w-[95%] items-center justify-center overflow-hidden rounded-lg border border-charcoal/10 bg-background lg:ml-auto lg:w-[70%]">
+          <div className="relative mx-auto flex aspect-[16/10] w-full items-center justify-center overflow-hidden rounded-lg border border-charcoal/10 bg-background lg:ml-auto lg:w-[70%]">
             {/* Media slot made Sanity-editable, 30 Aug 2026 — same
                 image/video/placeholder branching as Listening's own
                 column. This is the one section where a real video shoot
@@ -309,7 +314,18 @@ export function FounderSection({ media }: { media: Media }) {
                 two paragraphs; Founder has three paragraphs rather than
                 two, so the same "one paragraph, then a dash, then the
                 rest" rhythm lands here, between paragraph 1 and 2. */}
-            <div className="flex flex-col gap-4">
+            {/* `items-center lg:items-start` added, 31 Aug 2026 (owner,
+                testing live: "under 'I set out to build something on my
+                own,' the horizontal line needs to be centered, it's
+                currently on the left side") — this inner wrapper had no
+                alignment override of its own, unlike its two ancestors
+                (both already fixed earlier this same pass); a flex
+                column with no `items-*` defaults to `stretch`, which for
+                a fixed-width child like the `w-9` dash (or a `max-w-sm`-
+                capped paragraph) resolves to flush-left, not centered —
+                the outer centering never actually reached this specific
+                span. */}
+            <div className="flex flex-col items-center gap-4 lg:items-start">
               <p className="max-w-sm text-body text-charcoal/70">{FOUNDER_PARAGRAPH_1}</p>
               <span aria-hidden="true" className="h-px w-9 bg-charcoal/20" />
               <p className="max-w-sm text-body text-charcoal/70">{FOUNDER_PARAGRAPH_2}</p>

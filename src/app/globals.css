@@ -199,6 +199,30 @@ body {
   }
 }
 
+/* Product gallery slide-in, 31 Aug 2026 — see ProductCategoryCard.tsx's
+   own comment. Each frame change mounts a fresh `<img>` (via a
+   `key={imageIndex}` change) that plays one of these once on mount,
+   sliding in from the direction matching the arrow pressed (right ->
+   "next," left -> "prev") — a plain translate, no fade, so it reads as
+   one image physically replacing the other rather than a cross-dissolve. */
+@keyframes kibo-slide-in-right {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes kibo-slide-in-left {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
 /* Tiruppur photo filmstrip (30 Aug 2026) — see tiruppurSection.ts and
    TiruppurStorySection.tsx. The track renders the photo list TWICE
    back to back, then this keyframe shifts it left by exactly half its

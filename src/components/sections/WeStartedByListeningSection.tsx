@@ -187,7 +187,12 @@ export function WeStartedByListeningSection({
             prop comment above. Sits above the top dash, same position
             Products'/Catalog's own back link takes above their titles. */}
         {showBackToHome && <BackToHomeLink />}
-        <span aria-hidden="true" className="h-px w-12 bg-sage-green/60" />
+        {/* Top dash hidden below `sm`, 31 Aug 2026 (owner, testing live:
+            "our story need not have the top horizontal line — that
+            anchoring was more for desktop, I don't think mobile version
+            needs that") — the bottom dash (below) stays at every
+            breakpoint; only this top one is desktop/tablet-only now. */}
+        <span aria-hidden="true" className="hidden h-px w-12 bg-sage-green/60 sm:block" />
         <h2 className="text-h2 font-bold leading-[1.1] tracking-tight text-charcoal">
           {OUR_STORY_PLAIN}
           <span className="text-sage-green">{OUR_STORY_ACCENT}</span>
@@ -295,14 +300,20 @@ export function WeStartedByListeningSection({
             pass (owner: "We started by listening and What led to KIBO
             video thumbnails... need to be larger, I think they are
             show-stealers and right now not getting enough focus") —
-            85% → 95% below `lg`. Same fix, same reasoning, applied to
-            FounderSection.tsx's identical video box. */}
+            85% → 95% below `lg`.
+
+            **Widened a third time, same day** (owner, a follow-up live
+            pass: "I want the thumbnail... even larger... this still
+            seems smaller") — 95% → 100% (full width of the column,
+            i.e. flush with the page's own `px-6` edge padding, not the
+            viewport edge) below `lg`. Same fix, same reasoning, applied
+            to FounderSection.tsx's identical video box. */}
         <div className="relative lg:pr-16">
           <span
             aria-hidden="true"
             className="absolute inset-y-0 right-0 hidden w-px bg-charcoal/10 lg:block"
           />
-          <div className="relative mx-auto flex aspect-[16/10] w-[95%] items-center justify-center overflow-hidden rounded-lg border border-charcoal/10 bg-background lg:ml-auto lg:w-[70%]">
+          <div className="relative mx-auto flex aspect-[16/10] w-full items-center justify-center overflow-hidden rounded-lg border border-charcoal/10 bg-background lg:ml-auto lg:w-[70%]">
             {/* Media slot made Sanity-editable, 30 Aug 2026 — same
                 image/video/placeholder branching Hero.tsx already uses.
                 Not autoplaying/looping even in video mode (unlike

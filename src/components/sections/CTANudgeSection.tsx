@@ -1,7 +1,7 @@
 "use client";
 
 import { useTalkToKibo } from "@/components/TalkToKiboProvider";
-import { CTA_NUDGE_SUPPORTING_LINE, CTA_NUDGE_BUTTON_LABEL } from "@/lib/ctaNudge";
+import { CTA_NUDGE_LINE_1, CTA_NUDGE_LINE_2, CTA_NUDGE_BUTTON_LABEL } from "@/lib/ctaNudge";
 
 // Secondary "Talk to KIBO" CTA nudge — KIBO_Brand_and_Copy_Direction.md,
 // "Secondary CTA nudge — build spec, 27 Aug 2026." Sits directly after
@@ -121,8 +121,20 @@ export function CTANudgeSection() {
         <span aria-hidden="true" className="hidden h-px w-12 bg-sage-green/50 sm:block" />
         {/* `text-body`/`text-support` (30 Aug 2026, owner: "no other font
             sizes floating around" — every size must come from the 8
-            named tokens) replacing raw `text-lg`/`text-sm`. */}
-        <p className="max-w-md text-body text-charcoal/80">{CTA_NUDGE_SUPPORTING_LINE}</p>
+            named tokens) replacing raw `text-lg`/`text-sm`.
+
+            Forced 2-line break below `sm`, 31 Aug 2026 (owner: "Have a
+            requirement in mind first line, Talk to KIBO second line" —
+            mobile, per this session's standing rule) — each half is
+            `block` (own line) below `sm`; the literal space text node
+            between the two spans is invisible there (each is already on
+            its own line) but becomes the actual word-gap once both
+            switch to `sm:inline`, reconstituting the original single
+            flowing sentence unchanged at `sm` and up. */}
+        <p className="max-w-md text-body text-charcoal/80">
+          <span className="block sm:inline">{CTA_NUDGE_LINE_1}</span>{" "}
+          <span className="block sm:inline">{CTA_NUDGE_LINE_2}</span>
+        </p>
         <button
           type="button"
           onClick={open}

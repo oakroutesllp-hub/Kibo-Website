@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import Image from "next/image";
 import type { Media } from "@/lib/content";
 import {
@@ -109,16 +110,47 @@ export function TiruppurStorySection({ media }: { media?: Media }) {
   // switches from the mobile block to the desktop overlay panel.
   const panelBody = (
     <>
-      <div className="flex flex-col gap-[1.05rem]">
-        {TIRUPPUR_SUB_BLOCKS.map((block) => (
-          <div key={block.label} className="flex flex-col gap-[0.175rem]">
-            <h3 className="text-h3 font-semibold text-charcoal">{block.label}</h3>
-            <p className="text-body text-charcoal/70 lg:text-support">{block.copy}</p>
-          </div>
+      {/* Gap widened below `lg` + a divider inserted between the two
+          sub-blocks, 31 Aug 2026 (owner, testing live: "between 'A long
+          heritage' and 'Specialised ecosystems' we need a little more
+          gap and we need that horizontal line accent treatment also —
+          the shorter horizontal line treatment we used between 'before
+          building for the market...' and 'what we learned showed...'"
+          — i.e. Listening's own `h-px w-9` paragraph-divider style) —
+          this pairing had only a plain `1.05rem` gap and no divider at
+          all before; fine as a compact side-panel pairing at `lg`+
+          (unchanged there), but read as too tight/undifferentiated once
+          this content became a full-width mobile block (see the
+          mobile/desktop split further down). `gap-[1.75rem]` below `lg`
+          (was `1.05rem` uniformly), `lg:gap-[1.05rem]` restores the
+          original desktop value exactly. */}
+      <div className="flex flex-col gap-[1.75rem] lg:gap-[1.05rem]">
+        {TIRUPPUR_SUB_BLOCKS.map((block, i) => (
+          <Fragment key={block.label}>
+            {i > 0 && (
+              <span aria-hidden="true" className="h-px w-9 bg-charcoal/20 lg:hidden" />
+            )}
+            <div className="flex flex-col gap-[0.175rem]">
+              <h3 className="text-h3 font-semibold text-charcoal">{block.label}</h3>
+              <p className="text-body text-charcoal/70 lg:text-support">{block.copy}</p>
+            </div>
+          </Fragment>
         ))}
       </div>
 
-      <span aria-hidden="true" className="mt-[1.05rem] block h-px w-full bg-charcoal/15" />
+      {/* Matched to Listening's own short accent-dash style below `lg`,
+          31 Aug 2026 (owner: "give the same treatment to the horizontal
+          line [after 'Tiruppur is one of the most vibrant examples']...
+          the shorter horizontal line treatment... don't change the
+          desktop version, that's fine") — was a full-width, lighter
+          `bg-charcoal/15` rule at every breakpoint; now `w-9 bg-charcoal
+          /20` (Listening's exact paragraph-divider values) below `lg`,
+          `lg:w-full lg:bg-charcoal/15` restores the original desktop
+          rule unchanged. */}
+      <span
+        aria-hidden="true"
+        className="mt-[1.05rem] block h-px w-9 bg-charcoal/20 lg:w-full lg:bg-charcoal/15"
+      />
 
       <p className="mt-[1.05rem] text-body text-charcoal lg:text-support">
         <span className="font-semibold">{TIRUPPUR_CLOSING_BOLD}</span>
@@ -154,7 +186,16 @@ export function TiruppurStorySection({ media }: { media?: Media }) {
           once actually seen live; back to the standard seam-half value,
           `pb-4 sm:pb-5` (16px/20px), no longer tied to matching
           Listening's own top gap. */}
-      <div className="mx-auto flex w-full max-w-[1728px] flex-col items-center gap-4 px-6 pt-7 pb-4 text-center sm:px-10 sm:pt-[2.45rem] sm:pb-5">
+      {/* `pb-4` → `pb-7` below `sm`, 31 Aug 2026 (owner, testing live:
+          "the gap between [this dash] and the top edge of the video
+          thumbnail is less as compared to... the base of the horizontal
+          line and top edge of the We started by listening video
+          thumbnail... make that consistent") — matches Listening's own
+          mobile value exactly (`pt-7`/`pb-7` on that section's banner,
+          see WeStartedByListeningSection.tsx). `sm:pb-5` unchanged —
+          not flagged, mobile-only per this whole feedback session's
+          standing rule. */}
+      <div className="mx-auto flex w-full max-w-[1728px] flex-col items-center gap-4 px-6 pt-7 pb-7 text-center sm:px-10 sm:pt-[2.45rem] sm:pb-5">
         {/* Single line (30 Aug 2026, owner: "where apparel runs deep
             needs to be a single line") — was two hard-`block` lines
             (matching the old in-panel layout's narrower column, where

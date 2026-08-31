@@ -116,7 +116,28 @@ export function Hero({ content }: { content: HomepageContent }) {
           className="group mt-9 inline-flex items-center gap-2 rounded-full bg-charcoal px-7 py-3.5 text-support font-semibold tracking-[0.14em] text-background transition-colors hover:bg-green-gray"
         >
           Explore products
-          <span aria-hidden="true" className="transition-transform group-hover:translate-x-[3px]">→</span>
+          {/* Drawn SVG chevron replacing the plain "→" character, 31 Aug
+              2026 (owner, testing live: same complaint and same fix as
+              BackToHomeLink.tsx's own arrow — "either get rid of it or
+              do a chevron there as well" — a bare text arrow renders
+              however the font happens to draw it, not as a designed
+              icon). Same thin-stroke chevron style as that component
+              (and the product gallery's own prev/next arrows), just
+              pointed right instead of left. Hover nudge unchanged
+              ("Variant E," the one arrow-carrying button on the site —
+              see file comment above). */}
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={2.5}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="h-3 w-3 shrink-0 transition-transform group-hover:translate-x-[3px]"
+            aria-hidden="true"
+          >
+            <polyline points="9 6 15 12 9 18" />
+          </svg>
         </Link>
       </div>
 

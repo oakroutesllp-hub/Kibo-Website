@@ -78,6 +78,15 @@ export function ProductCategoryCard({
   onToggleFlip: () => void;
 }) {
   const [imageIndex, setImageIndex] = useState(0);
+  // Slide direction for the gallery's own enter animation, 31 Aug 2026
+  // (owner, testing live mobile: "the next picture comes when I click
+  // the left and right buttons — it should also happen with a slide")
+  // — the image swap was previously an instant `src` change with no
+  // transition at all. `1` = next (slides in from the right), `-1` =
+  // prev (slides in from the left) — matches the physical direction of
+  // the arrow pressed. Tapping the image itself (advance-to-next) also
+  // counts as `1`, same as the explicit next-arrow.
+  const [direction, setDirection] = useState<1 | -1>(1);
 
   // Reset the gallery back to frame 01 whenever this card un-flips, 30
   // Aug 2026 (owner: "once I click specs — if I scroll down then scroll
@@ -129,10 +138,12 @@ export function ProductCategoryCard({
   // from 3 to 6–8.
   const goToPrevImage = (e: MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
+    setDirection(-1);
     setImageIndex((i) => (i - 1 + frameCount) % frameCount);
   };
 
   const goToNextImage = () => {
+    setDirection(1);
     setImageIndex((i) => (i + 1) % frameCount);
   };
 
@@ -204,10 +215,22 @@ export function ProductCategoryCard({
         >
           {currentFrame.image ? (
             <Image
+              // `key={imageIndex}` forces React to mount a fresh `<img>`
+              // per frame instead of just patching `src` on the existing
+              // one — the slide-in animation below runs once per mount,
+              // so without a fresh element each frame change, it
+              // wouldn't replay. The ancestor front-face box (`overflow-
+              // hidden rounded-lg`, above) already clips the slide, no
+              // extra wrapper needed here.
+              key={imageIndex}
               src={currentFrame.image}
               alt={`${category.name} — ${currentFrame.label}`}
               fill
-              className="object-cover"
+              className={`object-cover ${
+                direction === 1
+                  ? "animate-[kibo-slide-in-right_0.3s_ease-out]"
+                  : "animate-[kibo-slide-in-left_0.3s_ease-out]"
+              }`}
             />
           ) : (
             <MediaPlaceholder label={currentFrame.label} className="h-full w-full" />
