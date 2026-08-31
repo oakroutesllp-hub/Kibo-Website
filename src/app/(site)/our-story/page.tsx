@@ -35,7 +35,11 @@ export default async function OurStoryPage() {
   const ourStory = await getOurStory();
   return (
     <>
-      <WeStartedByListeningSection media={ourStory.listeningMedia} />
+      {/* `showBackToHome`, 31 Aug 2026 — see that component's own prop
+          comment. This is the one caller that wants it (a real, separate
+          destination); `(site)/page.tsx`'s own Home usage doesn't pass
+          it. */}
+      <WeStartedByListeningSection media={ourStory.listeningMedia} showBackToHome />
       <TiruppurStorySection media={ourStory.tiruppurMedia} />
       <FounderSection media={ourStory.founderMedia} />
     </>

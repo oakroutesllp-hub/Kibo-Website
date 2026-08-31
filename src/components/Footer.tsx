@@ -142,7 +142,16 @@ export function Footer({ settings }: { settings: SiteSettingsContent }) {
               narrow edge instead of clipping, same graceful behavior
               every other multi-word label on this site already uses
               when space is tight. */}
-          <div className="flex flex-col text-micro text-charcoal/60">
+          {/* `gap-2` added, 31 Aug 2026 (owner, testing live mobile: "can
+              we increase the spacing between these lines to match the
+              spacing between Home Products Catalog Our Story on the
+              footer") — this container had no gap at all between its 3
+              lines (tight, default flex-col stacking), visibly denser
+              than the Navigate column's own link list right next to it,
+              which already uses `gap-2` (8px, see that `<nav>` below).
+              Matched exactly, same value, same reasoning: consistent
+              line rhythm between the two columns' stacked text. */}
+          <div className="flex flex-col gap-2 text-micro text-charcoal/60">
             {settings.footerBrandLines.map((line) => (
               <p key={line}>{line}</p>
             ))}

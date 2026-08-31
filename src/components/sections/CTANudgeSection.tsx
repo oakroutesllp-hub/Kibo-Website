@@ -73,7 +73,23 @@ export function CTANudgeSection() {
   const { open } = useTalkToKibo();
 
   return (
-    <section className="w-full bg-sage-green/10">
+    // Mobile-only patch treatment, 31 Aug 2026 (owner, testing live on
+    // /products' Long Run → this section: "it almost reads like a third
+    // pointer under Built for the Long Run... can we remove the last
+    // horizontal line... but use that vertical line to create a patch
+    // that is maybe slightly less transparent than the sage green grey,
+    // so it looks like a separate patch" — explicitly mobile-only: "I
+    // don't think it will look good on desktop") — this section shares
+    // Long Run's exact `bg-sage-green/10` tint AND the exact same dash
+    // device Long Run uses between its own two paragraphs (see file
+    // comment below), so on a continuous mobile scroll the two read as
+    // one uninterrupted list rather than two distinct sections. Below
+    // `sm`: a visibly darker tint (`bg-sage-green/20`, double Long Run's
+    // /10) makes this its own shaded patch instead of a same-toned
+    // continuation. `sm:bg-sage-green/10` restores the original shared
+    // tint at tablet/desktop — unchanged there, per the owner's own
+    // caveat above.
+    <section className="w-full bg-sage-green/20 sm:bg-sage-green/10">
       {/* Bottom reverted, same day, after live review (owner: "give me
           more gap between talk to keyboard button and our story...
           keep it the same as the six thumbnails bottom line and you
@@ -92,8 +108,17 @@ export function CTANudgeSection() {
             here as the "this is its own statement" cue so the seam can
             rely on a real visual marker instead of pure whitespace once
             Long Run's own bottom padding was trimmed (see that file's
-            own comment). */}
-        <span aria-hidden="true" className="h-px w-12 bg-sage-green/50" />
+            own comment).
+
+            **Hidden on mobile, 31 Aug 2026** — this exact dash style is
+            also what LongRunSection.tsx uses between ITS OWN two
+            paragraphs, right above this one on the page; on mobile the
+            new shaded-patch background (see this section's own comment
+            above) is the "this is separate" cue instead, so keeping
+            this dash too read as an actual 4th list item continuing
+            Long Run's own two. `sm:block` keeps it exactly as it was at
+            tablet/desktop, where the owner did not ask for a change. */}
+        <span aria-hidden="true" className="hidden h-px w-12 bg-sage-green/50 sm:block" />
         {/* `text-body`/`text-support` (30 Aug 2026, owner: "no other font
             sizes floating around" — every size must come from the 8
             named tokens) replacing raw `text-lg`/`text-sm`. */}

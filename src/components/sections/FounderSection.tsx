@@ -176,7 +176,22 @@ export function FounderSection({ media }: { media: Media }) {
           lg:border-r` wrapper + `lg:ml-auto` box), their two video
           boxes' left edges land at the exact same x-position by
           construction — confirmed live. */}
-      <div className="mx-auto grid w-full max-w-[1728px] grid-cols-1 gap-12 px-6 pt-[5.4rem] pb-[5.4rem] sm:px-10 sm:pt-[6.75rem] sm:pb-[6.75rem] lg:grid-cols-2 lg:gap-0">
+      {/* Bottom (to Footer) reduced on mobile only, 31 Aug 2026 (owner,
+          testing live: "before the footer, 'that became KIBO' and the
+          horizontal line after that — the gap is too large") — `pb-
+          [5.4rem]` (86.4px) was deliberately matched to this section's
+          OWN top padding, which is calibrated as the entire Tiruppur→
+          Founder seam (see this div's own comment above); that symmetry
+          was true and correct for the Tiruppur↔Founder gap it was
+          copying, but "the gap before Footer" is a different seam that
+          just happened to reuse the same value, and reads as too
+          generous there specifically once seen on a real phone.
+          `pb-10` (40px, the site's general standalone seam size) below
+          `sm`; `sm:pb-[6.75rem]` (unchanged) keeps this section's
+          previously-tuned desktop/tablet spacing exactly as it was —
+          this is a mobile-only reduction, not a re-tuning of the whole
+          section. */}
+      <div className="mx-auto grid w-full max-w-[1728px] grid-cols-1 gap-12 px-6 pt-[5.4rem] pb-10 sm:px-10 sm:pt-[6.75rem] sm:pb-[6.75rem] lg:grid-cols-2 lg:gap-0">
         {/* Left column — founder photo placeholder, click-to-play.
             `lg:pr-16` — mirrors Listening's own left (video) column
             exactly. `ml-auto` on the box hugs the divider-side boundary,

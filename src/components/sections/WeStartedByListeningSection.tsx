@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { MediaPlaceholder } from "@/components/MediaPlaceholder";
+import { BackToHomeLink } from "@/components/BackToHomeLink";
 import type { Media } from "@/lib/content";
 import {
   OUR_STORY_PLAIN,
@@ -55,7 +56,21 @@ import {
 // and (site)/our-story/page.tsx) fetch it once via `getOurStory()` and
 // pass it down, same top-level-fetch-then-prop-drill pattern Hero already
 // uses for its own media.
-export function WeStartedByListeningSection({ media }: { media: Media }) {
+// `showBackToHome` (31 Aug 2026) — same pattern as
+// `ProductsGridSection.tsx`'s own prop of the same name/purpose: this
+// component renders both on Home (as the "Our Story" preview, no back
+// link needed — already home) and standalone on `/our-story` (a real,
+// separate destination, per the owner's "add the same back-to-Home link
+// everywhere" instruction). Only `(site)/our-story/page.tsx` passes
+// `true`; `(site)/page.tsx`'s own Home usage leaves it at the default
+// `false`.
+export function WeStartedByListeningSection({
+  media,
+  showBackToHome = false,
+}: {
+  media: Media;
+  showBackToHome?: boolean;
+}) {
   return (
     <section id="listening" className="w-full scroll-mt-24 bg-background">
       {/* "OUR STORY" pulled out of the left column and made its own
@@ -168,6 +183,10 @@ export function WeStartedByListeningSection({ media }: { media: Media }) {
           same time — more visual weight/presence than a faint grey
           hairline had, doing more actual "anchoring" work. */}
       <div className="mx-auto flex w-full max-w-[1728px] flex-col items-center gap-3 px-6 pt-7 pb-7 text-center sm:px-10 sm:pt-[2.45rem] sm:pb-[2.45rem]">
+        {/* `showBackToHome` (31 Aug 2026) — see this component's own
+            prop comment above. Sits above the top dash, same position
+            Products'/Catalog's own back link takes above their titles. */}
+        {showBackToHome && <BackToHomeLink />}
         <span aria-hidden="true" className="h-px w-12 bg-sage-green/60" />
         <h2 className="text-h2 font-bold leading-[1.1] tracking-tight text-charcoal">
           {OUR_STORY_PLAIN}

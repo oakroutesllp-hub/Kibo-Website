@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { CatalogCtaSection } from "@/components/sections/CatalogCtaSection";
+import { BackToHomeLink } from "@/components/BackToHomeLink";
 
 export const metadata: Metadata = {
   title: "Catalog — KIBO",
@@ -21,10 +22,27 @@ export const metadata: Metadata = {
 // thumbnail, and the two CTAs (`CatalogCtaSection`) — the actual
 // catalog range/specs live in the PDF itself once that exists, not
 // duplicated on this page too.
+// Heading restyled to match Products'/Our Story's own page-title
+// treatment exactly, 31 Aug 2026 (owner, testing live, navigating
+// between all three via the hamburger menu: "Products and Our Story
+// font are the same, but Catalog font... is much larger... Products and
+// Our Story also have horizontal line treatment, Catalog does not...
+// needs to be consistent") — was `text-h1 font-semibold` (40px) with no
+// dash accent, a genuine one-off next to `ProductsGridSection.tsx`'s
+// `text-h2 font-bold` (30px) + single dash below. Now identical: same
+// size, weight, tracking, and dash.
+// `BackToHomeLink` added, 31 Aug 2026, same "add it everywhere" pass as
+// the heading restyle above — see that component's own file for the two
+// rounds of feedback (chevron icon, mobile text size) already folded
+// into it since it first existed on `/products`.
 export default function CatalogPage() {
   return (
     <div className="mx-auto flex w-full max-w-2xl flex-1 flex-col items-center gap-4 px-6 pt-10 text-center sm:px-10 sm:pt-14">
-      <h1 className="text-h1 font-semibold text-charcoal">Catalog</h1>
+      <div className="flex flex-col items-center gap-5">
+        <BackToHomeLink />
+        <h1 className="text-h2 font-bold leading-[1.1] tracking-tight text-charcoal">Catalog</h1>
+        <span aria-hidden="true" className="h-px w-12 bg-charcoal/20" />
+      </div>
       <p className="text-body text-charcoal/70">
         Our full range and specs, in one downloadable catalog.
       </p>

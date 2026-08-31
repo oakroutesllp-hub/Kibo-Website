@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Link from "next/link";
 import { ProductCategoryCard } from "@/components/ProductCategoryCard";
+import { BackToHomeLink } from "@/components/BackToHomeLink";
 import { PRODUCT_CATEGORIES } from "@/lib/productCategories";
 import { useTalkToKibo } from "@/components/TalkToKiboProvider";
 
@@ -194,16 +194,16 @@ export function ProductsGridSection({
             other, which nobody actually does — worth giving up for a
             link that's now easy to actually see and tap: in normal flow,
             centered with the heading below it (same `items-center`
-            column), `text-support` (13px, up from 11px). Still the same
-            arrow + "Home" wording, same hover treatment. */}
-        {showBackToHome && (
-          <Link
-            href="/"
-            className="inline-flex items-center gap-1.5 text-support font-semibold uppercase tracking-[0.14em] text-charcoal/50 transition-colors hover:text-charcoal"
-          >
-            <span aria-hidden="true">←</span> Home
-          </Link>
-        )}
+            column).
+
+            **Extracted into `BackToHomeLink.tsx`, 31 Aug 2026** — Catalog
+            and Our Story now show this same link too (owner: "add the
+            same link everywhere... consistent"), so the actual element
+            lives in one shared file now, not copy-pasted three times —
+            see that file's own comment for the chevron-icon and mobile-
+            text-size rounds of feedback since this link was first built
+            here. */}
+        {showBackToHome && <BackToHomeLink />}
         <Heading className="text-center text-h2 font-bold leading-[1.1] tracking-tight text-charcoal">
           {heading}
         </Heading>

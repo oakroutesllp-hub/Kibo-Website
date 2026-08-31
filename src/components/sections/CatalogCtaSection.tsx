@@ -70,10 +70,20 @@ export function CatalogCtaSection() {
         >
           Download Catalog
         </button>
+        {/* Matched to "Download Catalog"'s own solid black/white styling,
+            31 Aug 2026 (owner, testing live: "Download Catalog as a
+            black button and Talk to KIBO as a white button isn't making
+            much sense" — the outline treatment was meant to read as
+            "secondary option," but in practice just read as
+            inconsistent) — was `border border-charcoal/15 ... text-
+            charcoal`, an outline pill. Now identical to every other
+            "Talk to KIBO" button on the site (Nav, mobile sticky bar,
+            footer, this same page's own placeholder card): solid
+            charcoal background, white text, sage-green-grey hover. */}
         <button
           type="button"
           onClick={openTalkToKibo}
-          className="rounded-full border border-charcoal/15 px-4 py-2 text-support font-semibold text-charcoal transition-colors hover:bg-charcoal hover:text-background"
+          className="rounded-full bg-charcoal px-4 py-2 text-support font-semibold text-background transition-colors hover:bg-green-gray"
         >
           Talk to KIBO
         </button>
