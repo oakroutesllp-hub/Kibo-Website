@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type KeyboardEvent, type MouseEvent } from "react";
+import { useEffect, useRef, useState, type KeyboardEvent, type MouseEvent, type TouchEvent } from "react";
 import Image from "next/image";
 import { MediaPlaceholder } from "@/components/MediaPlaceholder";
 import type { ProductCategoryContent } from "@/lib/content";
@@ -77,16 +77,32 @@ export function ProductCategoryCard({
   animateFlip: boolean;
   onToggleFlip: () => void;
 }) {
-  const [imageIndex, setImageIndex] = useState(0);
-  // Slide direction for the gallery's own enter animation, 31 Aug 2026
-  // (owner, testing live mobile: "the next picture comes when I click
-  // the left and right buttons — it should also happen with a slide")
-  // — the image swap was previously an instant `src` change with no
-  // transition at all. `1` = next (slides in from the right), `-1` =
-  // prev (slides in from the left) — matches the physical direction of
-  // the arrow pressed. Tapping the image itself (advance-to-next) also
-  // counts as `1`, same as the explicit next-arrow.
-  const [direction, setDirection] = useState<1 | -1>(1);
+  // `imageIndex` renamed `displayIndex`, 31 Aug 2026 — see `incoming`
+  // below for why a single index is no longer enough to represent the
+  // gallery's state during a transition.
+  const [displayIndex, setDisplayIndex] = useState(0);
+  // Two-layer transition state, 31 Aug 2026 (owner, testing live
+  // mobile: "the next picture comes when I click the left and right
+  // buttons — it should also happen with a slide," then, after the
+  // first single-image-swap version shipped: "images toggle... this
+  // should happen with a slide too — that would be the natural
+  // tendency") — the first version gave the new `<Image>` a fresh
+  // `key` and animated it in alone, which replaced the old photo
+  // immediately at the DOM level; on a slower mobile connection the new
+  // image's bytes hadn't arrived yet when the animation played, so the
+  // frame was blank/white for the ~0.3s the slide was supposed to be
+  // visible, and by the time the photo actually loaded the animation
+  // had already finished — reading as an instant toggle, not a slide,
+  // exactly the report. Fixed by never removing the settled photo from
+  // the DOM during a transition: `displayIndex` is the STATIC base
+  // layer (always rendered, never animated, never blank), `incoming` is
+  // an OVERLAY layer that slides in on top of it and only takes over as
+  // the base once its slide-in animation actually finishes
+  // (`onAnimationEnd` → `settleIncoming` below) — so the old photo stays
+  // visible underneath for the entire transition regardless of how long
+  // the new one takes to load, and the swap only becomes permanent once
+  // the animation has genuinely played all the way through.
+  const [incoming, setIncoming] = useState<{ index: number; direction: 1 | -1 } | null>(null);
 
   // Reset the gallery back to frame 01 whenever this card un-flips, 30
   // Aug 2026 (owner: "once I click specs — if I scroll down then scroll
@@ -108,11 +124,15 @@ export function ProductCategoryCard({
   const [prevFlipped, setPrevFlipped] = useState(flipped);
   if (prevFlipped !== flipped) {
     setPrevFlipped(flipped);
-    if (!flipped) setImageIndex(0);
+    if (!flipped) {
+      setDisplayIndex(0);
+      setIncoming(null);
+    }
   }
 
   const frameCount = category.gallery.length;
-  const currentFrame = category.gallery[imageIndex];
+  const currentFrame = category.gallery[displayIndex];
+  const incomingFrame = incoming ? category.gallery[incoming.index] : null;
   // 29 Aug 2026 — every category is currently down to a single real
   // photo (see productCategories.ts's own comment), so the arrow/dot
   // gallery controls have nothing to cycle to. Rather than leave them
@@ -136,15 +156,110 @@ export function ProductCategoryCard({
   // in the browser at N=8 (every frame reachable, no skip) after the
   // owner flagged a possible off-by-one to check when the count went
   // from 3 to 6–8.
+  //
+  // `advance` starts a transition (sets `incoming`) rather than jumping
+  // straight to the new index — see the `incoming` state's own comment
+  // above for why. A tap/click/swipe mid-transition just retargets
+  // `incoming` to the next index in that direction from wherever it
+  // currently points, so rapid repeated taps still feel responsive
+  // (each one restarts the slide-in animation from the same edge)
+  // rather than queuing up or getting ignored.
+  const advance = (direction: 1 | -1) => {
+    const from = incoming ? incoming.index : displayIndex;
+    const nextIndex = (from + direction + frameCount) % frameCount;
+    setIncoming({ index: nextIndex, direction });
+  };
+
+  // Fires when the incoming layer's slide-in animation actually
+  // finishes — this is what makes the transition permanent (folds
+  // `incoming` into `displayIndex`), not a timer or the click handler
+  // itself. See the `incoming` state's own comment for why that
+  // distinction is the whole point of this two-layer approach.
+  const settleIncoming = () => {
+    setIncoming((current) => {
+      if (!current) return current;
+      setDisplayIndex(current.index);
+      return null;
+    });
+  };
+
+  // Fallback settle timer, 31 Aug 2026 — belt-and-suspenders alongside
+  // `onAnimationEnd` above, not a replacement for it. `animationend` is
+  // a standard, reliable browser event and is expected to fire on a
+  // real phone; it's called out separately here because this exact
+  // testing environment has one prior, confirmed case of an unrelated
+  // browser API (`IntersectionObserver`, see ProductsGridSection.tsx's
+  // own comment) simply never firing in its sandbox even though the
+  // same code worked in reasoning through the spec — so rather than
+  // trust `animationend` alone and risk a transition that visually
+  // finishes (the incoming layer has fully covered the old one either
+  // way) but never actually folds into `displayIndex` in React state,
+  // this timer force-settles shortly after the animation's own 300ms
+  // duration if the event hasn't already done it. Cleared and re-armed
+  // every time `incoming` changes, so a rapid second tap mid-transition
+  // doesn't fire a stale timer against the wrong target index.
+  useEffect(() => {
+    if (!incoming) return;
+    const timer = setTimeout(settleIncoming, 350);
+    return () => clearTimeout(timer);
+  }, [incoming]);
+
   const goToPrevImage = (e: MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
-    setDirection(-1);
-    setImageIndex((i) => (i - 1 + frameCount) % frameCount);
+    advance(-1);
   };
 
   const goToNextImage = () => {
-    setDirection(1);
-    setImageIndex((i) => (i + 1) % frameCount);
+    advance(1);
+  };
+
+  // Swipe gesture, 31 Aug 2026 (owner: "to go from one pic to another I
+  // should be able to swipe right/left in addition to clicking on the
+  // arrows") — deliberately touchend-only, no `touchmove` tracking or
+  // `preventDefault()` mid-gesture. This codebase already has one
+  // documented case of a hand-rolled touch interceptor in this exact
+  // area causing real, unresolved problems on an actual phone
+  // (`OverscrollBackGuard`, removed 27 Aug 2026 — see
+  // `(site)/layout.tsx`'s own comment) with no way to test real
+  // touch-event sequences from this environment to keep iterating
+  // blind. Comparing start vs. end position on `touchend` alone avoids
+  // that whole class of risk — no passive-listener/`preventDefault`
+  // interaction to get wrong — at the cost of not blocking the page's
+  // own vertical scroll during the gesture. `justSwiped` suppresses the
+  // image area's own tap-to-advance handler from ALSO firing on the
+  // synthetic click that follows a touch interaction, so a swipe never
+  // double-advances.
+  const touchStartRef = useRef<{ x: number; y: number } | null>(null);
+  const justSwipedRef = useRef(false);
+  const SWIPE_THRESHOLD_PX = 50;
+
+  const handleTouchStart = (e: TouchEvent<HTMLDivElement>) => {
+    const touch = e.touches[0];
+    touchStartRef.current = { x: touch.clientX, y: touch.clientY };
+  };
+
+  const handleTouchEnd = (e: TouchEvent<HTMLDivElement>) => {
+    const start = touchStartRef.current;
+    touchStartRef.current = null;
+    if (!start || !hasMultipleFrames) return;
+    const touch = e.changedTouches[0];
+    const dx = touch.clientX - start.x;
+    const dy = touch.clientY - start.y;
+    // Require the horizontal movement to clearly dominate (1.5x the
+    // vertical) so an ordinary vertical scroll that drifts slightly
+    // sideways doesn't get mistaken for a swipe.
+    if (Math.abs(dx) >= SWIPE_THRESHOLD_PX && Math.abs(dx) > Math.abs(dy) * 1.5) {
+      justSwipedRef.current = true;
+      advance(dx < 0 ? 1 : -1);
+    }
+  };
+
+  const handleImageAreaClick = () => {
+    if (justSwipedRef.current) {
+      justSwipedRef.current = false;
+      return;
+    }
+    goToNextImage();
   };
 
   const fadeClass = animateFlip ? "transition-opacity duration-300" : "";
@@ -211,29 +326,53 @@ export function ProductCategoryCard({
             (≈0.729:1). */}
         <div
           className={hasMultipleFrames ? "relative aspect-[35/48] cursor-pointer" : "relative aspect-[35/48]"}
-          onClick={hasMultipleFrames ? goToNextImage : undefined}
+          onClick={hasMultipleFrames ? handleImageAreaClick : undefined}
+          onTouchStart={hasMultipleFrames ? handleTouchStart : undefined}
+          onTouchEnd={hasMultipleFrames ? handleTouchEnd : undefined}
         >
+          {/* Base layer — the settled photo. Always present, never
+              animated, never removed from the DOM during a transition;
+              see the `incoming` state's own comment for why that's the
+              whole fix. */}
           {currentFrame.image ? (
             <Image
-              // `key={imageIndex}` forces React to mount a fresh `<img>`
-              // per frame instead of just patching `src` on the existing
-              // one — the slide-in animation below runs once per mount,
-              // so without a fresh element each frame change, it
-              // wouldn't replay. The ancestor front-face box (`overflow-
-              // hidden rounded-lg`, above) already clips the slide, no
-              // extra wrapper needed here.
-              key={imageIndex}
               src={currentFrame.image.url}
               alt={`${category.name} — ${currentFrame.label}`}
               fill
-              className={`object-cover ${
-                direction === 1
-                  ? "animate-[kibo-slide-in-right_0.3s_ease-out]"
-                  : "animate-[kibo-slide-in-left_0.3s_ease-out]"
-              }`}
+              className="object-cover"
             />
           ) : (
             <MediaPlaceholder label={currentFrame.label} className="h-full w-full" />
+          )}
+
+          {/* Incoming layer — only exists while a transition is in
+              flight, slides in on top of the base layer above and
+              becomes the new base once its animation actually finishes
+              (`onAnimationEnd` → `settleIncoming`). `key={incoming.index}`
+              forces a fresh element per transition so the animation
+              replays correctly even if the same frame is re-targeted
+              mid-gesture. */}
+          {incomingFrame && (
+            <div
+              key={incoming!.index}
+              className={`absolute inset-0 ${
+                incoming!.direction === 1
+                  ? "animate-[kibo-slide-in-right_0.3s_ease-out]"
+                  : "animate-[kibo-slide-in-left_0.3s_ease-out]"
+              }`}
+              onAnimationEnd={settleIncoming}
+            >
+              {incomingFrame.image ? (
+                <Image
+                  src={incomingFrame.image.url}
+                  alt={`${category.name} — ${incomingFrame.label}`}
+                  fill
+                  className="object-cover"
+                />
+              ) : (
+                <MediaPlaceholder label={incomingFrame.label} className="h-full w-full" />
+              )}
+            </div>
           )}
 
           {hasMultipleFrames && (
@@ -262,13 +401,19 @@ export function ProductCategoryCard({
                 <span aria-hidden="true">›</span>
               </button>
 
+              {/* Active dot tracks `incoming.index` during a transition
+                  (not the still-settled `displayIndex`) — 31 Aug 2026,
+                  same pass as the two-layer rewrite above — so the dots
+                  move the instant a swipe/tap/arrow fires, in step with
+                  the slide that's visibly already underway, rather than
+                  waiting for the animation to finish. */}
               <div className="absolute bottom-2 left-1/2 flex -translate-x-1/2 gap-1.5">
                 {category.gallery.map((frame, i) => (
                   <span
                     key={frame.label}
                     aria-hidden="true"
                     className={`h-1.5 w-1.5 rounded-full ${
-                      i === imageIndex ? "bg-charcoal/70" : "bg-charcoal/25"
+                      i === (incoming ? incoming.index : displayIndex) ? "bg-charcoal/70" : "bg-charcoal/25"
                     }`}
                   />
                 ))}
