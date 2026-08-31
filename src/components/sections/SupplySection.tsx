@@ -109,18 +109,38 @@ export function SupplySection() {
             within) the row's own height rather than collapsing to zero
             — a divider with no intrinsic height needs a stretched
             flex parent to have any height to inset from. */}
-        <div className="flex w-full max-w-4xl items-stretch justify-center">
+        {/* Mobile stacking fix, 31 Aug 2026 — found while checking the
+            live site on a real mobile width, not requested by name but
+            a genuine bug: this row had no responsive behavior at all.
+            Three `w-[15rem]` (240px) columns plus their icon/padding/
+            dividers need 700px+ side by side, but a phone viewport is
+            ~375px — the row overflowed horizontally, which dragged the
+            *entire page's* layout width wide along with it (confirmed:
+            `document.documentElement.scrollWidth` was 621px against a
+            375px device), which in turn stretched the `fixed inset-x-0`
+            header wide too, shoving the mobile menu button off the
+            right edge of the visible screen — the menu button wasn't
+            broken itself, it was just no longer inside the visible
+            375px strip. `flex-col` (stacked, one under another) below
+            `sm`, `sm:flex-row` (this section's existing side-by-side
+            layout) at `sm` and up — the fix is confined to breakpoint
+            classes, no change to anything at `sm` and above. */}
+        <div className="flex w-full max-w-4xl flex-col items-center sm:flex-row sm:items-stretch sm:justify-center">
           {SUPPLY_ROWS.map((row, i) => (
-            <div key={row.label} className="flex items-stretch">
-              {/* Divider inset increased `my-2` (8px each side) → `my-6`
-                  (24px each side) (30 Aug 2026, owner: "reduce the
-                  height of the vertical dividers by 20% ish - take a
-                  call") — divider height is `row height − 2×inset`, so
-                  a bigger inset is what shortens it; +16px each side
-                  cuts the divider from 157px to 125px on this row's
-                  actual measured height, a ~20.4% reduction. */}
+            <div key={row.label} className="flex flex-col items-center sm:flex-row sm:items-stretch">
+              {/* Divider follows the same stack/row flip: a horizontal
+                  rule between stacked items on mobile, the existing
+                  inset vertical rule (`my-6 w-px`, see the comment this
+                  replaced) once the row goes side-by-side at `sm`. Same
+                  24px inset value in both orientations — `my-6` on
+                  mobile is the vertical gap around the horizontal line,
+                  `sm:my-6` restores it as the original top/bottom inset
+                  once the line turns vertical. */}
               {i > 0 && (
-                <span aria-hidden="true" className="my-6 w-px shrink-0 bg-charcoal/10" />
+                <span
+                  aria-hidden="true"
+                  className="my-6 h-px w-40 shrink-0 bg-charcoal/10 sm:my-6 sm:h-auto sm:w-px sm:self-stretch"
+                />
               )}
               <div className="flex flex-col items-center gap-3 px-6 text-center sm:px-8">
                 <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-sage-green/40">
