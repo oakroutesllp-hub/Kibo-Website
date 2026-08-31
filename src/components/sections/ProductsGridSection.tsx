@@ -335,9 +335,21 @@ export function ProductsGridSection({
       {showGetInTouch && (
         <div className="flex flex-col items-center gap-5">
           {/* Trailing full stop removed (31 Aug 2026, owner, on a
-              screenshot of this exact line). */}
+              screenshot of this exact line).
+
+              Forced 2-line break below `sm`, same day, later pass
+              (owner: "under Products, 'Looking for something else' is
+              one line, 'we build to your spec' is next line" — mobile
+              only, same pattern as CTANudgeSection.tsx's identical
+              2-line split) — each half is `block` (own line) below
+              `sm`; the literal space text node between the two spans
+              is invisible there (each already on its own line) but
+              becomes the real word-gap once both switch to `sm:inline`,
+              reconstituting the original single-line sentence
+              unchanged at `sm` and up. */}
           <p className="text-center text-body text-charcoal/70">
-            Looking for something else? We build to your spec
+            <span className="block sm:inline">Looking for something else?</span>{" "}
+            <span className="block sm:inline">We build to your spec</span>
           </p>
           <button
             type="button"

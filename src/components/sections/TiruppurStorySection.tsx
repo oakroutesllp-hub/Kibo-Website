@@ -94,6 +94,17 @@ import {
 // only ever held an ambient background photo, not a click-to-play
 // video.
 export function TiruppurStorySection({ media }: { media?: Media }) {
+  // "KIBO" split out of TIRUPPUR_CLOSING_BOLD, 31 Aug 2026 (owner,
+  // testing live mobile, after a brief back-and-forth: "I think we just
+  // say KIBO bold and then 'works within ecosystems like these' can be
+  // regular font on mobile") — same `.replace` pattern
+  // FounderSection.tsx already uses for its own "KIBO" split, rather
+  // than editing tiruppurSection.ts's copy itself (that constant is
+  // still the correct, unchanged BOLD/REST split for desktop — see the
+  // render below, `lg:font-semibold` restores the full original bold
+  // phrase at `lg` and up, this is mobile-only).
+  const closingBoldRest = TIRUPPUR_CLOSING_BOLD.replace("KIBO", "");
+
   // Sub-blocks + closing statement, pulled into a variable 31 Aug 2026
   // so the same content can render twice below — once inside the
   // desktop overlay panel, once as its own plain block under the photo
@@ -124,7 +135,19 @@ export function TiruppurStorySection({ media }: { media?: Media }) {
           mobile/desktop split further down). `gap-[1.75rem]` below `lg`
           (was `1.05rem` uniformly), `lg:gap-[1.05rem]` restores the
           original desktop value exactly. */}
-      <div className="flex flex-col gap-[1.75rem] lg:gap-[1.05rem]">
+      {/* `items-center` added, 31 Aug 2026 (owner, testing live: "the
+          horizontal accent line under 'A long heritage' is left aligned
+          instead of center") — same bug, same fix, as FounderSection's
+          own paragraph divider earlier this pass: this flex column had
+          no alignment override of its own, so the fixed-width `w-9`
+          dash below defaulted to flush-left instead of centered.
+          `lg:items-stretch` makes the previously-implicit desktop
+          default explicit, so the sub-block wrapper's own width (and
+          therefore its `text-right` alignment) is provably unchanged at
+          `lg` and up — the dash itself doesn't even render there
+          (`lg:hidden`, see its own comment), so only the mobile
+          rendering actually changes here. */}
+      <div className="flex flex-col items-center gap-[1.75rem] lg:items-stretch lg:gap-[1.05rem]">
         {TIRUPPUR_SUB_BLOCKS.map((block, i) => (
           <Fragment key={block.label}>
             {i > 0 && (
@@ -153,7 +176,8 @@ export function TiruppurStorySection({ media }: { media?: Media }) {
       />
 
       <p className="mt-[1.05rem] text-body text-charcoal lg:text-support">
-        <span className="font-semibold">{TIRUPPUR_CLOSING_BOLD}</span>
+        <span className="font-semibold">KIBO</span>
+        <span className="font-normal lg:font-semibold">{closingBoldRest}</span>
         {TIRUPPUR_CLOSING_REST}
       </p>
     </>
