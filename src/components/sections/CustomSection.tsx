@@ -247,8 +247,17 @@ export function CustomSection() {
             the white space vertically... two rows of images need to come
             closer" — a live screenshot showed this exact gap as the bulk
             of the dead space between the process captions and the
-            "BUILT AROUND YOUR REQUIREMENTS" divider. */}
-        <div className="mx-auto flex w-full max-w-[986px] flex-col gap-6 sm:gap-8">
+            "BUILT AROUND YOUR REQUIREMENTS" divider.
+
+            **Mobile bumped back up slightly, 31 Aug 2026** (owner,
+            testing live: "there should be a little more space between
+            [the last caption] and 'built around your requirements'...
+            just on the mobile") — `gap-6` (24px) → `gap-8` (32px) below
+            `sm`, simply matching what `sm:gap-8` already was — mobile
+            was the one breakpoint with LESS breathing room here than
+            tablet/desktop, not a deliberate choice, just an oversight
+            from the cut above. `sm:gap-8` itself is unchanged. */}
+        <div className="mx-auto flex w-full max-w-[986px] flex-col gap-8 sm:gap-8">
           {/* Tracker-to-photo-grid gap cut the same way, same request
               ("reduce whitespace vertically here as well" — a follow-up
               screenshot showed this exact gap, between the tracker labels
@@ -315,8 +324,23 @@ export function CustomSection() {
                       of it") — `text-support` below `sm`, back to the
                       original `text-micro` at `sm` and up, so desktop
                       (where this was actually a deliberate, reviewed
-                      choice) is unaffected. */}
-                  <p className="line-clamp-3 text-center text-support text-charcoal/70 sm:text-micro">
+                      choice) is unaffected.
+
+                      **`line-clamp-3` moved to `sm:` only, same day**
+                      (owner, testing live: "we pack and ship your
+                      finished garments, ready to... that text is
+                      getting cut") — the 3-line clamp was tuned against
+                      the original 11px mobile size; at the new 13px
+                      mobile size the longest captions (this one
+                      specifically) wrap to 4 lines at this column
+                      width, so the clamp was silently truncating them
+                      with an ellipsis. Removed below `sm` (captions just
+                      wrap to however many lines they need — the grid
+                      already handles uneven card heights fine, nothing
+                      depends on a hard 3-line cap here); `sm:line-clamp-3`
+                      keeps the original desktop/tablet behavior, where
+                      the smaller `text-micro` size still fits inside it. */}
+                  <p className="text-center text-support text-charcoal/70 sm:line-clamp-3 sm:text-micro">
                     {step.caption}
                   </p>
                 </div>
