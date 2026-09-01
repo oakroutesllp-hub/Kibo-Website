@@ -169,7 +169,12 @@ export const CUSTOM_PROCESS_STEPS: CustomProcessStep[] = [
   {
     number: "06",
     trackerLabel: "Finished garment",
-    caption: "We pack and ship your finished garments, ready to go",
+    // Shortened (1 Sep 2026, owner, density pass): "We pack and ship
+    // your finished garments, ready to go" → "Packed, shipped and ready
+    // to go" — drops the subject/verb framing every other caption in
+    // this list still carries (they're a deliberate stylistic outlier
+    // now, not an inconsistency — owner reviewed this one specifically).
+    caption: "Packed, shipped and ready to go",
     // Upscaled 27 Aug 2026 — see file header comment (step 5): no
     // higher-res source of this exact photo exists, so this is a
     // Lanczos3 resample + sharpen of the same original crop rather than
@@ -203,28 +208,44 @@ export const CUSTOM_ATTRIBUTES: CustomAttribute[] = [
     // from, from natural and blended to performance options", the
     // repeated "from...from" read awkwardly once seen rendered.
     // "from" dropped too, same day, second look at the same screenshot.
-    blurb: "A variety of fabric types, natural and blended to performance options",
+    // Leading "A variety of fabric types," dropped entirely (1 Sep 2026,
+    // owner, density pass across all six blurbs) — same instruction
+    // applied to every attribute below: trim the lead-in clause, keep
+    // just the actual list of options.
+    // Comma added after "blended" (1 Sep 2026, owner, on a live read of
+    // this exact blurb) — was "Natural and blended to performance
+    // options", missing the pause between the two clauses that every
+    // other blurb's own comma provides.
+    blurb: "Natural and blended, to performance options",
     image: "/custom-section/swatch-fabric-2.jpg",
     imageAlt: "Close-up of a ribbed grey knit fabric texture",
   },
   {
     icon: "colour",
     label: "Colour",
-    blurb: "An array of colour options, from neutrals to bold shades",
+    // Leading "An array of colour options," dropped (1 Sep 2026, same
+    // density pass as Fabric above).
+    blurb: "From neutrals to bold shades",
     image: "/custom-section/swatch-colour.jpg",
     imageAlt: "A stack of folded fabric in an array of colours",
   },
   {
     icon: "fit",
     label: "Fit",
-    blurb: "Different fits for different styles, from slim and regular to relaxed",
+    // Leading "Different fits for" dropped (1 Sep 2026, same density pass
+    // as Fabric/Colour above) — was "Different fits for different
+    // styles, from slim and regular to relaxed", repeating "fit(s)"
+    // right after the "Fit" heading above it.
+    blurb: "Different styles, from slim and regular to relaxed",
     image: "/custom-section/swatch-fit.jpg",
     imageAlt: "A row of t-shirts on wooden hangers in different colours",
   },
   {
     icon: "construction",
     label: "Construction",
-    blurb: "A range of detailing options, simple to complex",
+    // "A range of" → "Various" (1 Sep 2026, same density pass as
+    // Fabric/Colour/Fit above).
+    blurb: "Various detailing options, simple to complex",
     image: "/custom-section/swatch-construction-3.jpg",
     imageAlt: "Close-up of folded orange fabric with a KIBO hangtag",
   },
@@ -236,7 +257,9 @@ export const CUSTOM_ATTRIBUTES: CustomAttribute[] = [
     // "Several" → "An array of" (30 Aug 2026, owner, on a screenshot of
     // Colour's blurb: "replace several with an array of") — matches
     // Colour's own phrasing ("An array of colour options...").
-    blurb: "An array of print techniques, from subtle graphics to bold designs",
+    // Leading "An array of print techniques," dropped (1 Sep 2026, same
+    // density pass as the other five blurbs).
+    blurb: "From subtle graphics to bold designs",
     // Real photo of a bold graphic tee (27 Aug 2026) — see the file-level
     // comment above for the full history (mountain graphic → abstract
     // geometric → mountain graphic again → this). Deliberately generic,
@@ -254,7 +277,10 @@ export const CUSTOM_ATTRIBUTES: CustomAttribute[] = [
   {
     icon: "finish",
     label: "Finish",
-    blurb: "Checked and finished with care, labels, trims and a clean presentation",
+    // Leading "Checked and finished with care," dropped (1 Sep 2026,
+    // same density pass as the other five blurbs) — "finished" also
+    // duplicated the "Finish" heading right above it.
+    blurb: "Labels, trims and a clean presentation",
     // Bumped `-3` → `-4` (27 Aug 2026, same fix as Print above) — owner
     // reported this missing from a live render alongside Print; `-3` was
     // renamed only shortly before that report, so a stale cached

@@ -19,7 +19,14 @@
 export const FOUNDER_HEADLINE_LINE_1 = "What led to";
 export const FOUNDER_HEADLINE_LINE_2 = "KIBO";
 
-export const FOUNDER_PARAGRAPH_1 = "I set out to build something on my own.";
+// Paragraphs 1 and 2 reworded (1 Sep 2026, owner-supplied copy, from a
+// highlighted screenshot of this section) — was "I set out to build
+// something on my own." / "Then I found an opportunity to connect
+// India's apparel expertise with growing markets in Africa." Paragraph
+// 3 is unchanged verbatim, including its trailing "KIBO." — the
+// `.replace("KIBO.", "")` split in FounderSection.tsx that colors just
+// that word still applies unmodified.
+export const FOUNDER_PARAGRAPH_1 = "It started with the idea of building something of my own.";
 export const FOUNDER_PARAGRAPH_2 =
-  "Then I found an opportunity to connect India's apparel expertise with growing markets in Africa.";
+  "Then came an opportunity to connect India's apparel expertise with growing markets in Africa.";
 export const FOUNDER_PARAGRAPH_3 = "That became KIBO.";

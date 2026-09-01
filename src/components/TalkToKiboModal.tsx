@@ -105,8 +105,13 @@ export function TalkToKiboModal({ onClose }: { onClose: () => void }) {
               named tokens) replacing raw `text-xl`/`text-sm` throughout
               this modal, including the confirmation state above and the
               form fields/button below. */}
+          {/* "Talk to KIBO" → "Get in touch" (1 Sep 2026) — see
+              Footer.tsx's own comment for the full reasoning (friend
+              feedback: read as an AI chatbot trigger). `id` kept as-is —
+              internal, not user-visible, and other elements still
+              reference it via `aria-labelledby`. */}
           <h2 id="talk-to-kibo-heading" className="pr-8 text-h3 font-semibold text-charcoal">
-            Talk to KIBO
+            Get in touch
           </h2>
           <p className="mt-1.5 text-support text-charcoal/60">
             Looking for men&apos;s apparel? Tell us what you need.

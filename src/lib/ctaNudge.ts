@@ -25,7 +25,11 @@
 // I say desktop" rule) — was one flowing sentence. `CTANudgeSection.tsx`
 // forces the break between these two below `sm` only; at `sm` and up
 // they render as the original single line (`sm:inline`), unchanged.
+// Both lines' "Talk to KIBO" → "Get in touch" (1 Sep 2026, owner,
+// relaying friend feedback: hesitant to click "Talk to KIBO," read it
+// as an AI chatbot trigger) — see Footer.tsx's own comment for the full
+// reasoning and the complete list of renamed sites across the codebase.
 export const CTA_NUDGE_LINE_1 = "Have a requirement in mind?";
-export const CTA_NUDGE_LINE_2 = "Talk to KIBO";
+export const CTA_NUDGE_LINE_2 = "Get in touch";
 
-export const CTA_NUDGE_BUTTON_LABEL = "Talk to KIBO";
+export const CTA_NUDGE_BUTTON_LABEL = "Get in touch";

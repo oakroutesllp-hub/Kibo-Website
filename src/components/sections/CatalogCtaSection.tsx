@@ -97,7 +97,9 @@ export function CatalogCtaSection({ thumbnail }: { thumbnail: ContentImage }) {
           onClick={openTalkToKibo}
           className="rounded-full bg-charcoal px-4 py-2 text-support font-semibold text-background transition-colors hover:bg-green-gray"
         >
-          Talk to KIBO
+          {/* "Talk to KIBO" → "Get in touch" (1 Sep 2026) — see
+              Footer.tsx's own comment for the full reasoning. */}
+          Get in touch
         </button>
       </div>
     </div>

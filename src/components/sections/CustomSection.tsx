@@ -237,7 +237,49 @@ export function CustomSection({ media }: { media: CustomSectionMediaContent }) {
           `pt-4 sm:pt-5`), but the owner wants Custom→Supply back to
           what it was just before that pass: `pb-7 sm:pb-[2.45rem]`
           (28px/39.2px), the 30%-reduction value. */}
-      <div className="mx-auto flex w-full max-w-[1728px] flex-col gap-8 px-6 pt-4 pb-7 sm:gap-10 sm:px-10 sm:pt-5 sm:pb-[2.45rem]">
+      {/* Top padding `pt-4 sm:pt-5` → `pt-7 sm:pt-[2.45rem]` (1 Sep 2026,
+          owner: "increase the space between 'Get in touch' and 'From
+          reference to finished garment' — this space should be the same
+          as the space between the six thumbnails' bottom edge and 'You
+          build your market, we build the supply behind it'") — this
+          section's own bottom half of the Custom→Supply seam is already
+          `pb-7 sm:pb-[2.45rem]` (28px/39.2px), matched by Supply's own
+          `pt-7 sm:pt-[2.45rem]` top half (SupplySection.tsx), for a
+          56px/78.4px total. Giving this section's TOP half the identical
+          `pt-7 sm:pt-[2.45rem]` (paired with the matching bump to
+          ProductsGridSection's own bottom padding, see that file)
+          reproduces that exact same 56px/78.4px total for the
+          Products-grid→Custom seam — same symmetric-halves mechanism the
+          rest of the page already uses at every section boundary, not a
+          one-off value.
+
+          **Headline-to-content gap `gap-8 sm:gap-10` → `gap-14
+          sm:gap-[4.9rem]`, 1 Sep 2026** (owner: "the gap between the
+          bottom line under 'From reference to finished garment' and
+          [the tracker numbers] should be the same as the gap between
+          the bottom line after 'Built around your requirements' and the
+          [attribute] icons") — the latter gap is the inner group's own
+          flex gap below (see that div's comment), bumped the same day
+          to `gap-14 sm:gap-[4.9rem]` (56px/78.4px); matching this
+          headline gap to the identical value satisfies the request
+          directly, and keeps every major vertical gap in this section
+          — Get in touch→headline, headline→tracker, captions→divider,
+          divider→attribute icons — on the same single 56px/78.4px
+          rhythm.
+
+          **Split back apart, same day, follow-up** (owner, live review:
+          "[headline→tracker] looks really large... decrease [it and
+          divider→icons] slightly, and slightly increase [Get in
+          touch→headline]") — the three gaps above stop sharing one
+          number: this outer headline→tracker gap (and the matching
+          inner divider→icons/captions→divider gap below) drops to
+          `gap-12 sm:gap-16` (48px/64px, real scale tokens, no arbitrary
+          value needed), while Get in touch→headline goes the other way,
+          to `pt-8 sm:pt-11` (32px/44px) paired with ProductsGridSection's
+          matching `pb-8 sm:pb-11` bump — 64px/88px total, still a
+          symmetric-halves seam like every other section boundary, just
+          no longer equal to the two gaps inside this section. */}
+      <div className="mx-auto flex w-full max-w-[1728px] flex-col gap-12 px-6 pt-8 pb-8 sm:gap-16 sm:px-10 sm:pt-11 sm:pb-11">
         {/* Headline — stays full-width (not part of the narrower
             container below it), unaffected by this section's whitespace
             tuning. */}
@@ -254,7 +296,50 @@ export function CustomSection({ media }: { media: CustomSectionMediaContent }) {
               leading/tracking override. Same change applied to
               Products'/Our story's/Listening's/Tiruppur's/Founder's own
               headlines in this same pass. */}
-          <h2 className="max-w-3xl text-h2 font-bold leading-[1.1] tracking-tight text-charcoal">
+          {/* `text-h2` → `text-h3` (1 Sep 2026, owner: "'From reference
+              to finished garment' and 'Built around your requirements'
+              should be the same level of text — right now [this heading]
+              is the same as [the 'Products' heading] and that's not the
+              level it belongs to... bump it down one level") — Products'
+              own heading (ProductsGridSection.tsx) is also `text-h2`;
+              dropping this one to `text-h3` (18px) is what actually
+              distinguishes it, and 'Built around your requirements'
+              (below) is bumped up to the same `text-h3` to match, per
+              the same instruction.
+
+              **`text-h3` → `text-[1.25rem]`, same day, follow-up**
+              (owner: "the text for both... bump it up a size") — the
+              type scale's only defined step above `text-h3` (18px) is
+              `text-h2` (30px), which would put this right back at
+              Products' own size — the exact thing the change above was
+              made to avoid. Landed on a custom 20px instead (Claude
+              Code's call, offered when asked "what do you think?"): a
+              real, visible bump up from 18px without re-triggering the
+              Products conflict. Applied identically to 'Built around
+              your requirements' below, so the two stay matched.
+
+              **`font-bold leading-[1.1] tracking-tight` →
+              `font-semibold`, same day, follow-up** (owner, after a
+              typography audit flagged this heading and 'Built around
+              your requirements' didn't actually match on weight/leading/
+              tracking despite matching on size/color: "we want 'Built
+              around your requirements' text to be sacred — copy that
+              style to 'From reference to finished garment'") — this
+              heading now takes on THAT element's own original
+              `font-semibold`, default line-height/tracking, rather than
+              the other way around (the reverse of this file's very next
+              edit before this one, on 'Built around your requirements'
+              itself — see that heading's own comment for the full
+              back-and-forth). This is also, notably, the one heading on
+              the page that no longer carries the `font-bold
+              leading-[1.1] tracking-tight` treatment shared by every
+              other "major section heading" (Supply, Long Run, Listening,
+              Tiruppur, Founder, Products) — a deliberate exception, not
+              an oversight, since this section's headline was already
+              singled out for a smaller custom size earlier in this same
+              session specifically to read as a lighter, lower-level
+              heading than that family. */}
+          <h2 className="max-w-3xl text-[1.25rem] font-semibold text-charcoal">
             From reference to finished garment
           </h2>
           <span aria-hidden="true" className="h-px w-12 bg-charcoal/20" />
@@ -285,7 +370,36 @@ export function CustomSection({ media }: { media: CustomSectionMediaContent }) {
             was the one breakpoint with LESS breathing room here than
             tablet/desktop, not a deliberate choice, just an oversight
             from the cut above. `sm:gap-8` itself is unchanged. */}
-        <div className="mx-auto flex w-full max-w-[986px] flex-col gap-8 sm:gap-8">
+        {/* `gap-8` → `gap-10` (1 Sep 2026, owner: "increase the space
+            between the bottom line [of captions]... and 'Built around
+            your requirements'. Increase that gap slightly. Repeat that
+            same gap between 'Built around your requirements' and the
+            [attribute] icons... across mobile and desktop") — this one
+            flex-column gap sits between all three children (photo-card
+            block, divider, attribute grid), so a single bump applies to
+            both requested gaps identically, at every breakpoint, exactly
+            as asked ("repeat that same gap").
+
+            **`gap-10` → `gap-14 sm:gap-[4.9rem]`, same day, follow-up**
+            (owner: "increase further... keep it the same distance as
+            the gap between 'Get in touch' and 'From reference to
+            finished garment'") — that gap is `pt-7 sm:pt-[2.45rem]` +
+            `pb-7 sm:pb-[2.45rem]` (56px/78.4px total, see this section's
+            own top-padding comment + ProductsGridSection.tsx's matching
+            bottom-padding comment); `gap-14 sm:gap-[4.9rem]` is the
+            identical 56px/78.4px as a single flex gap. Still one value
+            for both surrounding gaps (captions→divider, divider→
+            attribute icons), so both land on the match, not just one.
+
+            **`gap-14 sm:gap-[4.9rem]` → `gap-12 sm:gap-16`, same day,
+            follow-up** (owner, live review: "decrease [this] slightly"
+            — this is also the gap the owner wants matched to
+            headline→tracker above, which moved to the identical
+            `gap-12 sm:gap-16` (48px/64px) in the same request; see that
+            div's own comment) — no longer tied to the Get in
+            touch→headline gap (that one now moves the other way, up),
+            just to headline→tracker instead. */}
+        <div className="mx-auto flex w-full max-w-[986px] flex-col gap-12 sm:gap-16">
           {/* Tracker-to-photo-grid gap cut the same way, same request
               ("reduce whitespace vertically here as well" — a follow-up
               screenshot showed this exact gap, between the tracker labels
@@ -319,8 +433,16 @@ export function CustomSection({ media }: { media: CustomSectionMediaContent }) {
                   {/* `text-micro` (30 Aug 2026, owner: "no other font
                       sizes floating around") replacing raw `text-xs` —
                       an uppercase tracker label, the same role `text-
-                      micro` already serves elsewhere on the site. */}
-                  <span className="max-w-[8rem] text-micro font-semibold uppercase leading-snug tracking-[0.12em] text-charcoal/60">
+                      micro` already serves elsewhere on the site.
+
+                      `tracking-[0.12em]` → `tracking-[0.16em]` (1 Sep
+                      2026, owner-requested site-wide tracking
+                      unification — see BackToHomeLink.tsx's own comment
+                      for the full list of the four values this
+                      replaces). Same change applied to the attribute
+                      labels below, which this element is required to
+                      match exactly. */}
+                  <span className="max-w-[8rem] text-micro font-semibold uppercase leading-snug tracking-[0.16em] text-charcoal/60">
                     {step.trackerLabel}
                   </span>
                 </li>
@@ -333,8 +455,90 @@ export function CustomSection({ media }: { media: CustomSectionMediaContent }) {
             <div className="grid grid-cols-2 gap-x-8 gap-y-8 sm:grid-cols-3 lg:grid-cols-6 lg:gap-x-0 lg:gap-y-6">
               {CUSTOM_PROCESS_STEPS.map((step) => {
                 const stepMedia = media[STEP_MEDIA_KEY[step.number]];
+                // `gap-4` → `gap-2 sm:gap-4` (1 Sep 2026, owner: "looks
+                // very sparse... compact [label→thumbnail→description]
+                // ... but keep the gap between [this card] and [the
+                // next row] constant" — mobile only; `sm:gap-4` keeps
+                // tablet/desktop exactly as they were. This is the
+                // internal gap between the label, image, and caption
+                // WITHIN one card, not the grid's own row gap
+                // (`gap-y-8` on the grid two lines above, unchanged) —
+                // tightening this makes label+image+caption read as one
+                // grouped unit while the space between separate steps
+                // (Reference/spec vs. Cutting/sewing) stays exactly as
+                // wide as before, which is the actual ask: less air
+                // inside a card, same air between cards. Same change
+                // applied to the attribute cards below.
                 return (
-                <div key={step.number} className="flex flex-col gap-4">
+                <div key={step.number} className="flex flex-col gap-2 sm:gap-4">
+                  {/* Step label restored below `lg`, 1 Sep 2026 (owner:
+                      "it's missing the entire... reference/
+                      specification to development... we still need to
+                      show reference/spec, development, cutting/sewing,
+                      sample/inspection, production, finished garment" —
+                      caught live on mobile) — below `lg` the 6-step
+                      tracker above is `hidden`, and this file's own
+                      comment claimed "the photo captions carry the
+                      sequence on their own," but the captions are plain
+                      descriptive sentences ("You share a design, sample
+                      or specification") that never actually name the
+                      step, so the step identity was silently dropped on
+                      mobile/tablet, not just de-emphasized. Restores
+                      just `step.trackerLabel` ("Reference /
+                      specification" etc.) — explicitly WITHOUT the
+                      "01–06" numbers, per the owner's own "maybe we
+                      don't want to do the 01 02" — styled identically to
+                      the tracker's own label span (same size/case/color/
+                      tracking) so it reads as the same element, just
+                      without its number+dot row. `lg:hidden` since the
+                      tracker above already shows this exact label at
+                      that breakpoint.
+
+                      **Positioned ABOVE the thumbnail, not below it**
+                      (owner, immediate follow-up: "reference
+                      specification needs to be above the thumbnail,
+                      then the thumbnail, then the description below" —
+                      the very first pass put this directly above the
+                      caption instead, i.e. still below the image, which
+                      wasn't the requested order) — label, then image,
+                      then caption, top to bottom. Wrapped in the same
+                      `mx-auto w-[80%]` as the image right below it so
+                      the two share the same left/right edges.
+
+                      **Fixed-height wrapper added, same day, second
+                      follow-up** (owner: "the thumbnails are not
+                      aligned... development thumbnail is above the
+                      reference specification thumbnail... it's because
+                      of the one line, two line title thing") — three
+                      labels wrap to 2 lines ("Reference / specification,"
+                      "Cutting / sewing," "Sample / inspection") and three
+                      stay on 1 ("Development," "Production," "Finished
+                      garment"); on a 2-column mobile grid, a shorter
+                      1-line label in one card left its own image sitting
+                      higher than its row partner's, even though the grid
+                      row itself was tall enough for both — height
+                      equalized the CARD, not the image's position inside
+                      it, since nothing here pushes the image down to
+                      compensate the way `flex-1` does for the attribute
+                      grid's blurb-then-image order below (that trick only
+                      works when the flexible element comes BEFORE the
+                      thing needing alignment; here the label is first,
+                      so it needs to reserve its own fixed space instead).
+                      `h-8` (32px) measured live as enough for the
+                      tallest real 2-line label (30.78px rendered) with a
+                      hair of headroom; `items-end` bottom-aligns each
+                      label inside that fixed box, so 1-line labels sit
+                      right above the image with the same visual gap a
+                      2-line label's second line would have — only the
+                      empty space above a short label's single line
+                      differs, never the image's own top position. */}
+                  <div className="mx-auto w-[80%] lg:hidden">
+                    <div className="flex h-8 items-end justify-center">
+                      <span className="text-center text-micro font-semibold uppercase tracking-[0.16em] text-charcoal/60">
+                        {step.trackerLabel}
+                      </span>
+                    </div>
+                  </div>
                   <div className="mx-auto w-[80%]">
                     <div className="relative aspect-[4/5] overflow-hidden rounded-lg">
                       {stepMedia ? (
@@ -373,81 +577,80 @@ export function CustomSection({ media }: { media: CustomSectionMediaContent }) {
                       already handles uneven card heights fine, nothing
                       depends on a hard 3-line cap here); `sm:line-clamp-3`
                       keeps the original desktop/tablet behavior, where
-                      the smaller `text-micro` size still fits inside it. */}
-                  <p className="text-center text-support text-charcoal/70 sm:line-clamp-3 sm:text-micro">
-                    {step.caption}
-                  </p>
+                      the smaller `text-micro` size still fits inside it.
+
+                      **`sm:line-clamp-3` removed + wrapped in the same
+                      `mx-auto w-[80%]` as the image above it, 1 Sep 2026**
+                      (owner: "each thumbnail has a left and a right edge
+                      — the text for a particular thumbnail [should]
+                      never spill outside of the left and right edge of
+                      the thumbnail... we will see how many lines it
+                      spills over to") — previously this `<p>` was a
+                      direct child of the full-width column, so its text
+                      could run wider than the 80%-capped image sitting
+                      above it; the same `w-[80%]` wrapper used for the
+                      image now applies here too, so the caption can
+                      never extend past the image's own left/right edges.
+                      The clamp is dropped at the same time, per the
+                      explicit "let's see how many lines it spills over
+                      to" — clamping would hide exactly the information
+                      this change is meant to surface. */}
+                  <div className="mx-auto w-[80%]">
+                    <p className="text-center text-support text-charcoal/70 sm:text-micro">
+                      {step.caption}
+                    </p>
+                  </div>
                 </div>
                 );
               })}
             </div>
           </div>
 
-          {/* Divider */}
-          <div className="flex items-center justify-center gap-4 sm:gap-6">
-            {/* `w-8` (32px) → `w-16` (64px) below `sm`, 31 Aug 2026 (owner,
-                testing live: "those [dashes] have to be a little longer,
-                right now they are very tiny, tiny lines") — matches
-                what `sm:w-16` already was, so mobile now gets the same
-                length desktop already had; `sm:w-16` itself is
-                unchanged. */}
-            <span aria-hidden="true" className="h-px w-16 bg-charcoal/25" />
-            {/* Reclassified as a micro label, not H2 (29 Aug 2026, font
-                case 1.png: "'Built around your requirements.' → I would
-                make this a micro label, not H2, because visually and
-                structurally it functions as an eyebrow/section label")
-                — `text-micro` (11px) replacing `text-sm sm:text-base`.
-                Stays uppercase — that's the case rule for micro labels.
-                Bumped to `text-support` (13px, 30 Aug 2026, owner, on a
-                screenshot of this exact line: "increase font size") —
-                the next step up in the type scale from micro. */}
-            {/* Trailing full stop removed (30 Aug 2026, owner: "remove
-                the full stop after requirements"). */}
-            {/* Sentence case + sage-green, 30 Aug 2026 (owner, on a
-                screenshot: "make this sentence case or each-word-
-                capitalized — I think sentence case makes more sense,
-                take a judgment call — and sage green grey, just like the
-                entire graphic") — judgment call taken as invited:
-                sentence case over Title Case, since every other
-                headline/label on the site (Supply, Long Run, Listening,
-                Tiruppur) already uses sentence case, not Title Case —
-                Title Case here would be the one inconsistent label.
-                `uppercase` dropped (the copy itself now IS the display
-                casing, same fix pattern as every other de-capped label
-                on this site) and `tracking-[0.18em]` dropped with it —
-                that wide letter-spacing was tuned for all-caps and reads
-                too loose on mixed case, same reasoning as the footer's
-                own uppercase→sentence-case fix earlier this session.
-                `text-charcoal` → `text-sage-green`.
+          {/* Divider — restructured 1 Sep 2026 (owner: "remove the two
+              horizontal lines flanking 'Built around your requirements'
+              on the left and right. Put a horizontal line below 'Built
+              around your requirements', just like there is one below
+              'From reference to finished garment'") — the two flanking
+              `w-16` dashes are gone; a single short underline now sits
+              below the heading instead, matching the headline's own
+              `h-px w-12 bg-charcoal/20` accent exactly (same span,
+              same `gap-5` column layout as the headline block above).
 
-                `text-body` (15px, 30 Aug 2026, owner, on a screenshot of
-                this exact line: "bump up font size") — was `text-support`
-                (13px), the next step up on the scale.
+              Heading also bumped from `text-sage-green` to `text-charcoal`
+              (owner: "keep them both black fonts") and from `sm:text-body`
+              to a flat `text-h3` at every breakpoint, matching "From
+              reference to finished garment" being brought down to the
+              same `text-h3` size above — the two headings are now the
+              same size and color everywhere, not just on desktop.
 
-                **`text-center` added + bumped again on mobile, 31 Aug
-                2026** (owner, testing live: "'built around your
-                requirements' that text is not centered at all and I
-                think its size also needs to be bumped up") — this line
-                wraps to 2 lines at mobile widths, and with no
-                `text-center` a wrapped `<h3>` falls back to plain
-                left-aligned block text by default, which reads as
-                off-center between its two flanking dash accents (the
-                ROW itself was already `justify-center`, but that only
-                centers the row as a whole — it says nothing about how
-                text wraps *inside* the h3's own box). `text-h3` (18px)
-                below `sm`, back to the original `text-body` (15px) at
-                `sm` and up — desktop, where this was already a
-                specifically-tuned size, is unaffected. */}
-            <h3 className="text-center text-h3 font-semibold text-sage-green sm:text-body">
+              **`text-h3` → `text-[1.25rem]`, same day, follow-up** —
+              matches the identical bump on "From reference to finished
+              garment" above (see that heading's own comment for the
+              full reasoning); the two stay the same size.
+
+              **Font weight/leading/tracking flagged, same day** (owner:
+              "there seems to be a typography difference... is it the
+              exact same font type, size, and thickness?" — caught via
+              computed-style diff: same 20px/Montserrat/charcoal, but
+              this heading was 600 weight against the headline's 700,
+              with default line-height/tracking instead of the
+              headline's `leading-[1.1] tracking-tight`). First attempt
+              bumped THIS heading up to match the headline
+              (`font-bold leading-[1.1] tracking-tight`) — **reversed
+              immediately, same day** (owner: "we want 'Built around
+              your requirements' text to be sacred — copy that style to
+              'From reference to finished garment'") — this heading's
+              own `font-semibold`, default leading/tracking is the one
+              staying fixed; the headline changes instead (see its own
+              comment above). This element keeps its original,
+              unmodified weight/leading/tracking below — only its size
+              and color have changed from their original values, per the
+              earlier, separate instructions covering those two axes. */}
+          <div className="flex flex-col items-center gap-5">
+            <h3 className="text-center text-[1.25rem] font-semibold text-charcoal">
               Built around your requirements
             </h3>
-            {/* `w-8` (32px) → `w-16` (64px) below `sm`, 31 Aug 2026 (owner,
-                testing live: "those [dashes] have to be a little longer,
-                right now they are very tiny, tiny lines") — matches
-                what `sm:w-16` already was, so mobile now gets the same
-                length desktop already had; `sm:w-16` itself is
-                unchanged. */}
-            <span aria-hidden="true" className="h-px w-16 bg-charcoal/25" />
+            <span aria-hidden="true" className="h-px w-12 bg-charcoal/20" />
           </div>
 
           {/* Attribute grid — same columns/gaps as the photo grid above
@@ -469,7 +672,12 @@ export function CustomSection({ media }: { media: CustomSectionMediaContent }) {
             {CUSTOM_ATTRIBUTES.map((attr) => {
               const attrMedia = media[ATTR_MEDIA_KEY[attr.icon]];
               return (
-              <div key={attr.label} className="flex h-full flex-col items-center gap-4 text-center">
+              <div key={attr.label} className="flex h-full flex-col items-center gap-2 text-center sm:gap-4">
+                {/* `gap-4` → `gap-2 sm:gap-4` (1 Sep 2026) — same mobile-
+                    only internal-spacing tightening as the process cards
+                    above (see that card's own comment); tablet/desktop
+                    unchanged. The `flex-1` blurb below still does its
+                    row-alignment job regardless of gap size. */}
                 <CustomAttributeIcon name={attr.icon} className="h-9 w-9 text-sage-green" />
                 {/* `text-h3` (18px, 29 Aug 2026) — "Fabric/Colour/Fit/
                     Construction/Print/Finish" named explicitly as H3
@@ -492,7 +700,13 @@ export function CustomSection({ media }: { media: CustomSectionMediaContent }) {
                     wrapping. (First pass here mistakenly used
                     `text-support` — caught and corrected against the
                     tracker labels' actual class, not the numbers'.) */}
-                <h4 className="max-w-[8rem] text-micro font-semibold uppercase leading-snug tracking-[0.12em] text-charcoal/60">
+                {/* `tracking-[0.12em]` → `tracking-[0.16em]` (1 Sep
+                    2026, owner-requested site-wide tracking unification
+                    — see BackToHomeLink.tsx's own comment for the full
+                    list of the four values this replaces; the tracker
+                    label above is required to match this exactly, so it
+                    moved to the same value in the same pass). */}
+                <h4 className="max-w-[8rem] text-micro font-semibold uppercase leading-snug tracking-[0.16em] text-charcoal/60">
                   {attr.label}
                 </h4>
                 {/*
@@ -529,10 +743,24 @@ export function CustomSection({ media }: { media: CustomSectionMediaContent }) {
                     captions and these attribute blurbs, named together
                     — "needs to be bumped up," mobile-only) — same
                     `text-support`-below-`sm` mechanism, desktop
-                    unchanged. */}
-                <p className="flex-1 text-support text-charcoal/70 sm:text-micro">
-                  {attr.blurb}
-                </p>
+                    unchanged.
+
+                    **Wrapped in the same `mx-auto w-[80%]` as the image
+                    below it, 1 Sep 2026** (owner: same "text should
+                    never spill outside the thumbnail's left/right edge"
+                    rule applied to all 12 captions/blurbs — see the
+                    matching process-caption comment above for the full
+                    reasoning) — the `flex-1` growable role that used to
+                    live on this `<p>` (see this column's outer wrapper
+                    comment above) moves onto the new wrapper `<div>`
+                    instead, since it's now the wrapper, not the `<p>`
+                    directly, that needs to grow and absorb the extra
+                    row height. */}
+                <div className="mx-auto w-[80%] flex-1">
+                  <p className="text-center text-support text-charcoal/70 sm:text-micro">
+                    {attr.blurb}
+                  </p>
+                </div>
                 <div className="mx-auto mt-1 w-[80%]">
                   <div className="relative aspect-[4/5] overflow-hidden rounded-lg">
                     {attrMedia ? (

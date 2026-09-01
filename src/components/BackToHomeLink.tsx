@@ -23,11 +23,19 @@ import Link from "next/link";
 //   Home on mobile is very small. On desktop looks OK") — `text-body`
 //   (15px) below `sm`, `sm:text-support` (13px, the prior universal
 //   size, confirmed fine on desktop) at `sm` and up.
+// `tracking-[0.14em]` → `tracking-[0.16em]` (1 Sep 2026, owner-requested
+// site-wide unification after a typography audit found four different
+// uppercase-label tracking values in use: 0.16em (Eyebrow.tsx, Hero.tsx's
+// "OUR STORY" tag), 0.14em (here + Hero's "Explore products" button),
+// 0.12em (CustomSection.tsx's process/attribute labels), 0.10em
+// (BlogGrid.tsx's category tabs) — all now 0.16em, matching Eyebrow.tsx,
+// the value globals.css's own type-scale comment already cites as the
+// reference (`text-xs font-semibold uppercase tracking-[0.16em]`).
 export function BackToHomeLink() {
   return (
     <Link
       href="/"
-      className="inline-flex items-center gap-1.5 text-body font-semibold uppercase tracking-[0.14em] text-charcoal/50 transition-colors hover:text-charcoal sm:text-support"
+      className="inline-flex items-center gap-1.5 text-body font-semibold uppercase tracking-[0.16em] text-charcoal/50 transition-colors hover:text-charcoal sm:text-support"
     >
       <svg
         viewBox="0 0 24 24"

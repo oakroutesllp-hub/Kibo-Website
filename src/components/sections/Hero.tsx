@@ -118,9 +118,13 @@ export function Hero({ content }: { content: HomepageContent }) {
             Explore products slightly lower") — nudges the button further
             from the subheading above without touching the subheading's
             own spacing. */}
+        {/* `tracking-[0.14em]` → `tracking-[0.16em]` (1 Sep 2026, owner-
+            requested site-wide tracking unification — see
+            BackToHomeLink.tsx's own comment for the full list of the
+            four values this replaces). */}
         <Link
           href="/products"
-          className="group mt-9 inline-flex items-center gap-2 rounded-full bg-charcoal px-7 py-3.5 text-support font-semibold tracking-[0.14em] text-background transition-colors hover:bg-green-gray"
+          className="group mt-9 inline-flex items-center gap-2 rounded-full bg-charcoal px-7 py-3.5 text-support font-semibold tracking-[0.16em] text-background transition-colors hover:bg-green-gray"
         >
           Explore products
           {/* Drawn SVG chevron replacing the plain "→" character, 31 Aug

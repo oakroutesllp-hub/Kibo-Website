@@ -168,8 +168,21 @@ export function ProductsGridSection({
   // 32/40 total). Every other section sharing this standard
   // (Custom/Supply/Long Run/CTA nudge/Listening/Founder) gets the
   // identical `py-4 sm:py-5` half-value in this same pass.
+  // `pb-4 sm:pb-5` → `pb-7 sm:pb-[2.45rem]` (1 Sep 2026, owner: see
+  // CustomSection.tsx's matching top-padding comment — this section's
+  // bottom half of the Products-grid→Custom seam is bumped to the same
+  // `pb-7 sm:pb-[2.45rem]` (28px/39.2px) CustomSection's own bottom
+  // (Custom→Supply) half already uses, so the two seams read as the
+  // same gap, as requested.
+  //
+  // `pb-7 sm:pb-[2.45rem]` → `pb-8 sm:pb-11` (1 Sep 2026, same day,
+  // follow-up — owner, live review: "slightly increase the gap between
+  // 'Get in touch' and 'From reference to finished garment'") — paired
+  // with CustomSection.tsx's matching `pt-8 sm:pt-11` bump, for a
+  // 64px/88px total (up from 56px/78.4px) — see that file's own comment
+  // for the full context of this round's three-gap adjustment.
   return (
-    <div className="relative mx-auto flex w-full max-w-[1728px] flex-1 flex-col gap-10 px-6 pt-8 pb-4 sm:px-10 sm:pt-10 sm:pb-5">
+    <div className="relative mx-auto flex w-full max-w-[1728px] flex-1 flex-col gap-10 px-6 pt-8 pb-8 sm:px-10 sm:pt-10 sm:pb-11">
       {/* Centered (29 Aug 2026, owner: "center this") — was left-aligned
           by default (a plain block heading in a flex-col container with
           no alignment set).

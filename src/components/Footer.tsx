@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Logo } from "./Logo";
 import { LinkedInIcon, InstagramIcon } from "./SocialIcons";
 import { getVisibleNavLinks } from "@/lib/navigation";
@@ -46,6 +47,7 @@ function formatFooterAddressLines(address: string): string[] {
 
 export function Footer({ settings }: { settings: SiteSettingsContent }) {
   const year = new Date().getFullYear();
+  const pathname = usePathname();
   // Blog nav-visibility toggle (31 Aug 2026) — see lib/navigation.ts's
   // own comment on `getVisibleNavLinks`. Footer already receives
   // `settings` as a prop, so it derives the filtered list itself rather
@@ -203,6 +205,23 @@ export function Footer({ settings }: { settings: SiteSettingsContent }) {
               <Link
                 key={link.href}
                 href={link.href}
+                // Scroll-to-top fallback for "Home" when already on Home
+                // (1 Sep 2026, owner: "when you click home from the
+                // footer, it does not go to the home page") — Home is
+                // one continuous scrolling page, so clicking "Home"
+                // while already on "/" is a same-route no-op for Next's
+                // router (nothing visibly happens if scrolled deep into
+                // the page, reading as broken rather than "already
+                // here"). Same fix applied to Nav.tsx's desktop and
+                // mobile-menu Home links.
+                onClick={() => {
+                  if (link.href === "/" && pathname === "/") {
+                    // `"smooth"` → `"auto"` — see Nav.tsx's matching
+                    // comment: unverifiable live in this environment,
+                    // "auto" confirmed working.
+                    window.scrollTo({ top: 0, behavior: "auto" });
+                  }
+                }}
                 className="text-micro text-charcoal/60 transition-colors hover:text-charcoal"
               >
                 {link.label}
@@ -234,13 +253,27 @@ export function Footer({ settings }: { settings: SiteSettingsContent }) {
               sticky bar, the Products-page CTA nudge) — a plain
               `<button>`, not a `<Link>`, since it opens an overlay
               rather than navigating.
+
+              **Label "Talk to KIBO" → "Get in touch", 1 Sep 2026**
+              (owner, relaying friend feedback: "he was hesitant to click
+              on Talk to KIBO because he thought it will open up a chat
+              with an AI chatbot") — the underlying `useTalkToKibo().open()`
+              trigger and modal are unchanged, only the visible label;
+              "Get in touch" carries no chatbot connotation and matches
+              the label the Products-page CTA nudge already used for this
+              exact same action, removing a two-labels-one-action
+              inconsistency that existed between them. Same rename
+              applied to every other "Talk to KIBO"-labeled trigger site-
+              wide (Nav, mobile sticky bar, CTA nudge, Catalog page, the
+              modal's own heading) — see Nav.tsx's own comment for the
+              full list.
             */}
             <button
               type="button"
               onClick={openTalkToKibo}
               className="text-micro text-charcoal/60 transition-colors hover:text-charcoal"
             >
-              Talk to KIBO
+              Get in touch
             </button>
             {/* "Lookbook" → "Catalog" / `/lookbook` → `/catalog`, 30 Aug
                 2026 — see navigation.ts's own comment on the same

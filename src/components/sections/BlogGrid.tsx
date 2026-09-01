@@ -68,7 +68,13 @@ export function BlogGrid({ articles }: { articles: ArticleContent[] }) {
                 role="tab"
                 aria-selected={active}
                 onClick={() => setActiveCategory(category)}
-                className={`flex flex-col items-center gap-1.5 text-micro font-semibold uppercase tracking-[0.1em] transition-colors ${
+                // `tracking-[0.1em]` → `tracking-[0.16em]` (1 Sep 2026,
+                // owner-requested site-wide tracking unification — see
+                // BackToHomeLink.tsx's own comment for the full list of
+                // the four values this replaces). All three tabs share
+                // this one class string, so they stay matched to each
+                // other exactly, same as before.
+                className={`flex flex-col items-center gap-1.5 text-micro font-semibold uppercase tracking-[0.16em] transition-colors ${
                   active ? "text-charcoal" : "text-charcoal/50 hover:text-charcoal"
                 }`}
               >
@@ -143,9 +149,16 @@ function BlogCard({ article }: { article: ArticleContent }) {
         {/* Category pill, overlaid top-right of the image — same idea as
             the reference cards' own "Seasonal"/"Trending" pills, in
             KIBO's own pill styling (matches the site's other small
-            translucent-badge pattern, e.g. MediaPlaceholder's label). */}
+            translucent-badge pattern, e.g. MediaPlaceholder's label).
+
+            `text-charcoal/70` → `text-charcoal/60` (1 Sep 2026, owner-
+            requested unification after a typography audit found this
+            badge slightly darker than the same pill style elsewhere —
+            MediaPlaceholder.tsx and CatalogCtaSection.tsx both already
+            use `/60`, so this one moves to match rather than the other
+            two. */}
         {article.category && (
-          <span className="absolute right-3 top-3 rounded-full bg-background/85 px-3 py-1 text-micro font-medium text-charcoal/70">
+          <span className="absolute right-3 top-3 rounded-full bg-background/85 px-3 py-1 text-micro font-medium text-charcoal/60">
             {article.category}
           </span>
         )}

@@ -185,6 +185,33 @@ export function Nav({ showBlogInNav }: { showBlogInNav: boolean }) {
               <Link
                 key={link.href}
                 href={link.href}
+                // Scroll-to-top fallback for "Home" when already on Home
+                // (1 Sep 2026, owner: "when you click home from the
+                // footer, it does not go to the home page") — Home is
+                // one continuous scrolling page (`(site)/page.tsx`), so
+                // clicking a link to "/" while already on "/" is a
+                // same-route no-op for Next's router: the URL is already
+                // correct, so nothing visibly happens if you're scrolled
+                // deep into, say, Founder's section — reading as "this
+                // button is broken," not "you're already home." Same fix
+                // applied to the mobile menu below and Footer.tsx's own
+                // Home link.
+                onClick={() => {
+                  if (link.href === "/" && pathname === "/") {
+                    // `behavior: "smooth"` → `"auto"` (instant) — a
+                    // direct `window.scrollTo({behavior:"smooth"})` call
+                    // produced no visible movement at all when verified
+                    // live in this session's own testing sandbox (same
+                    // class of environment gap this codebase has hit
+                    // before with `IntersectionObserver`, see
+                    // ProductsGridSection.tsx's own comment on that) —
+                    // `"auto"` was confirmed working directly. Real
+                    // browsers do support smooth scroll, but per this
+                    // project's own established rule, an unverifiable
+                    // mechanism doesn't ship over one that's confirmed.
+                    window.scrollTo({ top: 0, behavior: "auto" });
+                  }
+                }}
                 aria-current={active ? "page" : undefined}
                 className={`text-support font-medium transition-colors ${
                   active ? "text-charcoal" : "text-charcoal/60 hover:text-charcoal"
@@ -195,6 +222,12 @@ export function Nav({ showBlogInNav }: { showBlogInNav: boolean }) {
             );
           })}
           {/*
+            **Label "Talk to KIBO" → "Get in touch", 1 Sep 2026** (owner,
+            relaying friend feedback: he hesitated to click "Talk to
+            KIBO" thinking it would open an AI chatbot) — trigger/modal
+            unchanged, label only; see Footer.tsx's own comment for the
+            full reasoning and the complete list of renamed sites.
+
             Persistent "Talk to KIBO" CTA — desktop half (28 Aug 2026).
             KIBO_Brand_and_Copy_Direction.md: "in addition to the
             persistent CTA (nav button on desktop, sticky bar on
@@ -221,7 +254,7 @@ export function Nav({ showBlogInNav }: { showBlogInNav: boolean }) {
             onClick={openTalkToKibo}
             className="rounded-full bg-charcoal px-4 py-2 text-support font-semibold text-background transition-colors hover:bg-green-gray"
           >
-            Talk to KIBO
+            Get in touch
           </button>
         </nav>
 
@@ -265,7 +298,26 @@ export function Nav({ showBlogInNav }: { showBlogInNav: boolean }) {
               <Link
                 key={link.href}
                 href={link.href}
-                onClick={() => setOpen(false)}
+                // Same Home-while-on-Home scroll-to-top fallback as the
+                // desktop nav above, 1 Sep 2026 — see that link's own
+                // comment.
+                onClick={() => {
+                  setOpen(false);
+                  if (link.href === "/" && pathname === "/") {
+                    // `behavior: "smooth"` → `"auto"` (instant) — a
+                    // direct `window.scrollTo({behavior:"smooth"})` call
+                    // produced no visible movement at all when verified
+                    // live in this session's own testing sandbox (same
+                    // class of environment gap this codebase has hit
+                    // before with `IntersectionObserver`, see
+                    // ProductsGridSection.tsx's own comment on that) —
+                    // `"auto"` was confirmed working directly. Real
+                    // browsers do support smooth scroll, but per this
+                    // project's own established rule, an unverifiable
+                    // mechanism doesn't ship over one that's confirmed.
+                    window.scrollTo({ top: 0, behavior: "auto" });
+                  }
+                }}
                 aria-current={active ? "page" : undefined}
                 className={`py-3 text-body font-medium ${active ? "text-charcoal" : "text-charcoal/60"}`}
               >
