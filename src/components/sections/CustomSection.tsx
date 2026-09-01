@@ -2,7 +2,7 @@ import Image from "next/image";
 import { CustomAttributeIcon } from "@/components/CustomAttributeIcon";
 import { MediaPlaceholder } from "@/components/MediaPlaceholder";
 import { CUSTOM_PROCESS_STEPS, CUSTOM_ATTRIBUTES } from "@/lib/customSection";
-import type { CustomSectionMediaContent } from "@/lib/content";
+import type { CustomSectionMediaContent, CustomSectionCopyContent } from "@/lib/content";
 
 // Maps each process step's fixed `number`/attribute's fixed `icon` to
 // its Sanity field key, 31 Aug 2026 (see customSectionMediaType.ts's
@@ -193,7 +193,22 @@ const ATTR_MEDIA_KEY: Record<string, keyof CustomSectionMediaContent> = {
 // Fetched by the parent page (Home) via `getCustomSectionMedia()` and
 // passed down, same pattern as every other Sanity-editable media slot
 // on this site.
-export function CustomSection({ media }: { media: CustomSectionMediaContent }) {
+// `copy` (1 Sep 2026, owner: "make everything editable") — reverses
+// this file's own long-standing "copy stays fixed/code-level" call.
+// `CUSTOM_PROCESS_STEPS`/`CUSTOM_ATTRIBUTES` (lib/customSection.ts)
+// are still imported for their fixed, non-editorial fields (`number`,
+// `icon`, `imageAlt`) and to know how many steps/attributes to render
+// — only the actual label/caption/blurb text now comes from `copy`,
+// zipped positionally against those fixed arrays (see
+// getCustomSectionCopy's own comment in lib/content/index.ts for why
+// position, not a shared key, is the correspondence).
+export function CustomSection({
+  media,
+  copy,
+}: {
+  media: CustomSectionMediaContent;
+  copy: CustomSectionCopyContent;
+}) {
   return (
     <section className="w-full bg-background">
       {/* Bottom padding split from the top (28 Aug 2026, owner: "this
@@ -330,17 +345,25 @@ export function CustomSection({ media }: { media: CustomSectionMediaContent }) {
               the other way around (the reverse of this file's very next
               edit before this one, on 'Built around your requirements'
               itself — see that heading's own comment for the full
-              back-and-forth). This is also, notably, the one heading on
-              the page that no longer carries the `font-bold
-              leading-[1.1] tracking-tight` treatment shared by every
-              other "major section heading" (Supply, Long Run, Listening,
-              Tiruppur, Founder, Products) — a deliberate exception, not
-              an oversight, since this section's headline was already
-              singled out for a smaller custom size earlier in this same
-              session specifically to read as a lighter, lower-level
-              heading than that family. */}
-          <h2 className="max-w-3xl text-[1.25rem] font-semibold text-charcoal">
-            From reference to finished garment
+              back-and-forth).
+
+              **`text-[1.25rem] font-semibold` → `text-h2 font-bold
+              leading-[1.1] tracking-tight`, same day, final follow-up**
+              (owner, reviewing a side-by-side mockup of both options:
+              "match the text with Products' text... in terms of its
+              attributes, size, pen width, spacing, everything") —
+              reverses the two "avoid matching Products" edits above;
+              this heading (and 'Built around your requirements' below,
+              kept matched to it) now rejoins the same `font-bold
+              leading-[1.1] tracking-tight` "major section heading"
+              family as Products/Supply/Long Run/Listening/Tiruppur/
+              Founder, at the identical 30px size — the owner explicitly
+              decided the earlier "don't match Products" concern no
+              longer applies. ONLY this heading's typography changed in
+              this edit — thumbnails, captions, attribute icons, and
+              every gap/spacing value on this page are untouched. */}
+          <h2 className="max-w-3xl text-h2 font-bold leading-[1.1] tracking-tight text-charcoal">
+            {copy.headline}
           </h2>
           <span aria-hidden="true" className="h-px w-12 bg-charcoal/20" />
         </div>
@@ -443,7 +466,7 @@ export function CustomSection({ media }: { media: CustomSectionMediaContent }) {
                       labels below, which this element is required to
                       match exactly. */}
                   <span className="max-w-[8rem] text-micro font-semibold uppercase leading-snug tracking-[0.16em] text-charcoal/60">
-                    {step.trackerLabel}
+                    {copy.processSteps[i]?.trackerLabel ?? step.trackerLabel}
                   </span>
                 </li>
               ))}
@@ -453,7 +476,8 @@ export function CustomSection({ media }: { media: CustomSectionMediaContent }) {
                 its column and centered (`mx-auto w-[80%]`), horizontal
                 gap collapsed to 0 at `lg` (see file comment, point 3–4). */}
             <div className="grid grid-cols-2 gap-x-8 gap-y-8 sm:grid-cols-3 lg:grid-cols-6 lg:gap-x-0 lg:gap-y-6">
-              {CUSTOM_PROCESS_STEPS.map((step) => {
+              {CUSTOM_PROCESS_STEPS.map((step, i) => {
+                const stepCopy = copy.processSteps[i] ?? step;
                 const stepMedia = media[STEP_MEDIA_KEY[step.number]];
                 // `gap-4` → `gap-2 sm:gap-4` (1 Sep 2026, owner: "looks
                 // very sparse... compact [label→thumbnail→description]
@@ -535,7 +559,7 @@ export function CustomSection({ media }: { media: CustomSectionMediaContent }) {
                   <div className="mx-auto w-[80%] lg:hidden">
                     <div className="flex h-8 items-end justify-center">
                       <span className="text-center text-micro font-semibold uppercase tracking-[0.16em] text-charcoal/60">
-                        {step.trackerLabel}
+                        {stepCopy.trackerLabel}
                       </span>
                     </div>
                   </div>
@@ -597,7 +621,7 @@ export function CustomSection({ media }: { media: CustomSectionMediaContent }) {
                       this change is meant to surface. */}
                   <div className="mx-auto w-[80%]">
                     <p className="text-center text-support text-charcoal/70 sm:text-micro">
-                      {step.caption}
+                      {stepCopy.caption}
                     </p>
                   </div>
                 </div>
@@ -640,15 +664,19 @@ export function CustomSection({ media }: { media: CustomSectionMediaContent }) {
               immediately, same day** (owner: "we want 'Built around
               your requirements' text to be sacred — copy that style to
               'From reference to finished garment'") — this heading's
-              own `font-semibold`, default leading/tracking is the one
-              staying fixed; the headline changes instead (see its own
-              comment above). This element keeps its original,
-              unmodified weight/leading/tracking below — only its size
-              and color have changed from their original values, per the
-              earlier, separate instructions covering those two axes. */}
+              own `font-semibold`, default leading/tracking stayed
+              fixed; the headline changed instead (see its own comment
+              above).
+
+              **Final follow-up, same day** (owner: "match the text with
+              Products' text... size, pen width, spacing, everything") —
+              the headline above moved to Products' own `text-h2
+              font-bold leading-[1.1] tracking-tight` (30px); this
+              heading follows it to the identical class, so the two stay
+              matched exactly, same as every prior round. */}
           <div className="flex flex-col items-center gap-5">
-            <h3 className="text-center text-[1.25rem] font-semibold text-charcoal">
-              Built around your requirements
+            <h3 className="text-center text-h2 font-bold leading-[1.1] tracking-tight text-charcoal">
+              {copy.dividerLabel}
             </h3>
             <span aria-hidden="true" className="h-px w-12 bg-charcoal/20" />
           </div>
@@ -669,10 +697,11 @@ export function CustomSection({ media }: { media: CustomSectionMediaContent }) {
               same row-relative position regardless of how many lines its
               own blurb took. */}
           <div className="grid grid-cols-2 gap-x-8 gap-y-10 sm:grid-cols-3 sm:gap-y-14 lg:grid-cols-6 lg:gap-x-0">
-            {CUSTOM_ATTRIBUTES.map((attr) => {
+            {CUSTOM_ATTRIBUTES.map((attr, i) => {
+              const attrCopy = copy.attributes[i] ?? attr;
               const attrMedia = media[ATTR_MEDIA_KEY[attr.icon]];
               return (
-              <div key={attr.label} className="flex h-full flex-col items-center gap-2 text-center sm:gap-4">
+              <div key={attr.icon} className="flex h-full flex-col items-center gap-2 text-center sm:gap-4">
                 {/* `gap-4` → `gap-2 sm:gap-4` (1 Sep 2026) — same mobile-
                     only internal-spacing tightening as the process cards
                     above (see that card's own comment); tablet/desktop
@@ -707,7 +736,7 @@ export function CustomSection({ media }: { media: CustomSectionMediaContent }) {
                     label above is required to match this exactly, so it
                     moved to the same value in the same pass). */}
                 <h4 className="max-w-[8rem] text-micro font-semibold uppercase leading-snug tracking-[0.16em] text-charcoal/60">
-                  {attr.label}
+                  {attrCopy.label}
                 </h4>
                 {/*
                   `line-clamp-3` REMOVED, 30 Aug 2026 (owner, on a
@@ -758,7 +787,7 @@ export function CustomSection({ media }: { media: CustomSectionMediaContent }) {
                     row height. */}
                 <div className="mx-auto w-[80%] flex-1">
                   <p className="text-center text-support text-charcoal/70 sm:text-micro">
-                    {attr.blurb}
+                    {attrCopy.blurb}
                   </p>
                 </div>
                 <div className="mx-auto mt-1 w-[80%]">

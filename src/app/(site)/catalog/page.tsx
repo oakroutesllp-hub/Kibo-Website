@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { CatalogCtaSection } from "@/components/sections/CatalogCtaSection";
 import { BackToHomeLink } from "@/components/BackToHomeLink";
-import { getCatalog } from "@/lib/content";
+import { getCatalog, getSiteSettings } from "@/lib/content";
 
 export const metadata: Metadata = {
   title: "Catalog — KIBO",
@@ -42,6 +42,9 @@ export const metadata: Metadata = {
 // since that needs to work from every page, not just this one).
 export default async function CatalogPage() {
   const catalog = await getCatalog();
+  // `getSiteSettings()` (1 Sep 2026) — see CatalogCtaSection.tsx's own
+  // comment; needed here for the global "Get in touch" button label.
+  const settings = await getSiteSettings();
   return (
     <div className="mx-auto flex w-full max-w-2xl flex-1 flex-col items-center gap-4 px-6 pt-10 text-center sm:px-10 sm:pt-14">
       <div className="flex flex-col items-center gap-5">
@@ -52,7 +55,7 @@ export default async function CatalogPage() {
       <p className="text-body text-charcoal/70">
         Our full range and specs, in one downloadable catalog.
       </p>
-      <CatalogCtaSection thumbnail={catalog.thumbnail} />
+      <CatalogCtaSection thumbnail={catalog.thumbnail} getInTouchLabel={settings.getInTouchLabel} />
     </div>
   );
 }

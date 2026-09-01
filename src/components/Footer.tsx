@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Logo } from "./Logo";
 import { LinkedInIcon, InstagramIcon } from "./SocialIcons";
-import { getVisibleNavLinks } from "@/lib/navigation";
+import { getVisibleNavLinks, applyNavLabelOverrides } from "@/lib/navigation";
 import { useTalkToKibo } from "@/components/TalkToKiboProvider";
 import type { SiteSettingsContent } from "@/lib/content";
 
@@ -52,7 +52,7 @@ export function Footer({ settings }: { settings: SiteSettingsContent }) {
   // own comment on `getVisibleNavLinks`. Footer already receives
   // `settings` as a prop, so it derives the filtered list itself rather
   // than needing a separate prop for this one thing.
-  const navLinks = getVisibleNavLinks(settings.showBlogInNav);
+  const navLinks = applyNavLabelOverrides(getVisibleNavLinks(settings.showBlogInNav), settings);
   // `"use client"` added to this file, 30 Aug 2026, specifically so
   // "Talk to KIBO" below can open the real shared modal instead of the
   // `/#contact` placeholder anchor — see that link's own comment.
@@ -273,7 +273,7 @@ export function Footer({ settings }: { settings: SiteSettingsContent }) {
               onClick={openTalkToKibo}
               className="text-micro text-charcoal/60 transition-colors hover:text-charcoal"
             >
-              Get in touch
+              {settings.getInTouchLabel}
             </button>
             {/* "Lookbook" → "Catalog" / `/lookbook` → `/catalog`, 30 Aug
                 2026 — see navigation.ts's own comment on the same

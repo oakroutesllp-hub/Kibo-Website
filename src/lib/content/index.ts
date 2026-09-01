@@ -9,7 +9,44 @@ import {
   sampleSiteSettings,
 } from "./sampleContent";
 import { PRODUCT_CATEGORIES } from "@/lib/productCategories";
-import { CUSTOM_PROCESS_STEPS, CUSTOM_ATTRIBUTES } from "@/lib/customSection";
+import {
+  CUSTOM_PROCESS_STEPS,
+  CUSTOM_ATTRIBUTES,
+  CUSTOM_SECTION_HEADLINE,
+  CUSTOM_SECTION_DIVIDER_LABEL,
+} from "@/lib/customSection";
+import { SUPPLY_HEADLINE_LINE_1, SUPPLY_HEADLINE_LINE_2, SUPPLY_SUPPORTING_LINE_1, SUPPLY_SUPPORTING_LINE_2, SUPPLY_ROWS } from "@/lib/supplySection";
+import {
+  LONG_RUN_HEADLINE_PLAIN,
+  LONG_RUN_HEADLINE_ACCENT,
+  LONG_RUN_PARAGRAPH_1_LINE_1,
+  LONG_RUN_PARAGRAPH_1_LINE_2,
+  LONG_RUN_PARAGRAPH_2_LINE_1,
+  LONG_RUN_PARAGRAPH_2_LINE_2,
+} from "@/lib/longRunSection";
+import { CTA_NUDGE_LINE_1, CTA_NUDGE_LINE_2, CTA_NUDGE_BUTTON_LABEL } from "@/lib/ctaNudge";
+import {
+  OUR_STORY_PLAIN,
+  OUR_STORY_ACCENT,
+  LISTENING_HEADLINE_LINE_1,
+  LISTENING_HEADLINE_LINE_2,
+  LISTENING_PARAGRAPH_1,
+  LISTENING_PARAGRAPH_2,
+} from "@/lib/ourStory";
+import {
+  TIRUPPUR_HEADLINE_LINE_1,
+  TIRUPPUR_HEADLINE_ACCENT,
+  TIRUPPUR_SUB_BLOCKS,
+  TIRUPPUR_CLOSING_BOLD,
+  TIRUPPUR_CLOSING_REST,
+} from "@/lib/tiruppurSection";
+import {
+  FOUNDER_HEADLINE_LINE_1,
+  FOUNDER_HEADLINE_LINE_2,
+  FOUNDER_PARAGRAPH_1,
+  FOUNDER_PARAGRAPH_2,
+  FOUNDER_PARAGRAPH_3,
+} from "@/lib/founderSection";
 import type {
   ContentImage,
   Media,
@@ -20,6 +57,11 @@ import type {
   ProductCategoryContent,
   CustomSectionMediaContent,
   CatalogContent,
+  CustomSectionCopyContent,
+  SupplySectionCopyContent,
+  LongRunSectionCopyContent,
+  CtaNudgeCopyContent,
+  OurStoryCopyContent,
   Seo,
 } from "./types";
 
@@ -262,17 +304,42 @@ type RawSiteSettings = {
   whatsappNumber?: string;
   requireCatalogGate?: boolean;
   showBlogInNav?: boolean;
+  getInTouchLabel?: string;
+  navLabelHome?: string;
+  navLabelProducts?: string;
+  navLabelCatalog?: string;
+  navLabelBlog?: string;
+  navLabelOurStory?: string;
 };
 
 const siteSettingsQuery = `*[_type == "siteSettings"][0]{
   footerBrandLines, footerAddress, footerEmail, enquiryEmail,
-  linkedInUrl, instagramUrl, whatsappNumber, requireCatalogGate, showBlogInNav
+  linkedInUrl, instagramUrl, whatsappNumber, requireCatalogGate, showBlogInNav,
+  getInTouchLabel, navLabelHome, navLabelProducts, navLabelCatalog, navLabelBlog, navLabelOurStory
 }`;
+
+// Hardcoded defaults for the global CTA label + nav labels (1 Sep
+// 2026) — these mirror NAV_LINKS' own labels in lib/navigation.ts and
+// the "Get in touch" text every trigger site-wide used before this
+// field existed. Kept here (not in sampleContent.ts) since they're not
+// placeholder/demo content — they're the actual current production
+// copy, same reasoning fallbackProductCategories() below already
+// documents for reusing real code data as a fallback rather than
+// sampleContent.ts's usual placeholder pattern.
+const DEFAULT_NAV_LABELS = {
+  getInTouchLabel: "Get in touch",
+  navLabelHome: "Home",
+  navLabelProducts: "Products",
+  navLabelCatalog: "Catalog",
+  navLabelBlog: "Blog",
+  navLabelOurStory: "Our Story",
+};
 
 export async function getSiteSettings(): Promise<SiteSettingsContent> {
   if (!isSanityConfigured) {
     return {
       ...sampleSiteSettings,
+      ...DEFAULT_NAV_LABELS,
       enquiryEmail: sampleSiteSettings.footerEmail,
       whatsappDigits: toWhatsAppDigits(sampleSiteSettings.whatsappNumber),
     };
@@ -321,10 +388,17 @@ export async function getSiteSettings(): Promise<SiteSettingsContent> {
       // is meaningful here too (though it also happens to be the
       // default, unlike the gate).
       showBlogInNav: doc.showBlogInNav ?? sampleSiteSettings.showBlogInNav,
+      getInTouchLabel: doc.getInTouchLabel || DEFAULT_NAV_LABELS.getInTouchLabel,
+      navLabelHome: doc.navLabelHome || DEFAULT_NAV_LABELS.navLabelHome,
+      navLabelProducts: doc.navLabelProducts || DEFAULT_NAV_LABELS.navLabelProducts,
+      navLabelCatalog: doc.navLabelCatalog || DEFAULT_NAV_LABELS.navLabelCatalog,
+      navLabelBlog: doc.navLabelBlog || DEFAULT_NAV_LABELS.navLabelBlog,
+      navLabelOurStory: doc.navLabelOurStory || DEFAULT_NAV_LABELS.navLabelOurStory,
     };
   } catch {
     return {
       ...sampleSiteSettings,
+      ...DEFAULT_NAV_LABELS,
       enquiryEmail: sampleSiteSettings.footerEmail,
       whatsappDigits: toWhatsAppDigits(sampleSiteSettings.whatsappNumber),
     };
@@ -501,6 +575,265 @@ export async function getCatalog(): Promise<CatalogContent> {
   }
 }
 
+// Text-copy content (1 Sep 2026) — see each schema file's own comment
+// (customSectionCopyType.ts etc.) for the full reasoning. Every
+// getter follows the exact same per-field fallback pattern as the
+// media/image content above: a document that exists but has some
+// fields still empty keeps showing the current hardcoded copy in just
+// those slots, not a blank string.
+
+function fallbackCustomSectionCopy(): CustomSectionCopyContent {
+  return {
+    headline: CUSTOM_SECTION_HEADLINE,
+    processSteps: CUSTOM_PROCESS_STEPS.map((s) => ({ trackerLabel: s.trackerLabel, caption: s.caption })),
+    dividerLabel: CUSTOM_SECTION_DIVIDER_LABEL,
+    attributes: CUSTOM_ATTRIBUTES.map((a) => ({ label: a.label, blurb: a.blurb })),
+  };
+}
+
+type RawCustomSectionCopy = {
+  headline?: string;
+  processSteps?: { trackerLabel?: string; caption?: string }[];
+  dividerLabel?: string;
+  attributes?: { label?: string; blurb?: string }[];
+};
+
+const customSectionCopyQuery = `*[_type == "customSectionCopy"][0]{
+  headline, processSteps[]{trackerLabel, caption}, dividerLabel, attributes[]{label, blurb}
+}`;
+
+// Arrays are zipped POSITIONALLY against the fixed 6-item fallback
+// arrays — array order is the correspondence to each fixed image slot
+// (Reference is always position 0, Fabric is always position 0 of
+// attributes), same convention productCategory's own `gallery` array
+// already uses. A document with fewer than 6 items just falls back to
+// the remaining fixed entries for whichever positions are missing,
+// rather than shrinking the tracker/grid to fewer than 6 columns.
+export async function getCustomSectionCopy(): Promise<CustomSectionCopyContent> {
+  const fallback = fallbackCustomSectionCopy();
+  if (!isSanityConfigured) return fallback;
+
+  try {
+    const doc = await sanityClient.fetch<RawCustomSectionCopy | null>(
+      customSectionCopyQuery,
+      {},
+      { cache: "no-store" },
+    );
+    if (!doc) return fallback;
+
+    return {
+      headline: doc.headline || fallback.headline,
+      processSteps: fallback.processSteps.map((step, i) => ({
+        trackerLabel: doc.processSteps?.[i]?.trackerLabel || step.trackerLabel,
+        caption: doc.processSteps?.[i]?.caption || step.caption,
+      })),
+      dividerLabel: doc.dividerLabel || fallback.dividerLabel,
+      attributes: fallback.attributes.map((attr, i) => ({
+        label: doc.attributes?.[i]?.label || attr.label,
+        blurb: doc.attributes?.[i]?.blurb || attr.blurb,
+      })),
+    };
+  } catch {
+    return fallback;
+  }
+}
+
+function fallbackSupplySectionCopy(): SupplySectionCopyContent {
+  return {
+    headlineLine1: SUPPLY_HEADLINE_LINE_1,
+    headlineLine2: SUPPLY_HEADLINE_LINE_2,
+    supportingLine1: SUPPLY_SUPPORTING_LINE_1,
+    supportingLine2: SUPPLY_SUPPORTING_LINE_2,
+    rows: SUPPLY_ROWS.map((r) => ({ label: r.label, copy: r.copy })),
+  };
+}
+
+type RawSupplySectionCopy = {
+  headlineLine1?: string;
+  headlineLine2?: string;
+  supportingLine1?: string;
+  supportingLine2?: string;
+  rows?: { label?: string; copy?: string }[];
+};
+
+const supplySectionCopyQuery = `*[_type == "supplySectionCopy"][0]{
+  headlineLine1, headlineLine2, supportingLine1, supportingLine2, rows[]{label, copy}
+}`;
+
+export async function getSupplySectionCopy(): Promise<SupplySectionCopyContent> {
+  const fallback = fallbackSupplySectionCopy();
+  if (!isSanityConfigured) return fallback;
+
+  try {
+    const doc = await sanityClient.fetch<RawSupplySectionCopy | null>(
+      supplySectionCopyQuery,
+      {},
+      { cache: "no-store" },
+    );
+    if (!doc) return fallback;
+
+    return {
+      headlineLine1: doc.headlineLine1 || fallback.headlineLine1,
+      headlineLine2: doc.headlineLine2 || fallback.headlineLine2,
+      supportingLine1: doc.supportingLine1 || fallback.supportingLine1,
+      supportingLine2: doc.supportingLine2 || fallback.supportingLine2,
+      rows: fallback.rows.map((row, i) => ({
+        label: doc.rows?.[i]?.label || row.label,
+        copy: doc.rows?.[i]?.copy || row.copy,
+      })),
+    };
+  } catch {
+    return fallback;
+  }
+}
+
+function fallbackLongRunSectionCopy(): LongRunSectionCopyContent {
+  return {
+    headlinePlain: LONG_RUN_HEADLINE_PLAIN,
+    headlineAccent: LONG_RUN_HEADLINE_ACCENT,
+    paragraph1Line1: LONG_RUN_PARAGRAPH_1_LINE_1,
+    paragraph1Line2: LONG_RUN_PARAGRAPH_1_LINE_2,
+    paragraph2Line1: LONG_RUN_PARAGRAPH_2_LINE_1,
+    paragraph2Line2: LONG_RUN_PARAGRAPH_2_LINE_2,
+  };
+}
+
+type RawLongRunSectionCopy = Partial<LongRunSectionCopyContent>;
+
+const longRunSectionCopyQuery = `*[_type == "longRunSectionCopy"][0]{
+  headlinePlain, headlineAccent, paragraph1Line1, paragraph1Line2, paragraph2Line1, paragraph2Line2
+}`;
+
+export async function getLongRunSectionCopy(): Promise<LongRunSectionCopyContent> {
+  const fallback = fallbackLongRunSectionCopy();
+  if (!isSanityConfigured) return fallback;
+
+  try {
+    const doc = await sanityClient.fetch<RawLongRunSectionCopy | null>(
+      longRunSectionCopyQuery,
+      {},
+      { cache: "no-store" },
+    );
+    if (!doc) return fallback;
+
+    return {
+      headlinePlain: doc.headlinePlain || fallback.headlinePlain,
+      headlineAccent: doc.headlineAccent || fallback.headlineAccent,
+      paragraph1Line1: doc.paragraph1Line1 || fallback.paragraph1Line1,
+      paragraph1Line2: doc.paragraph1Line2 || fallback.paragraph1Line2,
+      paragraph2Line1: doc.paragraph2Line1 || fallback.paragraph2Line1,
+      paragraph2Line2: doc.paragraph2Line2 || fallback.paragraph2Line2,
+    };
+  } catch {
+    return fallback;
+  }
+}
+
+function fallbackCtaNudgeCopy(): CtaNudgeCopyContent {
+  return {
+    line1: CTA_NUDGE_LINE_1,
+    line2: CTA_NUDGE_LINE_2,
+    buttonLabel: CTA_NUDGE_BUTTON_LABEL,
+  };
+}
+
+type RawCtaNudgeCopy = Partial<CtaNudgeCopyContent>;
+
+const ctaNudgeCopyQuery = `*[_type == "ctaNudgeCopy"][0]{ line1, line2, buttonLabel }`;
+
+export async function getCtaNudgeCopy(): Promise<CtaNudgeCopyContent> {
+  const fallback = fallbackCtaNudgeCopy();
+  if (!isSanityConfigured) return fallback;
+
+  try {
+    const doc = await sanityClient.fetch<RawCtaNudgeCopy | null>(
+      ctaNudgeCopyQuery,
+      {},
+      { cache: "no-store" },
+    );
+    if (!doc) return fallback;
+
+    return {
+      line1: doc.line1 || fallback.line1,
+      line2: doc.line2 || fallback.line2,
+      buttonLabel: doc.buttonLabel || fallback.buttonLabel,
+    };
+  } catch {
+    return fallback;
+  }
+}
+
+function fallbackOurStoryCopy(): OurStoryCopyContent {
+  return {
+    pageTitlePlain: OUR_STORY_PLAIN,
+    pageTitleAccent: OUR_STORY_ACCENT,
+    listeningHeadlineLine1: LISTENING_HEADLINE_LINE_1,
+    listeningHeadlineLine2: LISTENING_HEADLINE_LINE_2,
+    listeningParagraph1: LISTENING_PARAGRAPH_1,
+    listeningParagraph2: LISTENING_PARAGRAPH_2,
+    tiruppurHeadlinePlain: TIRUPPUR_HEADLINE_LINE_1,
+    tiruppurHeadlineAccent: TIRUPPUR_HEADLINE_ACCENT,
+    tiruppurSubBlocks: TIRUPPUR_SUB_BLOCKS.map((b) => ({ label: b.label, copy: b.copy })),
+    tiruppurClosingBold: TIRUPPUR_CLOSING_BOLD,
+    tiruppurClosingRest: TIRUPPUR_CLOSING_REST,
+    founderHeadlineLine1: FOUNDER_HEADLINE_LINE_1,
+    founderHeadlineLine2: FOUNDER_HEADLINE_LINE_2,
+    founderParagraph1: FOUNDER_PARAGRAPH_1,
+    founderParagraph2: FOUNDER_PARAGRAPH_2,
+    founderParagraph3: FOUNDER_PARAGRAPH_3,
+  };
+}
+
+type RawOurStoryCopy = Partial<Omit<OurStoryCopyContent, "tiruppurSubBlocks">> & {
+  tiruppurSubBlocks?: { label?: string; copy?: string }[];
+};
+
+const ourStoryCopyQuery = `*[_type == "ourStoryCopy"][0]{
+  pageTitlePlain, pageTitleAccent,
+  listeningHeadlineLine1, listeningHeadlineLine2, listeningParagraph1, listeningParagraph2,
+  tiruppurHeadlinePlain, tiruppurHeadlineAccent, tiruppurSubBlocks[]{label, copy},
+  tiruppurClosingBold, tiruppurClosingRest,
+  founderHeadlineLine1, founderHeadlineLine2, founderParagraph1, founderParagraph2, founderParagraph3
+}`;
+
+export async function getOurStoryCopy(): Promise<OurStoryCopyContent> {
+  const fallback = fallbackOurStoryCopy();
+  if (!isSanityConfigured) return fallback;
+
+  try {
+    const doc = await sanityClient.fetch<RawOurStoryCopy | null>(
+      ourStoryCopyQuery,
+      {},
+      { cache: "no-store" },
+    );
+    if (!doc) return fallback;
+
+    return {
+      pageTitlePlain: doc.pageTitlePlain || fallback.pageTitlePlain,
+      pageTitleAccent: doc.pageTitleAccent || fallback.pageTitleAccent,
+      listeningHeadlineLine1: doc.listeningHeadlineLine1 || fallback.listeningHeadlineLine1,
+      listeningHeadlineLine2: doc.listeningHeadlineLine2 || fallback.listeningHeadlineLine2,
+      listeningParagraph1: doc.listeningParagraph1 || fallback.listeningParagraph1,
+      listeningParagraph2: doc.listeningParagraph2 || fallback.listeningParagraph2,
+      tiruppurHeadlinePlain: doc.tiruppurHeadlinePlain || fallback.tiruppurHeadlinePlain,
+      tiruppurHeadlineAccent: doc.tiruppurHeadlineAccent || fallback.tiruppurHeadlineAccent,
+      tiruppurSubBlocks: fallback.tiruppurSubBlocks.map((block, i) => ({
+        label: doc.tiruppurSubBlocks?.[i]?.label || block.label,
+        copy: doc.tiruppurSubBlocks?.[i]?.copy || block.copy,
+      })),
+      tiruppurClosingBold: doc.tiruppurClosingBold || fallback.tiruppurClosingBold,
+      tiruppurClosingRest: doc.tiruppurClosingRest || fallback.tiruppurClosingRest,
+      founderHeadlineLine1: doc.founderHeadlineLine1 || fallback.founderHeadlineLine1,
+      founderHeadlineLine2: doc.founderHeadlineLine2 || fallback.founderHeadlineLine2,
+      founderParagraph1: doc.founderParagraph1 || fallback.founderParagraph1,
+      founderParagraph2: doc.founderParagraph2 || fallback.founderParagraph2,
+      founderParagraph3: doc.founderParagraph3 || fallback.founderParagraph3,
+    };
+  } catch {
+    return fallback;
+  }
+}
+
 export type {
   HomepageContent,
   OurStoryContent,
@@ -511,6 +844,15 @@ export type {
   ProductGalleryFrameContent,
   CustomSectionMediaContent,
   CatalogContent,
+  CustomProcessStepContent,
+  CustomAttributeContent,
+  CustomSectionCopyContent,
+  SupplyRowContent,
+  SupplySectionCopyContent,
+  LongRunSectionCopyContent,
+  CtaNudgeCopyContent,
+  TiruppurSubBlockContent,
+  OurStoryCopyContent,
   ContentImage,
   Media,
   Seo,

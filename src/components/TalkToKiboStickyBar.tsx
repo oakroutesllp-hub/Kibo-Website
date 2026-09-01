@@ -31,7 +31,9 @@ import { useTalkToKibo } from "@/components/TalkToKiboProvider";
 // old layout.tsx location) is skipped in lockstep with the bar itself,
 // via the same `hidden` check, so Catalog doesn't end up with a dead
 // gap at the bottom of the page where the bar would have been.
-export function TalkToKiboStickyBar() {
+// `label` (1 Sep 2026, owner: "make everything editable") — the global
+// "Get in touch" button label, now Sanity-editable.
+export function TalkToKiboStickyBar({ label }: { label: string }) {
   const { open } = useTalkToKibo();
   const pathname = usePathname();
   const hidden = pathname === "/catalog";
@@ -51,9 +53,7 @@ export function TalkToKiboStickyBar() {
           // point of this pass, not a case-by-case size per context.
           className="w-full rounded-full bg-charcoal px-4 py-2 text-support font-semibold text-background transition-colors hover:bg-green-gray"
         >
-          {/* "Talk to KIBO" → "Get in touch" (1 Sep 2026) — see
-              Footer.tsx's own comment for the full reasoning. */}
-          Get in touch
+          {label}
         </button>
       </div>
       {/* Spacer moved in from `(site)/layout.tsx`, 31 Aug 2026 — see file

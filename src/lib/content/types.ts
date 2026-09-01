@@ -105,6 +105,16 @@ export type SiteSettingsContent = {
   // in `getSiteSettings`'s resolution — the Blog page ships unlisted
   // until the owner has real content and flips this on herself.
   showBlogInNav: boolean;
+  // Global CTA label + nav labels (1 Sep 2026) — see
+  // siteSettingsType.ts's own field descriptions. Each falls back to
+  // its current hardcoded string ("Get in touch", "Home", etc.) when
+  // unset.
+  getInTouchLabel: string;
+  navLabelHome: string;
+  navLabelProducts: string;
+  navLabelCatalog: string;
+  navLabelBlog: string;
+  navLabelOurStory: string;
 };
 
 // Product Categories (31 Aug 2026) — see productCategoryType.ts's own
@@ -154,3 +164,67 @@ export type CatalogContent = {
   pdfUrl?: string;
   thumbnail: ContentImage;
 };
+
+// Text-copy content types (1 Sep 2026, owner: "make everything
+// editable... all the text can be sanity based") — reverses the
+// "copy stays fixed, code-level" call each of these sections' own
+// lib file previously documented. Every field falls back to that
+// file's current hardcoded string when unset — see each getter's own
+// per-field fallback in lib/content/index.ts.
+export type CustomProcessStepContent = { trackerLabel: string; caption: string };
+export type CustomAttributeContent = { label: string; blurb: string };
+export type CustomSectionCopyContent = {
+  headline: string;
+  processSteps: CustomProcessStepContent[];
+  dividerLabel: string;
+  attributes: CustomAttributeContent[];
+};
+
+export type SupplyRowContent = { label: string; copy: string };
+export type SupplySectionCopyContent = {
+  headlineLine1: string;
+  headlineLine2: string;
+  supportingLine1: string;
+  supportingLine2: string;
+  rows: SupplyRowContent[];
+};
+
+export type LongRunSectionCopyContent = {
+  headlinePlain: string;
+  headlineAccent: string;
+  paragraph1Line1: string;
+  paragraph1Line2: string;
+  paragraph2Line1: string;
+  paragraph2Line2: string;
+};
+
+export type CtaNudgeCopyContent = {
+  line1: string;
+  line2: string;
+  buttonLabel: string;
+};
+
+export type TiruppurSubBlockContent = { label: string; copy: string };
+export type OurStoryCopyContent = {
+  pageTitlePlain: string;
+  pageTitleAccent: string;
+  listeningHeadlineLine1: string;
+  listeningHeadlineLine2: string;
+  listeningParagraph1: string;
+  listeningParagraph2: string;
+  tiruppurHeadlinePlain: string;
+  tiruppurHeadlineAccent: string;
+  tiruppurSubBlocks: TiruppurSubBlockContent[];
+  tiruppurClosingBold: string;
+  tiruppurClosingRest: string;
+  founderHeadlineLine1: string;
+  founderHeadlineLine2: string;
+  founderParagraph1: string;
+  founderParagraph2: string;
+  founderParagraph3: string;
+};
+
+// Global CTA label + nav labels (1 Sep 2026) — added directly to
+// SiteSettingsContent below rather than their own content type, since
+// they're single strings alongside the footer/contact fields already
+// living there, not a whole section's worth of copy.

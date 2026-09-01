@@ -41,7 +41,17 @@ export function useTalkToKibo() {
   return ctx;
 }
 
-export function TalkToKiboProvider({ children }: { children: ReactNode }) {
+// `label` (1 Sep 2026, owner: "make everything editable") — the global
+// "Get in touch" button label (siteSettingsType.ts), forwarded to the
+// modal's own heading so it can't drift out of sync with every button
+// that opens it.
+export function TalkToKiboProvider({
+  children,
+  label,
+}: {
+  children: ReactNode;
+  label: string;
+}) {
   const [isOpen, setIsOpen] = useState(false);
   const open = useCallback(() => setIsOpen(true), []);
   const close = useCallback(() => setIsOpen(false), []);
@@ -50,7 +60,7 @@ export function TalkToKiboProvider({ children }: { children: ReactNode }) {
   return (
     <TalkToKiboContext.Provider value={value}>
       {children}
-      {isOpen && <TalkToKiboModal onClose={close} />}
+      {isOpen && <TalkToKiboModal onClose={close} label={label} />}
     </TalkToKiboContext.Provider>
   );
 }

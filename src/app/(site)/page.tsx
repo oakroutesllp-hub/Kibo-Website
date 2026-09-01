@@ -8,7 +8,18 @@ import { CTANudgeSection } from "@/components/sections/CTANudgeSection";
 import { WeStartedByListeningSection } from "@/components/sections/WeStartedByListeningSection";
 import { TiruppurStorySection } from "@/components/sections/TiruppurStorySection";
 import { FounderSection } from "@/components/sections/FounderSection";
-import { getHomepage, getOurStory, getProductCategories, getCustomSectionMedia } from "@/lib/content";
+import {
+  getHomepage,
+  getOurStory,
+  getProductCategories,
+  getCustomSectionMedia,
+  getCustomSectionCopy,
+  getSupplySectionCopy,
+  getLongRunSectionCopy,
+  getCtaNudgeCopy,
+  getOurStoryCopy,
+  getSiteSettings,
+} from "@/lib/content";
 
 export async function generateMetadata(): Promise<Metadata> {
   const homepage = await getHomepage();
@@ -78,17 +89,31 @@ export default async function Home() {
   // fetch-in-the-parent-then-prop-drill pattern as Hero/OurStory above.
   const productCategories = await getProductCategories();
   const customSectionMedia = await getCustomSectionMedia();
+  // Copy fetches (1 Sep 2026, owner: "make everything editable") — same
+  // fetch-in-the-parent-then-prop-drill pattern as every media fetch
+  // above; `ourStoryCopy` covers Listening/Tiruppur/Founder together,
+  // same scope as `ourStory` (media) above.
+  const customSectionCopy = await getCustomSectionCopy();
+  const supplySectionCopy = await getSupplySectionCopy();
+  const longRunSectionCopy = await getLongRunSectionCopy();
+  const ctaNudgeCopy = await getCtaNudgeCopy();
+  const ourStoryCopy = await getOurStoryCopy();
+  const settings = await getSiteSettings();
   return (
     <>
       <Hero content={homepage} />
-      <ProductsGridSection headingLevel="h2" categories={productCategories} />
-      <CustomSection media={customSectionMedia} />
-      <SupplySection />
-      <LongRunSection />
-      <CTANudgeSection />
-      <WeStartedByListeningSection media={ourStory.listeningMedia} />
-      <TiruppurStorySection media={ourStory.tiruppurMedia} />
-      <FounderSection media={ourStory.founderMedia} />
+      <ProductsGridSection
+        headingLevel="h2"
+        categories={productCategories}
+        getInTouchLabel={settings.getInTouchLabel}
+      />
+      <CustomSection media={customSectionMedia} copy={customSectionCopy} />
+      <SupplySection copy={supplySectionCopy} />
+      <LongRunSection copy={longRunSectionCopy} />
+      <CTANudgeSection copy={ctaNudgeCopy} />
+      <WeStartedByListeningSection media={ourStory.listeningMedia} copy={ourStoryCopy} />
+      <TiruppurStorySection media={ourStory.tiruppurMedia} copy={ourStoryCopy} />
+      <FounderSection media={ourStory.founderMedia} copy={ourStoryCopy} />
     </>
   );
 }

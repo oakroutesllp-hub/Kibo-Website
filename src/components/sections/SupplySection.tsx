@@ -1,11 +1,6 @@
 import { SupplyRowIcon } from "@/components/SupplyRowIcon";
-import {
-  SUPPLY_HEADLINE_LINE_1,
-  SUPPLY_HEADLINE_LINE_2,
-  SUPPLY_SUPPORTING_LINE_1,
-  SUPPLY_SUPPORTING_LINE_2,
-  SUPPLY_ROWS,
-} from "@/lib/supplySection";
+import { SUPPLY_ROWS } from "@/lib/supplySection";
+import type { SupplySectionCopyContent } from "@/lib/content";
 
 // "The Supply Behind Your Market" — KIBO_Brand_and_Copy_Direction.md,
 // "The Supply Behind Your Market — page anatomy" (LOCKED 27 Aug 2026).
@@ -40,7 +35,13 @@ import {
 //   exact class it had in the split-column version (`text-h2` headline,
 //   `text-body` supporting line, `text-h3` row titles, `text-support`
 //   row copy); only the arrangement changed.
-export function SupplySection() {
+// `copy` (1 Sep 2026, owner: "make everything editable") — reverses
+// this file's own "fixed, code-level" call. `SUPPLY_ROWS`
+// (lib/supplySection.ts) still supplies each row's fixed `icon`
+// (zipped positionally against `copy.rows`, same convention as
+// CustomSection.tsx's own copy wiring) — only label/copy text and the
+// two headline/supporting lines are now Sanity-editable.
+export function SupplySection({ copy }: { copy: SupplySectionCopyContent }) {
   return (
     <section className="w-full bg-background">
       {/* `py-10 sm:py-14` — the site's standardized inter-section
@@ -84,8 +85,8 @@ export function SupplySection() {
             `text-body` (15px) unchanged from the split-column version. */}
         <div className="flex max-w-2xl flex-col items-center gap-4">
           <h2 className="text-h2 font-bold leading-[1.1] tracking-tight">
-            <span className="block text-charcoal">{SUPPLY_HEADLINE_LINE_1}</span>
-            <span className="block text-sage-green">{SUPPLY_HEADLINE_LINE_2}</span>
+            <span className="block text-charcoal">{copy.headlineLine1}</span>
+            <span className="block text-sage-green">{copy.headlineLine2}</span>
           </h2>
 
           {/* Dash anchor added (30 Aug 2026, owner: "I like this
@@ -96,8 +97,8 @@ export function SupplySection() {
           <span aria-hidden="true" className="h-px w-12 bg-charcoal/20" />
 
           <p className="text-body text-charcoal/70">
-            <span className="block">{SUPPLY_SUPPORTING_LINE_1}</span>
-            <span className="block">{SUPPLY_SUPPORTING_LINE_2}</span>
+            <span className="block">{copy.supportingLine1}</span>
+            <span className="block">{copy.supportingLine2}</span>
           </p>
         </div>
 
@@ -126,8 +127,10 @@ export function SupplySection() {
             layout) at `sm` and up — the fix is confined to breakpoint
             classes, no change to anything at `sm` and above. */}
         <div className="flex w-full max-w-4xl flex-col items-center sm:flex-row sm:items-stretch sm:justify-center">
-          {SUPPLY_ROWS.map((row, i) => (
-            <div key={row.label} className="flex flex-col items-center sm:flex-row sm:items-stretch">
+          {SUPPLY_ROWS.map((row, i) => {
+            const rowCopy = copy.rows[i] ?? row;
+            return (
+            <div key={row.icon} className="flex flex-col items-center sm:flex-row sm:items-stretch">
               {/* Divider follows the same stack/row flip: a horizontal
                   rule between stacked items on mobile, the existing
                   inset vertical rule (`my-6 w-px`, see the comment this
@@ -193,13 +196,14 @@ export function SupplySection() {
                       its top. `items-start` pins the text to the box's
                       top edge instead, matching the other two. */}
                   <h3 className="flex min-h-[46.8px] items-start justify-center text-h3 font-semibold text-charcoal">
-                    {row.label}
+                    {rowCopy.label}
                   </h3>
-                  <p className="text-support text-charcoal/60">{row.copy}</p>
+                  <p className="text-support text-charcoal/60">{rowCopy.copy}</p>
                 </div>
               </div>
             </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>

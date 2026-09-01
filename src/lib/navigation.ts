@@ -56,3 +56,31 @@ export const NAV_LINKS = [
 export function getVisibleNavLinks(showBlogInNav: boolean) {
   return showBlogInNav ? NAV_LINKS : NAV_LINKS.filter((link) => link.href !== "/blog");
 }
+
+// Applies Sanity's per-route nav label overrides (1 Sep 2026, owner:
+// "make everything editable") on top of `getVisibleNavLinks`'s own
+// fixed list — routes/order/visibility stay code-controlled (see that
+// function's own comment), only each link's display TEXT can change.
+// Both Nav.tsx and Footer.tsx call this rather than each doing their
+// own href-keyed lookup, so the two can't drift out of sync with each
+// other, same reasoning NAV_LINKS itself being one shared array already
+// documents above.
+export function applyNavLabelOverrides(
+  links: readonly { href: string; label: string }[],
+  labels: {
+    navLabelHome: string;
+    navLabelProducts: string;
+    navLabelCatalog: string;
+    navLabelBlog: string;
+    navLabelOurStory: string;
+  },
+) {
+  const overrides: Record<string, string> = {
+    "/": labels.navLabelHome,
+    "/products": labels.navLabelProducts,
+    "/catalog": labels.navLabelCatalog,
+    "/blog": labels.navLabelBlog,
+    "/our-story": labels.navLabelOurStory,
+  };
+  return links.map((link) => ({ ...link, label: overrides[link.href] || link.label }));
+}

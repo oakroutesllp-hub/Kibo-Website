@@ -60,18 +60,25 @@ import type { ProductCategoryContent } from "@/lib/content";
 // This component itself stays a Client Component (owns the open/flip
 // state below), so it can't fetch Sanity data itself — same
 // fetch-in-the-parent-then-prop-drill pattern Hero/OurStory already use.
+// `getInTouchLabel` (1 Sep 2026, owner: "make everything editable") —
+// the global "Get in touch" button label, now Sanity-editable.
+// Defaulted rather than required since `showGetInTouch` callers that
+// don't pass one (there are none currently, but future callers might)
+// still get a sane label instead of `undefined` rendering as blank.
 export function ProductsGridSection({
   categories,
   headingLevel = "h1",
   showBackToHome = false,
   heading = "Products",
   showGetInTouch = true,
+  getInTouchLabel = "Get in touch",
 }: {
   categories: ProductCategoryContent[];
   headingLevel?: "h1" | "h2";
   showBackToHome?: boolean;
   heading?: string;
   showGetInTouch?: boolean;
+  getInTouchLabel?: string;
 }) {
   const Heading = headingLevel;
   const { open: openTalkToKibo } = useTalkToKibo();
@@ -369,7 +376,7 @@ export function ProductsGridSection({
             onClick={openTalkToKibo}
             className="rounded-full bg-charcoal px-4 py-2 text-support font-semibold text-background transition-colors hover:bg-green-gray"
           >
-            Get in touch
+            {getInTouchLabel}
           </button>
         </div>
       )}

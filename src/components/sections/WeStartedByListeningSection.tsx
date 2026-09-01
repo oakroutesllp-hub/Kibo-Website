@@ -1,15 +1,7 @@
 import Image from "next/image";
 import { MediaPlaceholder } from "@/components/MediaPlaceholder";
 import { BackToHomeLink } from "@/components/BackToHomeLink";
-import type { Media } from "@/lib/content";
-import {
-  OUR_STORY_PLAIN,
-  OUR_STORY_ACCENT,
-  LISTENING_HEADLINE_LINE_1,
-  LISTENING_HEADLINE_LINE_2,
-  LISTENING_PARAGRAPH_1,
-  LISTENING_PARAGRAPH_2,
-} from "@/lib/ourStory";
+import type { Media, OurStoryCopyContent } from "@/lib/content";
 
 // "We Started by Listening" — first section of the new `/our-story`
 // page, at anchor `#listening`. KIBO_Brand_and_Copy_Direction.md, "Our
@@ -64,11 +56,17 @@ import {
 // everywhere" instruction). Only `(site)/our-story/page.tsx` passes
 // `true`; `(site)/page.tsx`'s own Home usage leaves it at the default
 // `false`.
+// `copy` (1 Sep 2026, owner: "make everything editable") — reverses
+// lib/ourStory.ts's own "fixed, code-level" call. Takes the full
+// `OurStoryCopyContent` (same singleton also feeds Tiruppur/Founder)
+// and reads only its own "Our story"/Listening fields.
 export function WeStartedByListeningSection({
   media,
+  copy,
   showBackToHome = false,
 }: {
   media: Media;
+  copy: OurStoryCopyContent;
   showBackToHome?: boolean;
 }) {
   return (
@@ -202,8 +200,8 @@ export function WeStartedByListeningSection({
             headline from below, a separate visual job from marking a
             section boundary. */}
         <h2 className="text-h2 font-bold leading-[1.1] tracking-tight text-charcoal">
-          {OUR_STORY_PLAIN}
-          <span className="text-sage-green">{OUR_STORY_ACCENT}</span>
+          {copy.pageTitlePlain}
+          <span className="text-sage-green">{copy.pageTitleAccent}</span>
         </h2>
         <span aria-hidden="true" className="h-px w-12 bg-sage-green/60" />
       </div>
@@ -427,15 +425,15 @@ export function WeStartedByListeningSection({
                 just the single word "listening" on its own line, so no
                 further split was needed. */}
             <h2 className="text-h2 font-bold leading-[1.1] tracking-tight text-charcoal">
-              <span className="block">{LISTENING_HEADLINE_LINE_1}</span>
-              <span className="block text-sage-green">{LISTENING_HEADLINE_LINE_2}</span>
+              <span className="block">{copy.listeningHeadlineLine1}</span>
+              <span className="block text-sage-green">{copy.listeningHeadlineLine2}</span>
             </h2>
 
-            <p className="max-w-sm text-body text-charcoal/70">{LISTENING_PARAGRAPH_1}</p>
+            <p className="max-w-sm text-body text-charcoal/70">{copy.listeningParagraph1}</p>
 
             <span aria-hidden="true" className="h-px w-9 bg-charcoal/20" />
 
-            <p className="max-w-sm text-body text-charcoal/70">{LISTENING_PARAGRAPH_2}</p>
+            <p className="max-w-sm text-body text-charcoal/70">{copy.listeningParagraph2}</p>
           </div>
         </div>
       </div>

@@ -1,11 +1,4 @@
-import {
-  LONG_RUN_PARAGRAPH_1_LINE_1,
-  LONG_RUN_PARAGRAPH_1_LINE_2,
-  LONG_RUN_PARAGRAPH_2_LINE_1,
-  LONG_RUN_PARAGRAPH_2_LINE_2,
-  LONG_RUN_HEADLINE_PLAIN,
-  LONG_RUN_HEADLINE_ACCENT,
-} from "@/lib/longRunSection";
+import type { LongRunSectionCopyContent } from "@/lib/content";
 
 // "Built for the Long Run" — KIBO_Brand_and_Copy_Direction.md, "Built
 // for the Long Run — page anatomy" (LOCKED 27 Aug 2026). Fourth and
@@ -90,7 +83,10 @@ import {
 // longRunSection.ts (see that file's own comment) rather than picking
 // new ones — they're still the most balanced clause break in each
 // sentence.
-export function LongRunSection() {
+// `copy` (1 Sep 2026, owner: "make everything editable") — reverses
+// this file's own "fixed, code-level" call; see longRunSectionCopyType.ts
+// for why each paragraph keeps its own 2-line split as two fields.
+export function LongRunSection({ copy }: { copy: LongRunSectionCopyContent }) {
   return (
     <section className="w-full bg-sage-green/10">
       {/* Band height increased, same pass (owner: "increase the
@@ -137,22 +133,22 @@ export function LongRunSection() {
             + sage-green line), just inline on one line instead of two
             stacked ones. */}
         <h2 className="text-h2 font-bold leading-[1.1] tracking-tight text-charcoal">
-          {LONG_RUN_HEADLINE_PLAIN}
-          <span className="text-sage-green">{LONG_RUN_HEADLINE_ACCENT}</span>
+          {copy.headlinePlain}
+          <span className="text-sage-green">{copy.headlineAccent}</span>
         </h2>
 
         <span aria-hidden="true" className="h-px w-12 bg-sage-green/50" />
 
         <p className="text-body text-charcoal/70">
-          <span className="block">{LONG_RUN_PARAGRAPH_1_LINE_1}</span>
-          <span className="block">{LONG_RUN_PARAGRAPH_1_LINE_2}</span>
+          <span className="block">{copy.paragraph1Line1}</span>
+          <span className="block">{copy.paragraph1Line2}</span>
         </p>
 
         <span aria-hidden="true" className="h-px w-12 bg-sage-green/50" />
 
         <p className="text-body text-charcoal/70">
-          <span className="block">{LONG_RUN_PARAGRAPH_2_LINE_1}</span>
-          <span className="block">{LONG_RUN_PARAGRAPH_2_LINE_2}</span>
+          <span className="block">{copy.paragraph2Line1}</span>
+          <span className="block">{copy.paragraph2Line2}</span>
         </p>
       </div>
     </section>

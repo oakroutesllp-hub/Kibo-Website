@@ -68,7 +68,7 @@ export default async function SiteLayout({ children }: { children: ReactNode }) 
       requireGate={settings.requireCatalogGate}
       pdfUrl={catalog.pdfUrl ?? null}
     >
-      <TalkToKiboProvider>
+      <TalkToKiboProvider label={settings.getInTouchLabel}>
         {/* Dev-only diagnostic banner, deliberately left off the type scale
             (30 Aug 2026, owner: "no other font sizes floating around") —
             same reasoning as `style-guide/page.tsx`: this only ever
@@ -80,10 +80,10 @@ export default async function SiteLayout({ children }: { children: ReactNode }) 
             Sanity not connected — showing sample content
           </p>
         )}
-        <Nav showBlogInNav={settings.showBlogInNav} />
+        <Nav settings={settings} />
         <main className="flex flex-1 flex-col">{children}</main>
         <Footer settings={settings} />
-        <TalkToKiboStickyBar />
+        <TalkToKiboStickyBar label={settings.getInTouchLabel} />
       </TalkToKiboProvider>
     </DownloadCatalogProvider>
   );

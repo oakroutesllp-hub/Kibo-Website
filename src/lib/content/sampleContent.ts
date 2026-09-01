@@ -94,6 +94,16 @@ export const sampleSiteSettings: SiteSettingsContent = {
   whatsappNumber: "+91 75065 65454",
   requireCatalogGate: true,
   showBlogInNav: false,
+  // Global CTA label + nav labels (1 Sep 2026) — see
+  // siteSettingsType.ts's own field descriptions; this is the current
+  // production copy every trigger site-wide already used before these
+  // fields existed, not an invented placeholder.
+  getInTouchLabel: "Get in touch",
+  navLabelHome: "Home",
+  navLabelProducts: "Products",
+  navLabelCatalog: "Catalog",
+  navLabelBlog: "Blog",
+  navLabelOurStory: "Our Story",
 };
 
 // A second sample post added 31 Aug 2026, same time as the Blog page

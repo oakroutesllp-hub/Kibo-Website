@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { ProductsGridSection } from "@/components/sections/ProductsGridSection";
-import { getProductCategories } from "@/lib/content";
+import { getProductCategories, getSiteSettings } from "@/lib/content";
 
 // `description` added (30 Aug 2026, part of the same canonical-URL
 // discussion that trimmed this page down to just the grid) — this page
@@ -56,5 +56,14 @@ export const metadata: Metadata = {
 // (Client) component.
 export default async function ProductsPage() {
   const categories = await getProductCategories();
-  return <ProductsGridSection categories={categories} showBackToHome />;
+  // `getSiteSettings()` (1 Sep 2026) — see ProductsGridSection.tsx's own
+  // comment; needed here for the global "Get in touch" button label.
+  const settings = await getSiteSettings();
+  return (
+    <ProductsGridSection
+      categories={categories}
+      showBackToHome
+      getInTouchLabel={settings.getInTouchLabel}
+    />
+  );
 }

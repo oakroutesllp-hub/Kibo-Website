@@ -1,15 +1,6 @@
 import Image from "next/image";
 import { MediaPlaceholder } from "@/components/MediaPlaceholder";
-import type { Media } from "@/lib/content";
-import {
-  FOUNDER_HEADLINE_LINE_1,
-  FOUNDER_HEADLINE_LINE_2,
-  FOUNDER_PARAGRAPH_1,
-  FOUNDER_PARAGRAPH_2,
-  FOUNDER_PARAGRAPH_3,
-} from "@/lib/founderSection";
-// (all five constants are used — two of them, LINE_2 and PARAGRAPH_3,
-// via the `.replace("KIBO.", "")` split below, not rendered directly)
+import type { Media, OurStoryCopyContent } from "@/lib/content";
 
 // "The Person Behind KIBO" — third section of `/our-story`, directly
 // below The Tiruppur Story, at anchor `#founder`.
@@ -100,7 +91,11 @@ import {
 // `media` — Sanity-editable image/video slot, 30 Aug 2026 (see
 // OurStoryContent in lib/content/types.ts) — same mechanism as
 // WeStartedByListeningSection's own `media` prop.
-export function FounderSection({ media }: { media: Media }) {
+// `copy` (1 Sep 2026, owner: "make everything editable") — reverses
+// founderSection.ts's own "fixed, code-level" call. Takes the full
+// `OurStoryCopyContent` (same singleton also feeds Listening/Tiruppur)
+// and reads only its own Founder fields.
+export function FounderSection({ media, copy }: { media: Media; copy: OurStoryCopyContent }) {
   // Both "KIBO" mentions render in the accent color — split each string
   // at "KIBO." rather than storing the prefix/accent word as separate
   // constants, since the accent word is always the fixed literal "KIBO."
@@ -111,8 +106,8 @@ export function FounderSection({ media }: { media: Media }) {
   // see that constant's comment); PARAGRAPH_3 keeps its period (a real
   // sentence-ending full stop, not the same case), so its own replace
   // target is unchanged.
-  const headlineLine2Prefix = FOUNDER_HEADLINE_LINE_2.replace("KIBO", "");
-  const paragraph3Prefix = FOUNDER_PARAGRAPH_3.replace("KIBO.", "");
+  const headlineLine2Prefix = copy.founderHeadlineLine2.replace("KIBO", "");
+  const paragraph3Prefix = copy.founderParagraph3.replace("KIBO.", "");
 
   return (
     <section id="founder" className="w-full scroll-mt-24 bg-background">
@@ -308,7 +303,7 @@ export function FounderSection({ media }: { media: Media }) {
                 (30 Aug 2026, owner: "these fonts should look the same as
                 you build your market, we build the supply behind it"). */}
             <h2 className="text-h2 font-bold leading-[1.1] tracking-tight text-charcoal">
-              <span className="block">{FOUNDER_HEADLINE_LINE_1}</span>
+              <span className="block">{copy.founderHeadlineLine1}</span>
               <span className="block">
                 {headlineLine2Prefix}
                 <span className="text-sage-green">KIBO</span>
@@ -332,9 +327,9 @@ export function FounderSection({ media }: { media: Media }) {
                 the outer centering never actually reached this specific
                 span. */}
             <div className="flex flex-col items-center gap-4 lg:items-start">
-              <p className="max-w-sm text-body text-charcoal/70">{FOUNDER_PARAGRAPH_1}</p>
+              <p className="max-w-sm text-body text-charcoal/70">{copy.founderParagraph1}</p>
               <span aria-hidden="true" className="h-px w-9 bg-charcoal/20" />
-              <p className="max-w-sm text-body text-charcoal/70">{FOUNDER_PARAGRAPH_2}</p>
+              <p className="max-w-sm text-body text-charcoal/70">{copy.founderParagraph2}</p>
               <p className="max-w-sm text-body text-charcoal/70">
                 {paragraph3Prefix}
                 <span className="text-sage-green">KIBO.</span>

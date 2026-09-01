@@ -35,7 +35,10 @@ import { useDownloadCatalog } from "@/components/DownloadCatalogProvider";
 // since we already have their name + email — which opens
 // DownloadCatalogModal (site-wide, via DownloadCatalogProvider) already
 // knowing their details.
-export function TalkToKiboModal({ onClose }: { onClose: () => void }) {
+// `label` (1 Sep 2026, owner: "make everything editable") — the global
+// "Get in touch" button label, now Sanity-editable; see
+// TalkToKiboProvider.tsx's own comment.
+export function TalkToKiboModal({ onClose, label }: { onClose: () => void; label: string }) {
   const knownLead = getStoredLead();
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -111,7 +114,7 @@ export function TalkToKiboModal({ onClose }: { onClose: () => void }) {
               internal, not user-visible, and other elements still
               reference it via `aria-labelledby`. */}
           <h2 id="talk-to-kibo-heading" className="pr-8 text-h3 font-semibold text-charcoal">
-            Get in touch
+            {label}
           </h2>
           <p className="mt-1.5 text-support text-charcoal/60">
             Looking for men&apos;s apparel? Tell us what you need.

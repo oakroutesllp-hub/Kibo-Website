@@ -75,6 +75,51 @@ export const siteSettingsType = defineType({
       type: "boolean",
       initialValue: false,
     }),
+    // `getInTouchLabel` + nav labels (1 Sep 2026, owner: "make everything
+    // editable") — one shared button label used everywhere the site
+    // opens the enquiry form (nav bar, mobile sticky bar, footer, CTA
+    // nudge button, Catalog page, the modal's own heading) rather than
+    // five separate fields that could drift out of sync with each
+    // other — see Nav.tsx's own comment for the full "Talk to KIBO" →
+    // "Get in touch" rename history this field now controls going
+    // forward. Nav labels are separate fields, not one array tied to
+    // routes, since there are exactly 5, fixed — an array here would
+    // let someone add/remove/reorder entries in a way that doesn't
+    // correspond to any real route, which a fixed field per route can't
+    // do by construction.
+    defineField({
+      name: "getInTouchLabel",
+      title: "\"Get in touch\" button label",
+      description:
+        "Used on every button that opens the enquiry form — nav bar, mobile sticky bar, footer, the CTA nudge near the bottom of Home, and the Catalog page. Changing this changes all of them at once.",
+      type: "string",
+    }),
+    defineField({
+      name: "navLabelHome",
+      title: "Nav label — Home",
+      type: "string",
+    }),
+    defineField({
+      name: "navLabelProducts",
+      title: "Nav label — Products",
+      type: "string",
+    }),
+    defineField({
+      name: "navLabelCatalog",
+      title: "Nav label — Catalog",
+      type: "string",
+    }),
+    defineField({
+      name: "navLabelBlog",
+      title: "Nav label — Blog",
+      description: "Only shown if \"Show Blog in navigation\" above is ON.",
+      type: "string",
+    }),
+    defineField({
+      name: "navLabelOurStory",
+      title: "Nav label — Our Story",
+      type: "string",
+    }),
   ],
   preview: {
     prepare() {

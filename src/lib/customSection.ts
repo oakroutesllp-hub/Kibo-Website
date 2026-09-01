@@ -106,6 +106,16 @@
 // the old URL. Renaming forces every layer to treat these as genuinely
 // new URLs it's never cached before, which sidesteps the question of
 // which layer was stale rather than needing to diagnose it exactly.
+// Headline/divider-label constants added 1 Sep 2026 (owner: "make
+// everything editable") — these two strings previously lived only as
+// hardcoded JSX text directly in CustomSection.tsx; pulled out here so
+// getCustomSectionCopy() (lib/content/index.ts) has a single real
+// source of truth to fall back to, same as every other section's own
+// headline constants (SUPPLY_HEADLINE_LINE_1, TIRUPPUR_HEADLINE_LINE_1,
+// etc.) already provide.
+export const CUSTOM_SECTION_HEADLINE = "From reference to finished garment";
+export const CUSTOM_SECTION_DIVIDER_LABEL = "Built around your requirements";
+
 export type CustomProcessStep = {
   number: string;
   /** Short label for the step tracker, e.g. "Reference / Specification". */

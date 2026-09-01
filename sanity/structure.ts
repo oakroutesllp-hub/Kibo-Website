@@ -56,4 +56,30 @@ export const structure: StructureResolver = (S) =>
       S.listItem()
         .title("Catalog")
         .child(S.document().schemaType("catalog").documentId("catalog")),
+      S.divider(),
+      // Copy singletons, 1 Sep 2026 (owner: "make everything editable")
+      // — one per section, paired with that section's existing media
+      // singleton where one exists (Custom Section, Our Story). See
+      // each schema's own file for exactly what it covers.
+      S.listItem()
+        .title("Custom Section — Copy")
+        .child(
+          S.document().schemaType("customSectionCopy").documentId("customSectionCopy"),
+        ),
+      S.listItem()
+        .title("Supply Section — Copy")
+        .child(
+          S.document().schemaType("supplySectionCopy").documentId("supplySectionCopy"),
+        ),
+      S.listItem()
+        .title("Long Run Section — Copy")
+        .child(
+          S.document().schemaType("longRunSectionCopy").documentId("longRunSectionCopy"),
+        ),
+      S.listItem()
+        .title("CTA Nudge — Copy")
+        .child(S.document().schemaType("ctaNudgeCopy").documentId("ctaNudgeCopy")),
+      S.listItem()
+        .title("Our Story — Copy")
+        .child(S.document().schemaType("ourStoryCopy").documentId("ourStoryCopy")),
     ]);

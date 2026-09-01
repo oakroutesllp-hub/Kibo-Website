@@ -24,7 +24,15 @@ import type { ContentImage } from "@/lib/content";
 // (no cover uploaded yet) keeps this exact placeholder card, unchanged;
 // once the owner sets one in Sanity, it replaces the hairline-pattern
 // box with the real cover photo, same "Download PDF" tap target.
-export function CatalogCtaSection({ thumbnail }: { thumbnail: ContentImage }) {
+// `getInTouchLabel` (1 Sep 2026, owner: "make everything editable") —
+// the global "Get in touch" button label, now Sanity-editable.
+export function CatalogCtaSection({
+  thumbnail,
+  getInTouchLabel,
+}: {
+  thumbnail: ContentImage;
+  getInTouchLabel: string;
+}) {
   const { open: openTalkToKibo } = useTalkToKibo();
   const { open: openDownloadCatalog } = useDownloadCatalog();
 
@@ -97,9 +105,7 @@ export function CatalogCtaSection({ thumbnail }: { thumbnail: ContentImage }) {
           onClick={openTalkToKibo}
           className="rounded-full bg-charcoal px-4 py-2 text-support font-semibold text-background transition-colors hover:bg-green-gray"
         >
-          {/* "Talk to KIBO" → "Get in touch" (1 Sep 2026) — see
-              Footer.tsx's own comment for the full reasoning. */}
-          Get in touch
+          {getInTouchLabel}
         </button>
       </div>
     </div>

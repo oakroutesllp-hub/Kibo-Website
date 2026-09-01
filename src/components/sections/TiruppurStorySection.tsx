@@ -1,14 +1,7 @@
 import { Fragment } from "react";
 import Image from "next/image";
-import type { Media } from "@/lib/content";
-import {
-  TIRUPPUR_HEADLINE_LINE_1,
-  TIRUPPUR_HEADLINE_ACCENT,
-  TIRUPPUR_SUB_BLOCKS,
-  TIRUPPUR_CLOSING_BOLD,
-  TIRUPPUR_CLOSING_REST,
-  TIRUPPUR_PHOTO,
-} from "@/lib/tiruppurSection";
+import type { Media, OurStoryCopyContent } from "@/lib/content";
+import { TIRUPPUR_PHOTO } from "@/lib/tiruppurSection";
 
 // "The Tiruppur Story" — second section of `/our-story`, directly below
 // We Started by Listening, at anchor `#tiruppur`.
@@ -93,17 +86,27 @@ import {
 // click-to-play affordance — this section previously had none since it
 // only ever held an ambient background photo, not a click-to-play
 // video.
-export function TiruppurStorySection({ media }: { media?: Media }) {
-  // "KIBO" split out of TIRUPPUR_CLOSING_BOLD, 31 Aug 2026 (owner,
+// `copy` (1 Sep 2026, owner: "make everything editable") — reverses
+// tiruppurSection.ts's own "fixed, code-level" call. Takes the full
+// `OurStoryCopyContent` (same singleton also feeds Listening/Founder)
+// and reads only its own Tiruppur fields.
+export function TiruppurStorySection({
+  media,
+  copy,
+}: {
+  media?: Media;
+  copy: OurStoryCopyContent;
+}) {
+  // "KIBO" split out of the closing-bold copy, 31 Aug 2026 (owner,
   // testing live mobile, after a brief back-and-forth: "I think we just
   // say KIBO bold and then 'works within ecosystems like these' can be
   // regular font on mobile") — same `.replace` pattern
   // FounderSection.tsx already uses for its own "KIBO" split, rather
-  // than editing tiruppurSection.ts's copy itself (that constant is
-  // still the correct, unchanged BOLD/REST split for desktop — see the
-  // render below, `lg:font-semibold` restores the full original bold
-  // phrase at `lg` and up, this is mobile-only).
-  const closingBoldRest = TIRUPPUR_CLOSING_BOLD.replace("KIBO", "");
+  // than editing the copy itself (that field is still the correct,
+  // unchanged BOLD/REST split for desktop — see the render below,
+  // `lg:font-semibold` restores the full original bold phrase at `lg`
+  // and up, this is mobile-only).
+  const closingBoldRest = copy.tiruppurClosingBold.replace("KIBO", "");
 
   // Sub-blocks + closing statement, pulled into a variable 31 Aug 2026
   // so the same content can render twice below — once inside the
@@ -148,7 +151,7 @@ export function TiruppurStorySection({ media }: { media?: Media }) {
           (`lg:hidden`, see its own comment), so only the mobile
           rendering actually changes here. */}
       <div className="flex flex-col items-center gap-[1.75rem] lg:items-stretch lg:gap-[1.05rem]">
-        {TIRUPPUR_SUB_BLOCKS.map((block, i) => (
+        {copy.tiruppurSubBlocks.map((block, i) => (
           <Fragment key={block.label}>
             {i > 0 && (
               <span aria-hidden="true" className="h-px w-9 bg-charcoal/20 lg:hidden" />
@@ -178,7 +181,7 @@ export function TiruppurStorySection({ media }: { media?: Media }) {
       <p className="mt-[1.05rem] text-body text-charcoal lg:text-support">
         <span className="font-semibold">KIBO</span>
         <span className="font-normal lg:font-semibold">{closingBoldRest}</span>
-        {TIRUPPUR_CLOSING_REST}
+        {copy.tiruppurClosingRest}
       </p>
     </>
   );
@@ -230,8 +233,8 @@ export function TiruppurStorySection({ media }: { media?: Media }) {
             deep") — matches the same two-tone treatment now applied to
             Supply/Long Run/Listening's own headlines. */}
         <h2 className="text-h2 font-bold leading-[1.1] tracking-tight text-charcoal">
-          {TIRUPPUR_HEADLINE_LINE_1}{" "}
-          <span className="text-sage-green">{TIRUPPUR_HEADLINE_ACCENT}</span>
+          {copy.tiruppurHeadlinePlain}{" "}
+          <span className="text-sage-green">{copy.tiruppurHeadlineAccent}</span>
         </h2>
         <span aria-hidden="true" className="h-px w-12 bg-charcoal/20" />
       </div>

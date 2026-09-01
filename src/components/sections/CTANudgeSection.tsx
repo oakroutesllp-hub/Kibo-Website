@@ -1,7 +1,7 @@
 "use client";
 
 import { useTalkToKibo } from "@/components/TalkToKiboProvider";
-import { CTA_NUDGE_LINE_1, CTA_NUDGE_LINE_2, CTA_NUDGE_BUTTON_LABEL } from "@/lib/ctaNudge";
+import type { CtaNudgeCopyContent } from "@/lib/content";
 
 // Secondary "Talk to KIBO" CTA nudge — KIBO_Brand_and_Copy_Direction.md,
 // "Secondary CTA nudge — build spec, 27 Aug 2026." Sits directly after
@@ -69,7 +69,9 @@ import { CTA_NUDGE_LINE_1, CTA_NUDGE_LINE_2, CTA_NUDGE_BUTTON_LABEL } from "@/li
 // background` → `bg-sage-green/10`, same token Long Run already uses,
 // so the two sections' bands are visually one continuous field, not two
 // separately-tinted blocks that happen to match.
-export function CTANudgeSection() {
+// `copy` (1 Sep 2026, owner: "make everything editable") — reverses
+// lib/ctaNudge.ts's own "fixed, code-level" call.
+export function CTANudgeSection({ copy }: { copy: CtaNudgeCopyContent }) {
   const { open } = useTalkToKibo();
 
   return (
@@ -96,8 +98,23 @@ export function CTANudgeSection() {
           build your market" — i.e. Custom→Supply's own reverted value)
           — `pb-7 sm:pb-[2.45rem]` (28px/39.2px), matching that seam.
           Top (pairing with Long Run above) stays at the exact-match
-          `pt-4 sm:pt-5` — not flagged here. */}
-      <div className="mx-auto flex w-full max-w-[1728px] flex-col items-center gap-5 px-6 pt-4 pb-7 text-center sm:px-10 sm:pt-5 sm:pb-[2.45rem]">
+          `pt-4 sm:pt-5` — not flagged here.
+
+          **`pb-7 sm:pb-[2.45rem]` → `pb-16 sm:pb-[5.6rem]`, 1 Sep 2026**
+          (owner: "padding above 'Built for the long run' [and] below
+          'Get in touch' — take a call, make it symmetrical") — Long Run
+          and this section share one continuous sage-tinted band (see
+          LongRunSection.tsx's own comment), so the whitespace at the
+          band's very top (above its headline, `pt-16 sm:pt-[5.6rem]` =
+          64px/89.6px) and very bottom (below this section's own button)
+          read as one shape, not two independent seams — 28px/39.2px at
+          the bottom against 64px/89.6px at the top was visibly
+          lopsided. Matched the bottom UP to the top's value rather than
+          cutting the top down, since that top value was itself a
+          deliberate "give the band presence" choice (see Long Run's own
+          `py-20 sm:py-28` → trimmed → this comment's history) — worth
+          preserving rather than undoing for the sake of symmetry. */}
+      <div className="mx-auto flex w-full max-w-[1728px] flex-col items-center gap-5 px-6 pt-4 pb-16 text-center sm:px-10 sm:pt-5 sm:pb-[5.6rem]">
         {/* Dash accent added, 30 Aug 2026 (owner, on a screenshot of the
             merged sage-green band with Long Run above: "[these] need to
             look like separate things, however the gap seems larger —
@@ -139,8 +156,8 @@ export function CTANudgeSection() {
             switch to `sm:inline`, reconstituting the original single
             flowing sentence unchanged at `sm` and up. */}
         <p className="max-w-md text-body text-charcoal/80">
-          <span className="block sm:inline">{CTA_NUDGE_LINE_1}</span>{" "}
-          <span className="block sm:inline">{CTA_NUDGE_LINE_2}</span>
+          <span className="block sm:inline">{copy.line1}</span>{" "}
+          <span className="block sm:inline">{copy.line2}</span>
         </p>
         <button
           type="button"
@@ -152,7 +169,7 @@ export function CTANudgeSection() {
           // `px-6 py-3`.
           className="rounded-full bg-charcoal px-4 py-2 text-support font-semibold text-background transition-colors hover:bg-green-gray"
         >
-          {CTA_NUDGE_BUTTON_LABEL}
+          {copy.buttonLabel}
         </button>
       </div>
     </section>

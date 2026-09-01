@@ -4,8 +4,9 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Logo } from "./Logo";
-import { getVisibleNavLinks } from "@/lib/navigation";
+import { getVisibleNavLinks, applyNavLabelOverrides } from "@/lib/navigation";
 import { useTalkToKibo } from "@/components/TalkToKiboProvider";
+import type { SiteSettingsContent } from "@/lib/content";
 
 // Site-wide navigation — Phase 2. Supersedes the logo-only Masthead from
 // Phase 1 (which deliberately reserved this compositional slot without
@@ -70,8 +71,13 @@ import { useTalkToKibo } from "@/components/TalkToKiboProvider";
 // `showBlogInNav` (31 Aug 2026) — see lib/navigation.ts's own comment
 // on `getVisibleNavLinks`. Passed down from `(site)/layout.tsx`, which
 // already fetches `getSiteSettings()` for Footer.
-export function Nav({ showBlogInNav }: { showBlogInNav: boolean }) {
-  const navLinks = getVisibleNavLinks(showBlogInNav);
+// `settings` widened from a single `showBlogInNav: boolean` to the
+// full `SiteSettingsContent`, 1 Sep 2026 (owner: "make everything
+// editable") — this component now also needs the nav label overrides
+// and the global "Get in touch" button label, both living on that same
+// object (see siteSettingsType.ts).
+export function Nav({ settings }: { settings: SiteSettingsContent }) {
+  const navLinks = applyNavLabelOverrides(getVisibleNavLinks(settings.showBlogInNav), settings);
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [scrolledPastHero, setScrolledPastHero] = useState(false);
@@ -254,7 +260,7 @@ export function Nav({ showBlogInNav }: { showBlogInNav: boolean }) {
             onClick={openTalkToKibo}
             className="rounded-full bg-charcoal px-4 py-2 text-support font-semibold text-background transition-colors hover:bg-green-gray"
           >
-            Get in touch
+            {settings.getInTouchLabel}
           </button>
         </nav>
 

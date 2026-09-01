@@ -6,6 +6,11 @@ import { siteSettingsType } from "./siteSettingsType";
 import { productCategoryType } from "./productCategoryType";
 import { customSectionMediaType } from "./customSectionMediaType";
 import { catalogType } from "./catalogType";
+import { customSectionCopyType } from "./customSectionCopyType";
+import { supplySectionCopyType } from "./supplySectionCopyType";
+import { longRunSectionCopyType } from "./longRunSectionCopyType";
+import { ctaNudgeCopyType } from "./ctaNudgeCopyType";
+import { ourStoryCopyType } from "./ourStoryCopyType";
 
 export const schemaTypes = [
   seoType,
@@ -16,4 +21,9 @@ export const schemaTypes = [
   productCategoryType,
   customSectionMediaType,
   catalogType,
+  customSectionCopyType,
+  supplySectionCopyType,
+  longRunSectionCopyType,
+  ctaNudgeCopyType,
+  ourStoryCopyType,
 ];
