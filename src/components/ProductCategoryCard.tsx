@@ -339,6 +339,15 @@ export function ProductCategoryCard({
               src={currentFrame.image.url}
               alt={`${category.name} — ${currentFrame.label}`}
               fill
+              // `sizes` (2 Sep 2026, performance pass) — matches this
+              // card's real rendered width at each breakpoint
+              // (ProductsGridSection.tsx's own grid: lg 3-col within
+              // max-w-[887px] ≈ 285px, sm 2-col within max-w-[920px]
+              // ≈ 452px, mobile single column ≈ full width) — was
+              // missing entirely, which defaults to `100vw` and
+              // downloads a full-viewport-width image for what renders
+              // as a ~285px card.
+              sizes="(min-width: 1024px) 285px, (min-width: 640px) 452px, 100vw"
               className="object-cover"
             />
           ) : (

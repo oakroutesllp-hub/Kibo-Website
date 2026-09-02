@@ -137,10 +137,15 @@ function BlogCard({ article }: { article: ArticleContent }) {
     >
       <div className="relative aspect-[4/3] w-full overflow-hidden">
         {article.coverImage ? (
+          // `sizes` (2 Sep 2026, performance pass) — matches this
+          // card's real width in the listing page's 3/2/1-column grid
+          // (`max-w-5xl` container ≈ 293px per card at `lg`); was
+          // missing, defaulting to `100vw`.
           <Image
             src={article.coverImage.url}
             alt={article.coverImage.alt}
             fill
+            sizes="(min-width: 1024px) 293px, (min-width: 640px) 45vw, 100vw"
             className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
           />
         ) : (

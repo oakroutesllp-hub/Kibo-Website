@@ -38,10 +38,21 @@ export function Hero({ content }: { content: HomepageContent }) {
             playsInline
           />
         ) : content.heroMedia?.type === "image" ? (
+          // `sizes="100vw"` (2 Sep 2026, performance pass — owner:
+          // "lazy loading or other techniques... better this
+          // [Lighthouse] rating") — every `fill` image site-wide was
+          // missing an explicit `sizes` prop, which makes Next.js
+          // default to `sizes="100vw"` and always request the largest
+          // responsive variant regardless of the image's actual
+          // rendered size. Hero genuinely IS full-viewport-width, so
+          // `100vw` is correct here — made explicit rather than
+          // relying on the (correct, in this one case) default, same
+          // as every other `fill` image in this pass.
           <Image
             src={content.heroMedia.url}
             alt={content.heroMedia.alt}
             fill
+            sizes="100vw"
             className="object-cover"
             priority
           />

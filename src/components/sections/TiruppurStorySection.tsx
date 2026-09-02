@@ -1,5 +1,6 @@
 import { Fragment } from "react";
 import Image from "next/image";
+import { LazyBackgroundVideo } from "@/components/LazyBackgroundVideo";
 import type { Media, OurStoryCopyContent } from "@/lib/content";
 import { TIRUPPUR_PHOTO } from "@/lib/tiruppurSection";
 
@@ -257,27 +258,47 @@ export function TiruppurStorySection({
             established autoplay-ambient-background pattern from before
             it was a static photo — the new play button below is an
             explicit owner addition on top of that, not a replacement
-            for the autoplay. */}
+            for the autoplay.
+
+            **Extracted to `LazyBackgroundVideo`, 2 Sep 2026** (owner,
+            performance pass: worried real video, once uploaded, will
+            slow the site down further) — a bare `<video autoPlay src=...>`
+            starts fetching immediately regardless of scroll position;
+            this section sits 8th of 9 on Home, so that cost nothing
+            today (no real video uploaded) but would hit every page
+            load once one exists. See that component's own comment for
+            the full mechanism (IntersectionObserver, poster shown
+            until it's actually approaching viewport). */}
         {media?.type === "video" ? (
-          <video
+          <LazyBackgroundVideo
             src={media.url}
             poster={media.poster ?? undefined}
-            autoPlay
-            muted
-            loop
-            playsInline
-            className="absolute inset-0 h-full w-full object-cover"
+            className="absolute inset-0 h-full w-full"
           />
         ) : (
           <div
             aria-hidden="true"
             className="absolute inset-0 h-full w-full animate-[kibo-ken-burns_24s_ease-in-out_infinite_alternate]"
           >
+            {/* `priority` removed, `sizes="100vw"` added (2 Sep 2026,
+                performance pass — owner: "lazy loading or other
+                techniques... better this [Lighthouse] rating") —
+                `priority` tells Next.js to preload this as a critical,
+                above-the-fold resource and skip lazy-loading it
+                entirely, but this section is the 2nd of 3 on
+                `/our-story` (8th of 9 on Home) — nowhere near the fold.
+                It was competing with Hero's own, genuinely critical
+                `priority` image for early bandwidth on every page load,
+                for a photo most visitors won't scroll to for several
+                seconds. Now lazy-loads like every other below-the-fold
+                image on the site (the Next.js default once `priority`
+                is removed). `sizes="100vw"` was already correct for
+                this full-bleed slot but had never been made explicit. */}
             <Image
               src={media?.type === "image" ? media.url : TIRUPPUR_PHOTO}
               alt=""
               fill
-              priority
+              sizes="100vw"
               className="object-cover"
             />
           </div>

@@ -347,7 +347,12 @@ export function WeStartedByListeningSection({
                 className="h-full w-full object-cover"
               />
             ) : media?.type === "image" ? (
-              <Image src={media.url} alt={media.alt} fill className="object-cover" />
+              // `sizes` (2 Sep 2026, performance pass) — this panel is
+              // `lg:w-[70%]` of one column of a 2-col grid inside
+              // `max-w-[1728px]` (≈577px at desktop), full width below
+              // `lg`; was missing, defaulting to `100vw` at every
+              // breakpoint including desktop.
+              <Image src={media.url} alt={media.alt} fill sizes="(min-width: 1024px) 577px, 100vw" className="object-cover" />
             ) : (
               <MediaPlaceholder
                 label="We Started by Listening — image/video placeholder"

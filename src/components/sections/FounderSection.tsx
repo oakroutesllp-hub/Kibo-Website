@@ -248,7 +248,11 @@ export function FounderSection({ media, copy }: { media: Media; copy: OurStoryCo
                 className="h-full w-full object-cover"
               />
             ) : media?.type === "image" ? (
-              <Image src={media.url} alt={media.alt} fill className="object-cover" />
+              // `sizes` (2 Sep 2026, performance pass) — same panel
+              // shape as WeStartedByListeningSection.tsx's own image
+              // (see that file's comment); was missing, defaulting to
+              // `100vw`.
+              <Image src={media.url} alt={media.alt} fill sizes="(min-width: 1024px) 577px, 100vw" className="object-cover" />
             ) : (
               <MediaPlaceholder
                 label="The Person Behind KIBO — image/video placeholder"

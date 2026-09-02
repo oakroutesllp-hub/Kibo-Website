@@ -566,7 +566,22 @@ export function CustomSection({
                   <div className="mx-auto w-[80%]">
                     <div className="relative aspect-[4/5] overflow-hidden rounded-lg">
                       {stepMedia ? (
-                        <Image src={stepMedia.url} alt={stepMedia.alt || step.imageAlt} fill className="object-cover" />
+                        // `sizes` (2 Sep 2026, performance pass) —
+                        // matches this thumbnail's real rendered width
+                        // (measured live at 131px on desktop, per the
+                        // 6-column `max-w-[986px]` grid; 40vw is a safe
+                        // approximation for the 2/3-column mobile/tablet
+                        // rows) — was missing, defaulting to `100vw` and
+                        // downloading a full-viewport image for a
+                        // ~131px thumbnail. Same fix applied to the
+                        // attribute swatch below.
+                        <Image
+                          src={stepMedia.url}
+                          alt={stepMedia.alt || step.imageAlt}
+                          fill
+                          sizes="(min-width: 1024px) 131px, (min-width: 640px) 220px, 40vw"
+                          className="object-cover"
+                        />
                       ) : (
                         <MediaPlaceholder label={step.imageAlt} className="h-full w-full" />
                       )}
@@ -793,7 +808,13 @@ export function CustomSection({
                 <div className="mx-auto mt-1 w-[80%]">
                   <div className="relative aspect-[4/5] overflow-hidden rounded-lg">
                     {attrMedia ? (
-                      <Image src={attrMedia.url} alt={attrMedia.alt || attr.imageAlt} fill className="object-cover" />
+                      <Image
+                        src={attrMedia.url}
+                        alt={attrMedia.alt || attr.imageAlt}
+                        fill
+                        sizes="(min-width: 1024px) 131px, (min-width: 640px) 220px, 40vw"
+                        className="object-cover"
+                      />
                     ) : (
                       <MediaPlaceholder label={attr.imageAlt} className="h-full w-full" />
                     )}

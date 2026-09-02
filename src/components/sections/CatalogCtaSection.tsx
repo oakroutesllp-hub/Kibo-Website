@@ -59,7 +59,10 @@ export function CatalogCtaSection({
         className="relative flex aspect-[3/4] w-full max-w-[220px] flex-col items-center justify-center gap-3 overflow-hidden rounded-lg border border-charcoal/10 bg-charcoal/[0.04] bg-[repeating-linear-gradient(135deg,color-mix(in_srgb,var(--color-charcoal)_8%,transparent)_0,color-mix(in_srgb,var(--color-charcoal)_8%,transparent)_1px,transparent_1px,transparent_14px)] transition-colors hover:bg-charcoal/[0.07]"
       >
         {thumbnail ? (
-          <Image src={thumbnail.url} alt={thumbnail.alt} fill className="object-cover" />
+          // `sizes="220px"` (2 Sep 2026, performance pass) — this card
+          // has a hard `max-w-[220px]`, so that's its real width on
+          // every screen; was missing, defaulting to `100vw`.
+          <Image src={thumbnail.url} alt={thumbnail.alt} fill sizes="220px" className="object-cover" />
         ) : (
           <svg
             viewBox="0 0 24 24"
