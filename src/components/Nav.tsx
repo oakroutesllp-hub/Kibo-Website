@@ -266,11 +266,30 @@ export function Nav({ settings }: { settings: SiteSettingsContent }) {
             token, and ProductCategoryCard.tsx's own comment — the
             Specs pill's RESTING color (the "grey" it swaps FROM) moved
             to the same deeper shade too, same reasoning.
-          */}
+
+            **`active:bg-green-gray-deep` added, same day, follow-up**
+            (owner: "on mobile it doesn't [hover] — is that intentional?"
+            — genuinely yes, on purpose: `hover:` is gated behind
+            `@media (hover: hover)` so a touch tap can't get visually
+            "stuck" in the hover color with no cursor around to trigger
+            an un-hover, the same reasoning ProductCategoryCard.tsx's own
+            `group-active:bg-charcoal` comment already documents for the
+            Specs pill. But checking that pill's own fix exposed a real
+            gap: it got a tap-feedback fallback back on 31 Aug 2026,
+            these other 12 "Variant A" buttons never did — tapping any
+            of them gave literally zero visual response. `active:` fires
+            on the press itself (works on touch, unlike `:hover`), so
+            every one of these buttons now gets the identical
+            green-gray-deep flash on tap that desktop already gets on
+            hover — one consistent feedback language across both input
+            types, not just desktop. Applied identically to all 12
+            "Variant A" buttons site-wide (this one, the enquiry/
+            download modals, the mobile sticky bar, CTA nudge, Catalog,
+            Hero's own CTA, Products' own "Get in touch"). */}
           <button
             type="button"
             onClick={openTalkToKibo}
-            className="rounded-full bg-charcoal px-4 py-2 text-support font-semibold text-background transition-colors hover:bg-green-gray-deep"
+            className="rounded-full bg-charcoal px-4 py-2 text-support font-semibold text-background transition-colors hover:bg-green-gray-deep active:bg-green-gray-deep"
           >
             {settings.getInTouchLabel}
           </button>

@@ -96,7 +96,7 @@ export function TalkToKiboModal({ onClose, label }: { onClose: () => void; label
           <button
             type="button"
             onClick={handleDownloadCatalogClick}
-            className="mt-2 rounded-full bg-charcoal px-4 py-2 text-support font-semibold text-background transition-colors hover:bg-green-gray-deep"
+            className="mt-2 rounded-full bg-charcoal px-4 py-2 text-support font-semibold text-background transition-colors hover:bg-green-gray-deep active:bg-green-gray-deep"
           >
             Download the catalog
           </button>
@@ -189,7 +189,7 @@ export function TalkToKiboModal({ onClose, label }: { onClose: () => void; label
               // Padding matched to Nav's own CTA button, `px-4 py-2` (30
               // Aug 2026, owner: button-size consistency pass across
               // every "Talk to KIBO"-style trigger) — was `px-5 py-3`.
-              className="mt-2 rounded-full bg-charcoal px-4 py-2 text-support font-semibold text-background transition-colors hover:bg-green-gray-deep disabled:opacity-60"
+              className="mt-2 rounded-full bg-charcoal px-4 py-2 text-support font-semibold text-background transition-colors hover:bg-green-gray-deep active:bg-green-gray-deep disabled:opacity-60"
             >
               {submitting ? "Sending…" : "Send Enquiry"}
             </button>

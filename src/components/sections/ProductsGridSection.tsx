@@ -404,7 +404,7 @@ export function ProductsGridSection({
           <button
             type="button"
             onClick={openTalkToKibo}
-            className="rounded-full bg-charcoal px-4 py-2 text-support font-semibold text-background transition-colors hover:bg-green-gray-deep"
+            className="rounded-full bg-charcoal px-4 py-2 text-support font-semibold text-background transition-colors hover:bg-green-gray-deep active:bg-green-gray-deep"
           >
             {getInTouchLabel}
           </button>
