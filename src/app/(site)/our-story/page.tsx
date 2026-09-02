@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { WeStartedByListeningSection } from "@/components/sections/WeStartedByListeningSection";
 import { TiruppurStorySection } from "@/components/sections/TiruppurStorySection";
 import { FounderSection } from "@/components/sections/FounderSection";
-import { getOurStory, getOurStoryCopy } from "@/lib/content";
+import { getOurStory, getOurStoryCopy, getSiteSettings } from "@/lib/content";
 
 // `description` added (30 Aug 2026, same pass as products/page.tsx's
 // own — part of the canonical-URL/duplicate-content discussion) — had
@@ -34,15 +34,16 @@ export default async function OurStoryPage() {
   // uses for `getHomepage()`.
   const ourStory = await getOurStory();
   const ourStoryCopy = await getOurStoryCopy();
+  const settings = await getSiteSettings();
   return (
     <>
       {/* `showBackToHome`, 31 Aug 2026 — see that component's own prop
           comment. This is the one caller that wants it (a real, separate
           destination); `(site)/page.tsx`'s own Home usage doesn't pass
           it. */}
-      <WeStartedByListeningSection media={ourStory.listeningMedia} copy={ourStoryCopy} showBackToHome />
-      <TiruppurStorySection media={ourStory.tiruppurMedia} copy={ourStoryCopy} />
-      <FounderSection media={ourStory.founderMedia} copy={ourStoryCopy} />
+      <WeStartedByListeningSection media={ourStory.listeningMedia} copy={ourStoryCopy} showBackToHome carouselSeconds={settings.carouselIntervalSeconds} />
+      <TiruppurStorySection media={ourStory.tiruppurMedia} copy={ourStoryCopy} carouselSeconds={settings.carouselIntervalSeconds} />
+      <FounderSection media={ourStory.founderMedia} copy={ourStoryCopy} carouselSeconds={settings.carouselIntervalSeconds} />
     </>
   );
 }

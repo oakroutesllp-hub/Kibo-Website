@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { MediaPlaceholder } from "@/components/MediaPlaceholder";
+import { MediaCarousel } from "@/components/MediaCarousel";
 import type { Media, OurStoryCopyContent } from "@/lib/content";
 
 // "The Person Behind KIBO" — third section of `/our-story`, directly
@@ -95,7 +96,15 @@ import type { Media, OurStoryCopyContent } from "@/lib/content";
 // founderSection.ts's own "fixed, code-level" call. Takes the full
 // `OurStoryCopyContent` (same singleton also feeds Listening/Tiruppur)
 // and reads only its own Founder fields.
-export function FounderSection({ media, copy }: { media: Media; copy: OurStoryCopyContent }) {
+export function FounderSection({
+  media,
+  copy,
+  carouselSeconds,
+}: {
+  media: Media;
+  copy: OurStoryCopyContent;
+  carouselSeconds?: number;
+}) {
   // Both "KIBO" mentions render in the accent color — split each string
   // at "KIBO." rather than storing the prefix/accent word as separate
   // constants, since the accent word is always the fixed literal "KIBO."
@@ -247,6 +256,8 @@ export function FounderSection({ media, copy }: { media: Media; copy: OurStoryCo
                 preload="metadata"
                 className="h-full w-full object-cover"
               />
+            ) : media?.type === "carousel" ? (
+              <MediaCarousel images={media.images} sizes="(min-width: 1024px) 577px, 100vw" intervalSeconds={carouselSeconds} />
             ) : media?.type === "image" ? (
               // `sizes` (2 Sep 2026, performance pass) — same panel
               // shape as WeStartedByListeningSection.tsx's own image

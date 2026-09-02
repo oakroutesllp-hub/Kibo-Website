@@ -104,6 +104,7 @@ export const sampleSiteSettings: SiteSettingsContent = {
   navLabelCatalog: "Catalog",
   navLabelBlog: "Blog",
   navLabelOurStory: "Our Story",
+  carouselIntervalSeconds: 5,
 };
 
 // A second sample post added 31 Aug 2026, same time as the Blog page

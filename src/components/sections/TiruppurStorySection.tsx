@@ -1,6 +1,7 @@
 import { Fragment } from "react";
 import Image from "next/image";
 import { LazyBackgroundVideo } from "@/components/LazyBackgroundVideo";
+import { MediaCarousel } from "@/components/MediaCarousel";
 import type { Media, OurStoryCopyContent } from "@/lib/content";
 import { TIRUPPUR_PHOTO } from "@/lib/tiruppurSection";
 
@@ -94,9 +95,11 @@ import { TIRUPPUR_PHOTO } from "@/lib/tiruppurSection";
 export function TiruppurStorySection({
   media,
   copy,
+  carouselSeconds,
 }: {
   media?: Media;
   copy: OurStoryCopyContent;
+  carouselSeconds?: number;
 }) {
   // "KIBO" split out of the closing-bold copy, 31 Aug 2026 (owner,
   // testing live mobile, after a brief back-and-forth: "I think we just
@@ -275,6 +278,8 @@ export function TiruppurStorySection({
             poster={media.poster ?? undefined}
             className="absolute inset-0 h-full w-full"
           />
+        ) : media?.type === "carousel" ? (
+          <MediaCarousel images={media.images} sizes="100vw" intervalSeconds={carouselSeconds} />
         ) : (
           <div
             aria-hidden="true"

@@ -80,10 +80,19 @@ function resolveImage(image: Image | undefined, alt: string): ContentImage {
 // image/video toggle mechanism was reused for 3 more media slots on
 // `/our-story` (see OurStoryContent) — behavior unchanged, just no
 // longer named after the one field it originally served.
+//
+// Extended 2 Sep 2026 with an optional 4th argument, a carousel image
+// array — precedence is video, then carousel, then single image: video
+// stays first since that was the existing behavior (an editor who's set
+// a video clearly wants that playing), carousel outranks the single
+// image since uploading several images is a deliberate multi-step
+// choice, unlikely to be left over by accident the way a single image
+// field might be.
 function resolveMedia(
   image: Image | undefined,
   videoUrl: string | undefined,
   alt: string,
+  carouselImages?: Image[],
 ): Media {
   if (videoUrl) {
     return {
@@ -91,6 +100,12 @@ function resolveMedia(
       url: videoUrl,
       poster: resolveImage(image, alt)?.url ?? null,
     };
+  }
+  if (carouselImages?.length) {
+    const resolved = carouselImages
+      .map((img, i) => resolveImage(img, `${alt} — image ${i + 1}`))
+      .filter((img): img is NonNullable<ContentImage> => img !== null);
+    if (resolved.length) return { type: "carousel", images: resolved };
   }
   const resolved = resolveImage(image, alt);
   return resolved ? { type: "image", url: resolved.url, alt: resolved.alt } : null;
@@ -126,12 +141,14 @@ type RawHomepage = {
   heroSubheading?: string;
   heroMedia?: Image;
   heroVideoUrl?: string;
+  heroCarousel?: Image[];
   seo?: RawSeo;
 };
 
 const homepageQuery = `*[_type == "homepage"][0]{
   heroHeading, heroSubheading, heroMedia,
   "heroVideoUrl": heroVideo.asset->url,
+  heroCarousel,
   seo
 }`;
 
@@ -160,8 +177,12 @@ export async function getHomepage(): Promise<HomepageContent> {
       // once one is, `resolveHeroMedia` returns non-null and this
       // fallback stops applying automatically, no code change needed.
       heroMedia:
-        resolveMedia(doc.heroMedia, doc.heroVideoUrl, doc.heroHeading || "KIBO") ??
-        sampleHomepage.heroMedia,
+        resolveMedia(
+          doc.heroMedia,
+          doc.heroVideoUrl,
+          doc.heroHeading || "KIBO",
+          doc.heroCarousel,
+        ) ?? sampleHomepage.heroMedia,
       seo: resolveSeo(doc.seo),
     };
   } catch {
@@ -172,16 +193,19 @@ export async function getHomepage(): Promise<HomepageContent> {
 type RawOurStory = {
   listeningMedia?: Image;
   listeningVideoUrl?: string;
+  listeningCarousel?: Image[];
   tiruppurMedia?: Image;
   tiruppurVideoUrl?: string;
+  tiruppurCarousel?: Image[];
   founderMedia?: Image;
   founderVideoUrl?: string;
+  founderCarousel?: Image[];
 };
 
 const ourStoryQuery = `*[_type == "ourStory"][0]{
-  listeningMedia, "listeningVideoUrl": listeningVideo.asset->url,
-  tiruppurMedia, "tiruppurVideoUrl": tiruppurVideo.asset->url,
-  founderMedia, "founderVideoUrl": founderVideo.asset->url
+  listeningMedia, "listeningVideoUrl": listeningVideo.asset->url, listeningCarousel,
+  tiruppurMedia, "tiruppurVideoUrl": tiruppurVideo.asset->url, tiruppurCarousel,
+  founderMedia, "founderVideoUrl": founderVideo.asset->url, founderCarousel
 }`;
 
 // `/our-story` page media — see OurStoryContent's own comment. Same
@@ -201,13 +225,13 @@ export async function getOurStory(): Promise<OurStoryContent> {
 
     return {
       listeningMedia:
-        resolveMedia(doc.listeningMedia, doc.listeningVideoUrl, "") ??
+        resolveMedia(doc.listeningMedia, doc.listeningVideoUrl, "", doc.listeningCarousel) ??
         sampleOurStory.listeningMedia,
       tiruppurMedia:
-        resolveMedia(doc.tiruppurMedia, doc.tiruppurVideoUrl, "") ??
+        resolveMedia(doc.tiruppurMedia, doc.tiruppurVideoUrl, "", doc.tiruppurCarousel) ??
         sampleOurStory.tiruppurMedia,
       founderMedia:
-        resolveMedia(doc.founderMedia, doc.founderVideoUrl, "") ??
+        resolveMedia(doc.founderMedia, doc.founderVideoUrl, "", doc.founderCarousel) ??
         sampleOurStory.founderMedia,
     };
   } catch {
@@ -310,12 +334,14 @@ type RawSiteSettings = {
   navLabelCatalog?: string;
   navLabelBlog?: string;
   navLabelOurStory?: string;
+  carouselIntervalSeconds?: number;
 };
 
 const siteSettingsQuery = `*[_type == "siteSettings"][0]{
   footerBrandLines, footerAddress, footerEmail, enquiryEmail,
   linkedInUrl, instagramUrl, whatsappNumber, requireCatalogGate, showBlogInNav,
-  getInTouchLabel, navLabelHome, navLabelProducts, navLabelCatalog, navLabelBlog, navLabelOurStory
+  getInTouchLabel, navLabelHome, navLabelProducts, navLabelCatalog, navLabelBlog, navLabelOurStory,
+  carouselIntervalSeconds
 }`;
 
 // Hardcoded defaults for the global CTA label + nav labels (1 Sep
@@ -394,6 +420,13 @@ export async function getSiteSettings(): Promise<SiteSettingsContent> {
       navLabelCatalog: doc.navLabelCatalog || DEFAULT_NAV_LABELS.navLabelCatalog,
       navLabelBlog: doc.navLabelBlog || DEFAULT_NAV_LABELS.navLabelBlog,
       navLabelOurStory: doc.navLabelOurStory || DEFAULT_NAV_LABELS.navLabelOurStory,
+      // `??`, not `||` — same reasoning as `requireCatalogGate` above,
+      // though a carousel speed of literally `0` isn't something the
+      // Sanity field's own `.min(2)` validation would allow through
+      // anyway; kept for consistency with every other numeric/boolean
+      // field's fallback style in this function.
+      carouselIntervalSeconds:
+        doc.carouselIntervalSeconds ?? sampleSiteSettings.carouselIntervalSeconds,
     };
   } catch {
     return {

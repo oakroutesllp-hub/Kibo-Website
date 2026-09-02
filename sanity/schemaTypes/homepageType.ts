@@ -34,7 +34,22 @@ export const homepageType = defineType({
       type: "file",
       options: { accept: "video/*" },
       description:
-        "Optional — a short video (per the architecture brief's 'cinematic' hero). Takes priority over Hero image if both are set.",
+        "Optional — a short video (per the architecture brief's 'cinematic' hero). Takes priority over Hero image and Hero carousel if any are set.",
+    }),
+    defineField({
+      // Carousel option (2 Sep 2026, owner: "in addition to the image
+      // or video, I would like to have an option where multiple
+      // pictures can be scrolled, like a carousel"). Used only if Hero
+      // video above is empty; takes priority over the single Hero
+      // image above if both are set (see resolveMedia's own comment in
+      // lib/content/index.ts for the full precedence order).
+      name: "heroCarousel",
+      title: "Hero image carousel",
+      type: "array",
+      of: [{ type: "image", options: { hotspot: true } }],
+      validation: (Rule) => Rule.max(6),
+      description:
+        "Optional — up to 6 images that scroll automatically (visitors can also use the arrows/dots). Used if Hero video above is empty; takes priority over the single Hero image above if both are set.",
     }),
     defineField({
       name: "seo",

@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { MediaPlaceholder } from "@/components/MediaPlaceholder";
+import { MediaCarousel } from "@/components/MediaCarousel";
 import type { HomepageContent } from "@/lib/content";
 
 // Website Architecture §01 HERO, rebuilt taller/more immersive per
@@ -23,7 +24,13 @@ import type { HomepageContent } from "@/lib/content";
 // Text content is padded from the top enough to clear the fixed nav
 // (~89px, see Nav.tsx) — re-measure and adjust `pt-28`/`sm:pt-32` below
 // if Nav's height changes.
-export function Hero({ content }: { content: HomepageContent }) {
+export function Hero({
+  content,
+  carouselSeconds,
+}: {
+  content: HomepageContent;
+  carouselSeconds?: number;
+}) {
   return (
     <section id="hero" className="relative h-dvh min-h-[32rem] w-full overflow-hidden">
       <div className="absolute inset-0">
@@ -37,6 +44,8 @@ export function Hero({ content }: { content: HomepageContent }) {
             loop
             playsInline
           />
+        ) : content.heroMedia?.type === "carousel" ? (
+          <MediaCarousel images={content.heroMedia.images} sizes="100vw" intervalSeconds={carouselSeconds} />
         ) : content.heroMedia?.type === "image" ? (
           // `sizes="100vw"` (2 Sep 2026, performance pass — owner:
           // "lazy loading or other techniques... better this

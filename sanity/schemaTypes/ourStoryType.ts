@@ -32,7 +32,16 @@ export const ourStoryType = defineType({
       title: "We Started by Listening — video",
       type: "file",
       options: { accept: "video/*" },
-      description: "Optional. Takes priority over the image above if both are set.",
+      description: "Optional. Takes priority over the image and carousel above if any are set.",
+    }),
+    defineField({
+      name: "listeningCarousel",
+      title: "We Started by Listening — image carousel",
+      type: "array",
+      of: [{ type: "image", options: { hotspot: true } }],
+      validation: (Rule) => Rule.max(6),
+      description:
+        "Optional — up to 6 images that scroll automatically. Used if the video above is empty; takes priority over the single image above if both are set.",
     }),
     defineField({
       name: "tiruppurMedia",
@@ -47,7 +56,16 @@ export const ourStoryType = defineType({
       title: "Where Apparel Runs Deep — video",
       type: "file",
       options: { accept: "video/*" },
-      description: "Optional. Takes priority over the image above if both are set.",
+      description: "Optional. Takes priority over the image and carousel above if any are set.",
+    }),
+    defineField({
+      name: "tiruppurCarousel",
+      title: "Where Apparel Runs Deep — image carousel",
+      type: "array",
+      of: [{ type: "image", options: { hotspot: true } }],
+      validation: (Rule) => Rule.max(6),
+      description:
+        "Optional — up to 6 images that scroll automatically. Used if the video above is empty; takes priority over the single image above if both are set.",
     }),
     defineField({
       name: "founderMedia",
@@ -62,7 +80,16 @@ export const ourStoryType = defineType({
       title: "The Person Behind KIBO — video",
       type: "file",
       options: { accept: "video/*" },
-      description: "Optional. Takes priority over the image above if both are set.",
+      description: "Optional. Takes priority over the image and carousel above if any are set.",
+    }),
+    defineField({
+      name: "founderCarousel",
+      title: "The Person Behind KIBO — image carousel",
+      type: "array",
+      of: [{ type: "image", options: { hotspot: true } }],
+      validation: (Rule) => Rule.max(6),
+      description:
+        "Optional — up to 6 images that scroll automatically. Used if the video above is empty; takes priority over the single image above if both are set.",
     }),
   ],
   preview: {

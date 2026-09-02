@@ -10,17 +10,24 @@ export type ContentImage = {
   alt: string;
 } | null;
 
-// Generic image-or-video media slot — editors pick one of the two fields
-// in Sanity, video wins if both are set. `poster` is the image, used as
-// the video's poster frame when both are present. Originally
-// `HeroMedia` (Hero was the only Sanity-editable media slot); generalized
-// 30 Aug 2026 when the same image/video toggle was extended to three more
-// spots on `/our-story` (We Started by Listening, The Tiruppur Story, The
-// Person Behind KIBO) — see `OurStoryContent` below. `HeroMedia` kept as
-// an alias so Hero's own code/comments referencing that name don't need
-// touching.
+// Generic image-or-video-or-carousel media slot — editors pick one of the
+// three fields in Sanity; precedence when more than one is set: video,
+// then carousel, then single image (see resolveMedia's own comment).
+// `poster` is the image, used as the video's poster frame when both are
+// present. Originally `HeroMedia` (Hero was the only Sanity-editable
+// media slot); generalized 30 Aug 2026 when the same image/video toggle
+// was extended to three more spots on `/our-story` (We Started by
+// Listening, The Tiruppur Story, The Person Behind KIBO) — see
+// `OurStoryContent` below. `HeroMedia` kept as an alias so Hero's own
+// code/comments referencing that name don't need touching.
+//
+// `carousel` variant added 2 Sep 2026 (owner: "in addition to the image
+// or video, I would like to have an option where multiple pictures can
+// be scrolled, like a carousel... maybe five, six images") — a bare
+// array of up to 6 images, rendered by the new MediaCarousel component.
 export type Media =
   | { type: "video"; url: string; poster: string | null }
+  | { type: "carousel"; images: { url: string; alt: string }[] }
   | { type: "image"; url: string; alt: string }
   | null;
 
@@ -115,6 +122,10 @@ export type SiteSettingsContent = {
   navLabelCatalog: string;
   navLabelBlog: string;
   navLabelOurStory: string;
+  // Image carousel speed (2 Sep 2026) — see siteSettingsType.ts's own
+  // field description. Falls back to 5 (seconds) when unset, same
+  // default MediaCarousel.tsx always used before this field existed.
+  carouselIntervalSeconds: number;
 };
 
 // Product Categories (31 Aug 2026) — see productCategoryType.ts's own

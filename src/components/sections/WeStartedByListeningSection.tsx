@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { MediaPlaceholder } from "@/components/MediaPlaceholder";
+import { MediaCarousel } from "@/components/MediaCarousel";
 import { BackToHomeLink } from "@/components/BackToHomeLink";
 import type { Media, OurStoryCopyContent } from "@/lib/content";
 
@@ -64,10 +65,12 @@ export function WeStartedByListeningSection({
   media,
   copy,
   showBackToHome = false,
+  carouselSeconds,
 }: {
   media: Media;
   copy: OurStoryCopyContent;
   showBackToHome?: boolean;
+  carouselSeconds?: number;
 }) {
   return (
     <section id="listening" className="w-full scroll-mt-24 bg-background">
@@ -346,6 +349,8 @@ export function WeStartedByListeningSection({
                 preload="metadata"
                 className="h-full w-full object-cover"
               />
+            ) : media?.type === "carousel" ? (
+              <MediaCarousel images={media.images} sizes="(min-width: 1024px) 577px, 100vw" intervalSeconds={carouselSeconds} />
             ) : media?.type === "image" ? (
               // `sizes` (2 Sep 2026, performance pass) — this panel is
               // `lg:w-[70%]` of one column of a 2-col grid inside

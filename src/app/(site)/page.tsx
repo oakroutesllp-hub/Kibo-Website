@@ -101,7 +101,7 @@ export default async function Home() {
   const settings = await getSiteSettings();
   return (
     <>
-      <Hero content={homepage} />
+      <Hero content={homepage} carouselSeconds={settings.carouselIntervalSeconds} />
       <ProductsGridSection
         headingLevel="h2"
         categories={productCategories}
@@ -111,9 +111,9 @@ export default async function Home() {
       <SupplySection copy={supplySectionCopy} />
       <LongRunSection copy={longRunSectionCopy} />
       <CTANudgeSection copy={ctaNudgeCopy} />
-      <WeStartedByListeningSection media={ourStory.listeningMedia} copy={ourStoryCopy} />
-      <TiruppurStorySection media={ourStory.tiruppurMedia} copy={ourStoryCopy} />
-      <FounderSection media={ourStory.founderMedia} copy={ourStoryCopy} />
+      <WeStartedByListeningSection media={ourStory.listeningMedia} copy={ourStoryCopy} carouselSeconds={settings.carouselIntervalSeconds} />
+      <TiruppurStorySection media={ourStory.tiruppurMedia} copy={ourStoryCopy} carouselSeconds={settings.carouselIntervalSeconds} />
+      <FounderSection media={ourStory.founderMedia} copy={ourStoryCopy} carouselSeconds={settings.carouselIntervalSeconds} />
     </>
   );
 }

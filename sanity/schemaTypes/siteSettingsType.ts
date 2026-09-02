@@ -68,6 +68,22 @@ export const siteSettingsType = defineType({
       initialValue: true,
     }),
     defineField({
+      // Carousel speed (2 Sep 2026, owner: "let the number of seconds
+      // be something that I can customize... or does it stay hard
+      // coded" — made owner-editable rather than freezing it). One
+      // shared value for every image carousel on the site (Hero, We
+      // Started by Listening, Where Apparel Runs Deep, The Person
+      // Behind KIBO) — see MediaCarousel.tsx's own comment for why this
+      // is one setting, not one per section.
+      name: "carouselIntervalSeconds",
+      title: "Image carousel speed (seconds per image)",
+      description:
+        "How long each image in a carousel shows before auto-advancing to the next. Visitors can still click the arrows/dots to move faster or slower on their own — this only controls the automatic timing. Leave blank for the default (5 seconds).",
+      type: "number",
+      validation: (rule) => rule.min(2).max(20),
+      initialValue: 5,
+    }),
+    defineField({
       name: "showBlogInNav",
       title: "Show Blog in navigation",
       description:
