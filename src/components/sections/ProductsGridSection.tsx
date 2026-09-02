@@ -334,8 +334,28 @@ export function ProductsGridSection({
         looks smaller in my opinion... stretch by another 15-20%") — a
         further ~18% bump on top of the fifth pass, same mechanism, same
         `2xl:`-only gate, `lg:` and below still completely untouched.
+
+        **`2xl:max-w-[1300px]` → `2xl:max-w-[1728px]`, 2 Sep 2026,
+        reported again the next round** (owner, screenshot from a real
+        27" 2560×1440 Mac display, windowed not fullscreen: "still
+        looks a little tight... a lot of padding left/right"). Measured
+        live at the full 2560px viewport before touching anything: the
+        1300px cap was leaving 630px of empty margin on EACH side (49%
+        of the screen blank) — worse than the 509px gap that triggered
+        the FIRST bump, because 1300px still has no upper bound of its
+        own past 2560px either. Rather than pick another arbitrary
+        number and risk a third round of "still tight," this now
+        matches `max-w-[1728px]` exactly — the same outer content
+        ceiling Nav, Footer, Hero, and every other section on the page
+        already use (see this section's own OUTER wrapper two lines
+        below, which was already at 1728px this whole time — only the
+        grid's own inner cap was lagging behind it). Same safe
+        mechanism as both prior bumps: CSS Grid's fixed `gap-4` (16px)
+        doesn't scale with the container, so widening a fixed 3-column
+        grid just grows all 3 columns equally — no change to the
+        image-to-gap ratio, `lg:` and below untouched by construction.
       */}
-      <div className="mx-auto grid w-full grid-cols-1 gap-8 sm:max-w-[920px] sm:grid-cols-2 sm:gap-4 lg:max-w-[887px] lg:grid-cols-3 lg:gap-4 2xl:max-w-[1300px]">
+      <div className="mx-auto grid w-full grid-cols-1 gap-8 sm:max-w-[920px] sm:grid-cols-2 sm:gap-4 lg:max-w-[887px] lg:grid-cols-3 lg:gap-4 2xl:max-w-[1728px]">
         {categories.map((category) => (
           <div
             key={category.name}

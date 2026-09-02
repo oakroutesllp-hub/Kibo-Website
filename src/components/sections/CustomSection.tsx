@@ -444,8 +444,34 @@ export function CustomSection({
             **`2xl:max-w-[1200px]` → `2xl:max-w-[1400px]`, same day,
             immediate follow-up** — same "stretch by another 15-20%"
             request and same ~18% bump as ProductsGridSection.tsx's own
-            matching follow-up; see that file's own comment. */}
-        <div className="mx-auto flex w-full max-w-[986px] flex-col gap-12 sm:gap-16 2xl:max-w-[1400px]">
+            matching follow-up; see that file's own comment.
+
+            **`2xl:max-w-[1400px]` → `2xl:max-w-[1648px]`, 2 Sep 2026,
+            reported again the next round** — same report, same fix as
+            ProductsGridSection.tsx's own matching third bump (owner,
+            screenshot from a real 2560×1440 Mac display: "still looks
+            a little tight"); see that file's own comment for the full
+            measurement. 1648px is this wrapper's ceiling once nested
+            inside the OUTER `max-w-[1728px] px-6 sm:px-10` wrapper two
+            lines up — 1728px minus that wrapper's own 40px+40px side
+            padding — so this inner content block can finally reach
+            exactly as wide as its own outer section allows, the same
+            full-parity target ProductsGridSection.tsx's sibling bump
+            just reached (1728px there has no further padding to
+            subtract, since that section's grid sits directly inside
+            its own `max-w-[1728px] px-6 sm:px-10` wrapper the same
+            way). Safe for the same reason as ever prior bump here, for
+            an even simpler reason than ProductsGridSection.tsx's own
+            fixed-`gap-4` case: the photo-card grid below is
+            `lg:grid-cols-6 lg:gap-x-0` (zero horizontal gap at `lg`+)
+            with each thumbnail sized as `w-[80%]` of its own column —
+            widening this outer wrapper just grows all 6 equal columns
+            together, so every image scales up by the same proportion
+            with nothing to distort; the attribute grid right below
+            follows the identical 6-column/zero-gap pattern. `lg:` and
+            below untouched by construction — this is a `2xl:`-only
+            addition. */}
+        <div className="mx-auto flex w-full max-w-[986px] flex-col gap-12 sm:gap-16 2xl:max-w-[1648px]">
           {/* Tracker-to-photo-grid gap cut the same way, same request
               ("reduce whitespace vertically here as well" — a follow-up
               screenshot showed this exact gap, between the tracker labels
