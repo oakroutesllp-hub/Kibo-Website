@@ -421,8 +421,31 @@ export function CustomSection({
             `gap-12 sm:gap-16` (48px/64px) in the same request; see that
             div's own comment) — no longer tied to the Get in
             touch→headline gap (that one now moves the other way, up),
-            just to headline→tracker instead. */}
-        <div className="mx-auto flex w-full max-w-[986px] flex-col gap-12 sm:gap-16">
+            just to headline→tracker instead.
+
+            **`2xl:max-w-[1200px]` added, 2 Sep 2026** — same fix, same
+            reasoning, same day as ProductsGridSection.tsx's own
+            `2xl:max-w-[1100px]` addition (see that file's own comment
+            for the full "friend feedback on a widescreen Mac" story and
+            why this is deliberately NOT a repeat of this exact
+            section's own earlier "yikes"'d widen attempt). Measured
+            live at 1920px: this wrapper's flat `max-w-[986px]` (no
+            upper-bound breakpoint at all, unlike the products grid's
+            `lg:`-gated one) was producing 460px of empty margin per
+            side. `2xl:` (1536px+) is a strictly ADDITIVE breakpoint on
+            top of the existing unprefixed 986px base — every viewport
+            below 1536px, including the 13" laptop and phone the owner
+            confirmed already look right, renders identically to before
+            this change. 1200px is a ~22% bump, matching
+            ProductsGridSection's ~24% bump so the two sections (which
+            visually read as one continuous block on Home) grow by
+            roughly the same proportion.
+
+            **`2xl:max-w-[1200px]` → `2xl:max-w-[1400px]`, same day,
+            immediate follow-up** — same "stretch by another 15-20%"
+            request and same ~18% bump as ProductsGridSection.tsx's own
+            matching follow-up; see that file's own comment. */}
+        <div className="mx-auto flex w-full max-w-[986px] flex-col gap-12 sm:gap-16 2xl:max-w-[1400px]">
           {/* Tracker-to-photo-grid gap cut the same way, same request
               ("reduce whitespace vertically here as well" — a follow-up
               screenshot showed this exact gap, between the tracker labels

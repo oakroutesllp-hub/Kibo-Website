@@ -304,8 +304,38 @@ export function ProductsGridSection({
           107.8% ratio on the third-pass 264px.
         - sm: max-w-[856px] → max-w-[920px] → (920−16)/2 = 452px, a
           107.6% ratio on the third-pass 420px.
+
+        Fifth pass, 2 Sep 2026 — `2xl:max-w-[1100px]` added, NOT a
+        revision of the `lg:` value above (owner, relaying friend
+        feedback: "on a large Mac/widescreen it looks too narrow, too
+        much padding left/right — fine on my 13" laptop and phone").
+        Measured live at 1920px viewport before touching anything: the
+        `lg:max-w-[887px]` cap was producing 509px of empty margin on
+        EACH side (53% of the screen blank) — `lg:` has no upper bound,
+        so the margin just keeps growing on any screen wider than a
+        normal laptop. Deliberately NOT a repeat of the widen this
+        section's own sibling section already got "yikes"'d on
+        (CustomSection.tsx's history, same day) — that failure came from
+        shrinking the gap-to-image ratio (bumping the image's fraction
+        of its column while holding the gap fixed); this instead scales
+        the whole container up as one unit at a NEW, higher-only
+        breakpoint (Tailwind's `2xl`, 1536px+) — `lg:`'s own cap, gap,
+        and 3-column layout are completely unchanged below that, so the
+        13"-laptop and phone experience the owner confirmed is "fine"
+        is untouched by construction, not just by intent. 1100px is a
+        24% bump from 887px, landing the same-shape grid moderately
+        larger with proportionally more breathing room restored at the
+        edges, verified live at 1920px/2560px before shipping (see this
+        session's own verification, not repeated in-line here).
+
+        **`2xl:max-w-[1100px]` → `2xl:max-w-[1300px]`, same day,
+        immediate follow-up** (owner, reviewing the fifth pass live via
+        Chrome DevTools' responsive mode at a simulated 1920px: "still
+        looks smaller in my opinion... stretch by another 15-20%") — a
+        further ~18% bump on top of the fifth pass, same mechanism, same
+        `2xl:`-only gate, `lg:` and below still completely untouched.
       */}
-      <div className="mx-auto grid w-full grid-cols-1 gap-8 sm:max-w-[920px] sm:grid-cols-2 sm:gap-4 lg:max-w-[887px] lg:grid-cols-3 lg:gap-4">
+      <div className="mx-auto grid w-full grid-cols-1 gap-8 sm:max-w-[920px] sm:grid-cols-2 sm:gap-4 lg:max-w-[887px] lg:grid-cols-3 lg:gap-4 2xl:max-w-[1300px]">
         {categories.map((category) => (
           <div
             key={category.name}
