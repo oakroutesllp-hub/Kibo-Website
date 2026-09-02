@@ -474,7 +474,17 @@ export function ProductCategoryCard({
               bg-charcoal` on the pill (the row above got `group` added
               for this), triggered by hovering anywhere on the row, not
               just the small pill itself, since the whole row is the
-              real click target. */}
+              real click target.
+
+            **`bg-green-gray` → `bg-green-gray-deep`, 2 Sep 2026** (owner:
+            same accessibility pass as every button's hover color site-
+            wide — see globals.css's own comment on the new token) —
+            white text on this pill's original green-gray background
+            measured at only 2.98:1 contrast, below WCAG's 4.5:1
+            minimum; `green-gray-deep` (5.6:1) fixes it. Only the pill's
+            RESTING color changes — the `group-hover`/`group-active`
+            swap to solid charcoal on interaction is untouched, still
+            the same "grey at rest, black on hover/tap" pattern. */}
           <span
             aria-hidden="true"
             // `group-active:bg-charcoal` added 31 Aug 2026 (owner, testing
@@ -486,7 +496,7 @@ export function ProductCategoryCard({
             // covers the touch-and-hold moment a tap produces, which
             // hover can't; `group-hover` stays too, unchanged, for
             // desktop's actual mouse-hover case.
-            className="flex h-8 shrink-0 items-center gap-1.5 rounded-full bg-green-gray px-3 text-background transition-colors group-hover:bg-charcoal group-active:bg-charcoal"
+            className="flex h-8 shrink-0 items-center gap-1.5 rounded-full bg-green-gray-deep px-3 text-background transition-colors group-hover:bg-charcoal group-active:bg-charcoal"
           >
             {/* Sentence case, not uppercase (29 Aug 2026, font case
                 1.png: "'Specs' → button label, sentence case") — the

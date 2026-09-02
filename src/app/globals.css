@@ -22,6 +22,19 @@
   --color-soft-taupe: #bb8044;
   --color-charcoal: #222222;
 
+  /* `--color-green-gray-deep` (2 Sep 2026, owner: white-on-green-gray
+     button hover text measured at only 2.98:1 contrast — below WCAG's
+     4.5:1 minimum for normal text) — NOT a new brand color, a derived
+     accessibility fix: green-gray darkened ~35% (same hue, same family)
+     until white text against it clears 4.5:1 with real margin (lands at
+     5.6:1). Replaces `green-gray` in every spot white text sits ON TOP
+     of it — button hover backgrounds site-wide, and the Specs badge's
+     own resting background (ProductCategoryCard.tsx) — so a button
+     never gets HARDER to read than its resting state the moment you
+     interact with it. `green-gray` itself is untouched and still used
+     wherever it doesn't carry white text on top of it. */
+  --color-green-gray-deep: #5f6b5e;
+
   /* Base surface — brand spec calls for "white or very light neutral" */
   --color-background: #ffffff;
   --color-foreground: var(--color-charcoal);
@@ -31,6 +44,7 @@
   /* Brand colours as Tailwind utilities: bg-sage-green, text-charcoal, etc. */
   --color-sage-green: var(--color-sage-green);
   --color-green-gray: var(--color-green-gray);
+  --color-green-gray-deep: var(--color-green-gray-deep);
   --color-warm-stone: var(--color-warm-stone);
   --color-soft-taupe: var(--color-soft-taupe);
   --color-charcoal: var(--color-charcoal);

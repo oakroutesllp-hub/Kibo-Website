@@ -374,7 +374,7 @@ export function ProductsGridSection({
           end of the sentence; now its own centered pill button on the
           line below, styled identically to Nav.tsx's "Talk to KIBO"
           button (`rounded-full bg-charcoal ... text-support font-
-          semibold text-background hover:bg-green-gray`, "Variant A"
+          semibold text-background hover:bg-green-gray-deep`, "Variant A"
           hover — see that file's own comment for the full hover-
           treatment history). The sentence above drops its trailing
           em-dash/lowercase "get in touch." tail and ends in a period on
@@ -404,7 +404,7 @@ export function ProductsGridSection({
           <button
             type="button"
             onClick={openTalkToKibo}
-            className="rounded-full bg-charcoal px-4 py-2 text-support font-semibold text-background transition-colors hover:bg-green-gray"
+            className="rounded-full bg-charcoal px-4 py-2 text-support font-semibold text-background transition-colors hover:bg-green-gray-deep"
           >
             {getInTouchLabel}
           </button>

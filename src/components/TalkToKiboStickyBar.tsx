@@ -51,7 +51,7 @@ export function TalkToKiboStickyBar({ label }: { label: string }) {
           // `py-2` reads slightly slimmer full-width than it did as an
           // inline pill, but keeping one true standard everywhere is the
           // point of this pass, not a case-by-case size per context.
-          className="w-full rounded-full bg-charcoal px-4 py-2 text-support font-semibold text-background transition-colors hover:bg-green-gray"
+          className="w-full rounded-full bg-charcoal px-4 py-2 text-support font-semibold text-background transition-colors hover:bg-green-gray-deep"
         >
           {label}
         </button>

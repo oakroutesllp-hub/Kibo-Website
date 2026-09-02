@@ -118,6 +118,9 @@ export function Hero({ content }: { content: HomepageContent }) {
             green grey when hovered on") — plain Sage Green isn't this
             palette's grey; Green Gray is the token every other black
             button's hover now uses, for consistency.
+            `hover:bg-green-gray` → `hover:bg-green-gray-deep` (2 Sep
+            2026) — accessibility pass, see globals.css's own comment on
+            the new token; same rename applied to every button site-wide.
             Settled on "Variant E" (30 Aug 2026, owner: "Lets go with A
             and E - just like you suggested") — this is the one button
             site-wide that carries an arrow, so it gets A's flat color
@@ -135,7 +138,7 @@ export function Hero({ content }: { content: HomepageContent }) {
             four values this replaces). */}
         <Link
           href="/products"
-          className="group mt-9 inline-flex items-center gap-2 rounded-full bg-charcoal px-7 py-3.5 text-support font-semibold tracking-[0.16em] text-background transition-colors hover:bg-green-gray"
+          className="group mt-9 inline-flex items-center gap-2 rounded-full bg-charcoal px-7 py-3.5 text-support font-semibold tracking-[0.16em] text-background transition-colors hover:bg-green-gray-deep"
         >
           Explore products
           {/* Drawn SVG chevron replacing the plain "→" character, 31 Aug

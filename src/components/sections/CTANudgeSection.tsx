@@ -167,7 +167,7 @@ export function CTANudgeSection({ copy }: { copy: CtaNudgeCopyContent }) {
           // requirement in mind... is larger than the talk to KIBO
           // button on the top sticky bar... make it consistent") — was
           // `px-6 py-3`.
-          className="rounded-full bg-charcoal px-4 py-2 text-support font-semibold text-background transition-colors hover:bg-green-gray"
+          className="rounded-full bg-charcoal px-4 py-2 text-support font-semibold text-background transition-colors hover:bg-green-gray-deep"
         >
           {copy.buttonLabel}
         </button>

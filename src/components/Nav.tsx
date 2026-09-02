@@ -254,11 +254,23 @@ export function Nav({ settings }: { settings: SiteSettingsContent }) {
             — one hover language across all of them. Hero's own CTA is
             the one exception, on "Variant E" (A plus an arrow nudge) —
             see that file's own comment for why only that one differs.
+
+            **Green Gray → Green Gray Deep, 2 Sep 2026** (owner: white
+            text on the original Green Gray, #8F988E, measured at only
+            2.98:1 contrast — below WCAG's 4.5:1 minimum) — every button
+            using this hover swap site-wide now swaps to
+            `--color-green-gray-deep` (#5F6B5E, 5.6:1) instead, same
+            "Variant A" flat-swap mechanics, just a darker shade of the
+            same hue so a button never gets harder to read the moment
+            you hover it. See globals.css's own comment on the new
+            token, and ProductCategoryCard.tsx's own comment — the
+            Specs pill's RESTING color (the "grey" it swaps FROM) moved
+            to the same deeper shade too, same reasoning.
           */}
           <button
             type="button"
             onClick={openTalkToKibo}
-            className="rounded-full bg-charcoal px-4 py-2 text-support font-semibold text-background transition-colors hover:bg-green-gray"
+            className="rounded-full bg-charcoal px-4 py-2 text-support font-semibold text-background transition-colors hover:bg-green-gray-deep"
           >
             {settings.getInTouchLabel}
           </button>

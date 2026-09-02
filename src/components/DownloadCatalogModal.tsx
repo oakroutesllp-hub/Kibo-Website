@@ -152,7 +152,7 @@ export function DownloadCatalogModal({
             <a
               href={pdfUrl}
               download
-              className="mt-2 rounded-full bg-charcoal px-4 py-2 text-support font-semibold text-background transition-colors hover:bg-green-gray"
+              className="mt-2 rounded-full bg-charcoal px-4 py-2 text-support font-semibold text-background transition-colors hover:bg-green-gray-deep"
             >
               Download PDF
             </a>
@@ -182,7 +182,7 @@ export function DownloadCatalogModal({
                 type="button"
                 onClick={handleRetryClick}
                 disabled={submitting}
-                className="mt-2 rounded-full bg-charcoal px-4 py-2 text-support font-semibold text-background transition-colors hover:bg-green-gray disabled:opacity-60"
+                className="mt-2 rounded-full bg-charcoal px-4 py-2 text-support font-semibold text-background transition-colors hover:bg-green-gray-deep disabled:opacity-60"
               >
                 {submitting ? "Sending…" : "Try again"}
               </button>
@@ -232,7 +232,7 @@ export function DownloadCatalogModal({
             <button
               type="submit"
               disabled={submitting}
-              className="mt-2 rounded-full bg-charcoal px-4 py-2 text-support font-semibold text-background transition-colors hover:bg-green-gray disabled:opacity-60"
+              className="mt-2 rounded-full bg-charcoal px-4 py-2 text-support font-semibold text-background transition-colors hover:bg-green-gray-deep disabled:opacity-60"
             >
               {submitting ? "Sending…" : "Download Catalog"}
             </button>
