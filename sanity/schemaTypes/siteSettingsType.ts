@@ -35,7 +35,7 @@ export const siteSettingsType = defineType({
       name: "enquiryEmail",
       title: "Enquiry form destination email",
       description:
-        "Where \"Talk to KIBO\" form submissions get sent. Leave empty to use the Footer contact email above instead — set this separately only if enquiries should go to a different inbox (e.g. a sales address) than the one shown publicly in the footer. Change this any time — no code change needed, takes effect on the next form submission.",
+        "Where \"Talk to KIBO\" form submissions get sent. Leave empty to use the Footer contact email above instead — set this separately only if enquiries should go to a different inbox (e.g. a sales address) than the one shown publicly in the footer. Change this any time — no code change needed, takes effect within about a minute.",
       type: "string",
     }),
     defineField({
@@ -63,7 +63,7 @@ export const siteSettingsType = defineType({
       name: "requireCatalogGate",
       title: "Require details before download (Catalog)",
       description:
-        "ON: the Catalog page's \"Download Catalog\" button asks for Name + Email first, same as it does today. OFF: it skips the form entirely and goes straight to the download — no details collected for that visit. Leave ON to keep capturing leads from catalog downloads; only turn OFF if you'd rather prioritize a frictionless download over capturing that contact. Takes effect immediately on save, no code change or redeploy needed.",
+        "ON: the Catalog page's \"Download Catalog\" button asks for Name + Email first, same as it does today. OFF: it skips the form entirely and goes straight to the download — no details collected for that visit. Leave ON to keep capturing leads from catalog downloads; only turn OFF if you'd rather prioritize a frictionless download over capturing that contact. Takes effect within about a minute of saving, no code change or redeploy needed.",
       type: "boolean",
       initialValue: true,
     }),
@@ -87,7 +87,7 @@ export const siteSettingsType = defineType({
       name: "showBlogInNav",
       title: "Show Blog in navigation",
       description:
-        "OFF (default): the Blog page still exists and works if someone has the direct link, but it's hidden from the main nav and footer — effectively unlisted, not deleted. Turn this ON once there's real content published and you're ready for visitors to find it through normal browsing. Takes effect immediately on save, no code change or redeploy needed.",
+        "OFF (default): the Blog page still exists and works if someone has the direct link, but it's hidden from the main nav and footer — effectively unlisted, not deleted. Turn this ON once there's real content published and you're ready for visitors to find it through normal browsing. Takes effect within about a minute of saving, no code change or redeploy needed.",
       type: "boolean",
       initialValue: false,
     }),

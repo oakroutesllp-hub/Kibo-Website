@@ -70,6 +70,25 @@ import type {
 // keeps the Sanity dependency swappable (Master Brief §5, Plan B) and
 // means the site renders sample content out of the box before a Sanity
 // project is connected, rather than an empty/broken page.
+//
+// `{ next: { revalidate: 60 } }` on every fetch below (2 Sep 2026,
+// owner: Sanity's free plan is metered on API requests/month, and
+// every page view previously fetched fresh — `{ cache: "no-store" }`,
+// no caching at all). Was `no-store` since these functions were first
+// written, deliberately, so an owner publishing a Sanity edit saw it
+// live in seconds with no waiting — see OWNER-OPERATIONS-GUIDE.md's
+// own "takes effect immediately" language for several fields, which
+// this changes: an edit can now take up to 60 seconds to appear live,
+// not a few seconds. Traded for a real gain — a visitor loading the
+// same page within 60 seconds of a previous visitor now costs zero
+// additional Sanity requests, versus one full set of requests per
+// visit before. 60s (not longer) keeps the "practically instant"
+// feel for the owner's own editing sessions while absorbing the vast
+// majority of real traffic's request cost. If a future edit genuinely
+// needs to go live faster than 60s for one specific save (e.g. a live
+// demo), Sanity Studio's Publish still works the same way — the delay
+// is only in how soon this SITE re-fetches, not in whether the edit
+// saved.
 
 function resolveImage(image: Image | undefined, alt: string): ContentImage {
   if (!image?.asset) return null;
@@ -159,7 +178,7 @@ export async function getHomepage(): Promise<HomepageContent> {
     const doc = await sanityClient.fetch<RawHomepage | null>(
       homepageQuery,
       {},
-      { cache: "no-store" },
+      { next: { revalidate: 60 } },
     );
     if (!doc) return sampleHomepage;
 
@@ -219,7 +238,7 @@ export async function getOurStory(): Promise<OurStoryContent> {
     const doc = await sanityClient.fetch<RawOurStory | null>(
       ourStoryQuery,
       {},
-      { cache: "no-store" },
+      { next: { revalidate: 60 } },
     );
     if (!doc) return sampleOurStory;
 
@@ -279,7 +298,7 @@ export async function getArticles(): Promise<ArticleContent[]> {
     const docs = await sanityClient.fetch<RawArticle[]>(
       articlesQuery,
       {},
-      { cache: "no-store" },
+      { next: { revalidate: 60 } },
     );
     return docs.length ? docs.map(mapArticle) : sampleArticles;
   } catch {
@@ -296,7 +315,7 @@ export async function getArticle(slug: string): Promise<ArticleContent | null> {
     const doc = await sanityClient.fetch<RawArticle | null>(
       articleBySlugQuery,
       { slug },
-      { cache: "no-store" },
+      { next: { revalidate: 60 } },
     );
     // Falls back to a matching sample article on a Sanity "not found"
     // result, not just on a thrown error — found and fixed 31 Aug 2026
@@ -375,7 +394,7 @@ export async function getSiteSettings(): Promise<SiteSettingsContent> {
     const doc = await sanityClient.fetch<RawSiteSettings | null>(
       siteSettingsQuery,
       {},
-      { cache: "no-store" },
+      { next: { revalidate: 60 } },
     );
     if (!doc) {
       return {
@@ -476,7 +495,7 @@ export async function getProductCategories(): Promise<ProductCategoryContent[]> 
     const docs = await sanityClient.fetch<RawProductCategory[]>(
       productCategoriesQuery,
       {},
-      { cache: "no-store" },
+      { next: { revalidate: 60 } },
     );
     if (!docs.length) return fallback;
 
@@ -553,7 +572,7 @@ export async function getCustomSectionMedia(): Promise<CustomSectionMediaContent
     const doc = await sanityClient.fetch<RawCustomSectionMedia | null>(
       customSectionMediaQuery,
       {},
-      { cache: "no-store" },
+      { next: { revalidate: 60 } },
     );
     if (!doc) return fallback;
 
@@ -595,7 +614,7 @@ export async function getCatalog(): Promise<CatalogContent> {
     const doc = await sanityClient.fetch<RawCatalog | null>(
       catalogQuery,
       {},
-      { cache: "no-store" },
+      { next: { revalidate: 60 } },
     );
     if (!doc) return empty;
 
@@ -650,7 +669,7 @@ export async function getCustomSectionCopy(): Promise<CustomSectionCopyContent> 
     const doc = await sanityClient.fetch<RawCustomSectionCopy | null>(
       customSectionCopyQuery,
       {},
-      { cache: "no-store" },
+      { next: { revalidate: 60 } },
     );
     if (!doc) return fallback;
 
@@ -701,7 +720,7 @@ export async function getSupplySectionCopy(): Promise<SupplySectionCopyContent> 
     const doc = await sanityClient.fetch<RawSupplySectionCopy | null>(
       supplySectionCopyQuery,
       {},
-      { cache: "no-store" },
+      { next: { revalidate: 60 } },
     );
     if (!doc) return fallback;
 
@@ -745,7 +764,7 @@ export async function getLongRunSectionCopy(): Promise<LongRunSectionCopyContent
     const doc = await sanityClient.fetch<RawLongRunSectionCopy | null>(
       longRunSectionCopyQuery,
       {},
-      { cache: "no-store" },
+      { next: { revalidate: 60 } },
     );
     if (!doc) return fallback;
 
@@ -782,7 +801,7 @@ export async function getCtaNudgeCopy(): Promise<CtaNudgeCopyContent> {
     const doc = await sanityClient.fetch<RawCtaNudgeCopy | null>(
       ctaNudgeCopyQuery,
       {},
-      { cache: "no-store" },
+      { next: { revalidate: 60 } },
     );
     if (!doc) return fallback;
 
@@ -837,7 +856,7 @@ export async function getOurStoryCopy(): Promise<OurStoryCopyContent> {
     const doc = await sanityClient.fetch<RawOurStoryCopy | null>(
       ourStoryCopyQuery,
       {},
-      { cache: "no-store" },
+      { next: { revalidate: 60 } },
     );
     if (!doc) return fallback;
 
