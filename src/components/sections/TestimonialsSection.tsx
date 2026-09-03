@@ -96,7 +96,30 @@ export function TestimonialsSection({
     // Testimonials instead by the same construction, no change needed
     // on CTA's side).
     <section className="w-full bg-sage-green/10">
-      <div className="mx-auto flex w-full max-w-[1728px] flex-col items-center gap-10 px-6 py-16 sm:px-10 sm:py-20">
+      {/* Heading→tile gap `gap-10` → `gap-14` (40px → 56px, 3 Sep 2026,
+          owner: "increase the gap between 'what our partners say' and
+          the top of the tile... need some space") — measured live
+          first (exactly 40px, confirming this single flex `gap` is the
+          whole seam, both for the desktop grid/carousel and the mobile
+          carousel, since only one of those two is ever an un-hidden
+          flex sibling at a given breakpoint).
+
+          Bottom padding split off the shared `py-16 sm:py-20` into its
+          own `pb-11 sm:pb-14` (44px/56px, same day, same request:
+          "decrease the space between the slider... dot dot dot... and
+          'have a requirement in mind'... reduce that gap slightly") —
+          measured that seam too: 100px at desktop, made up of this
+          section's own `sm:py-20` bottom half (80px) plus
+          CTANudgeSection's own `sm:pt-5` top padding (20px) once the
+          two sections meet with no gap between the boxes themselves.
+          Cut the bottom half only, top (`pt-16 sm:pt-20`, the space
+          above the heading) left exactly as it was — that's a
+          different seam, not the one flagged. New total: 76px at
+          desktop (56 + CTA's unchanged 20), a real but not drastic
+          reduction from 100px, in the same ~30%-cut range as this
+          codebase's existing precedent for "tighten a flagged seam
+          without collapsing it." */}
+      <div className="mx-auto flex w-full max-w-[1728px] flex-col items-center gap-14 px-6 pt-16 pb-11 sm:px-10 sm:pt-20 sm:pb-14">
         <h2 className="text-center text-h2 font-bold leading-[1.1] tracking-tight text-charcoal">
           What our <span className="text-sage-green">partners say</span>
         </h2>

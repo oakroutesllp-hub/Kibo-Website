@@ -180,18 +180,25 @@ export function CTANudgeSection({
             sizes floating around" — every size must come from the 8
             named tokens) replacing raw `text-lg`/`text-sm`.
 
-            Forced 2-line break below `sm`, 31 Aug 2026 (owner: "Have a
-            requirement in mind first line, Talk to KIBO second line" —
-            mobile, per this session's standing rule) — each half is
-            `block` (own line) below `sm`; the literal space text node
-            between the two spans is invisible there (each is already on
-            its own line) but becomes the actual word-gap once both
-            switch to `sm:inline`, reconstituting the original single
-            flowing sentence unchanged at `sm` and up. */}
-        <p className="max-w-md text-body text-charcoal/80">
-          <span className="block sm:inline">{copy.line1}</span>{" "}
-          <span className="block sm:inline">{copy.line2}</span>
-        </p>
+            `copy.line2` dropped from display, 3 Sep 2026 (owner, on a
+            screenshot: "we are saying 'have a requirement, get in
+            touch,' and then showing another 'get in touch' button — I
+            think we just need to say 'have a requirement'... remove
+            the get in touch next to it and just have that button
+            below") — `line2` was literally the button's own label
+            repeated as a second line of text right above the button
+            itself, real redundancy once flagged, not a design nitpick.
+            The forced-2-line mobile break this replaced (line1/line2
+            each their own line below `sm`, joined into one sentence at
+            `sm`+) no longer applies with only one line of text — a
+            single centered line reads correctly at every breakpoint on
+            its own, no responsive split needed.
+            `copy.line2`/`ctaNudgeCopyType.ts`'s "Line 2" field is left
+            in place (still Sanity-editable, still fetched) rather than
+            removed outright — simplest, least destructive fix; a
+            future session can drop the field itself if an editor
+            confirms it's genuinely never needed again. */}
+        <p className="max-w-md text-center text-body text-charcoal/80">{copy.line1}</p>
         <button
           type="button"
           onClick={open}
