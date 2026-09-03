@@ -205,9 +205,11 @@ const ATTR_MEDIA_KEY: Record<string, keyof CustomSectionMediaContent> = {
 export function CustomSection({
   media,
   copy,
+  testimonialsVisible,
 }: {
   media: CustomSectionMediaContent;
   copy: CustomSectionCopyContent;
+  testimonialsVisible: boolean;
 }) {
   return (
     <section className="w-full bg-background">
@@ -312,9 +314,25 @@ export function CustomSection({
           documents for its neighboring seam (Supply→Long Run, also
           doubled for the same reason) — applied here by the same
           logic, this time on the seam ABOVE the tinted section rather
-          than below it. Top padding (`pt-8 sm:pt-11`) intentionally
-          left untouched — the owner only flagged this one seam. */}
-      <div className="mx-auto flex w-full max-w-[1728px] flex-col gap-12 px-6 pt-8 pb-16 sm:gap-16 sm:px-10 sm:pt-11 sm:pb-[5.5rem]">
+          than below it.
+
+          **Made conditional on `testimonialsVisible`, same day, later
+          follow-up** (owner: "the gap between you build your market
+          and the six thumbnails reduces to what it was earlier" — part
+          of the same request that made SupplySection's own background
+          conditional, see that file's comment) — this doubled value
+          only makes sense while Supply is actually tinted; once
+          Testimonials is hidden, Supply reverts to plain white (this
+          section's own neighbor), the seam is white→white again, and
+          the doubling this comment documents no longer applies — reverts
+          to the original `pb-8 sm:pb-11` (32px/44px) in that state.
+          Top padding (`pt-8 sm:pt-11`) stays unconditional either way —
+          never flagged, not part of this. */}
+      <div
+        className={`mx-auto flex w-full max-w-[1728px] flex-col gap-12 px-6 pt-8 sm:gap-16 sm:px-10 sm:pt-11 ${
+          testimonialsVisible ? "pb-16 sm:pb-[5.5rem]" : "pb-8 sm:pb-11"
+        }`}
+      >
         {/* Headline — stays full-width (not part of the narrower
             container below it), unaffected by this section's whitespace
             tuning. */}

@@ -94,11 +94,35 @@ import type { LongRunSectionCopyContent } from "@/lib/content";
 // Custom/Supply/Testimonials' own white siblings already use. See
 // SupplySection.tsx's own comment for where the tint actually lives
 // now, and TestimonialsSection.tsx's for the new tinted pair it forms
-// with CTANudgeSection (which keeps its own unchanged background —
-// see that file's own comment on why it doesn't need updating).
-export function LongRunSection({ copy }: { copy: LongRunSectionCopyContent }) {
+// with CTANudgeSection.
+//
+// **Made conditional on `testimonialsVisible`, same day, later
+// follow-up** (owner: "when the testimonials aren't showing, you
+// build your market stays in white, built for the long run along
+// with have a requirement in mind... stays that sage green
+// background") — with Testimonials hidden (toggle off or zero
+// documents), this section sits directly above CTANudgeSection with
+// nothing tinted between them, and CTANudgeSection's own background
+// is a constant tint (see that file — never changed for this), so the
+// owner wants THIS section to pick up the tint in that state instead
+// of Supply, forming one continuous Long-Run→CTA band exactly the way
+// Supply→Testimonials→CTA does when Testimonials IS showing. `white
+// when visible, tinted when not` — the literal inverse of Supply's
+// own new conditional (see that file), by construction: exactly one
+// of {Supply, Long Run} carries the tint at any given time, never both,
+// never neither. `testimonialsVisible` computed once in `(site)/
+// page.tsx` (the same `showTestimonials && testimonials.length > 0`
+// check TestimonialsSection already applies internally) and passed to
+// both this section and Supply, so they can never disagree.
+export function LongRunSection({
+  copy,
+  testimonialsVisible,
+}: {
+  copy: LongRunSectionCopyContent;
+  testimonialsVisible: boolean;
+}) {
   return (
-    <section className="w-full bg-background">
+    <section className={`w-full ${testimonialsVisible ? "bg-background" : "bg-sage-green/10"}`}>
       {/* Band height increased, same pass (owner: "increase the
           height... a little wider height wise... nice presence to it")
           — `py-10 sm:py-14` (40px/56px) → `py-20 sm:py-28` (80px/112px),

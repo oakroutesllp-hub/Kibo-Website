@@ -72,35 +72,20 @@ import type { CtaNudgeCopyContent } from "@/lib/content";
 // `copy` (1 Sep 2026, owner: "make everything editable") — reverses
 // lib/ctaNudge.ts's own "fixed, code-level" call.
 //
-// `testimonialsVisible` prop (3 Sep 2026, owner: "when we are showing
-// the testimonials, the current color block arrangement is what we
-// want. When we are not showing the testimonials, [Long Run] and
-// [this section] will be next to each other... it should be white in
-// color when the testimonials are not displayed") — this section's
-// own sage tint (below) was built on the assumption that
-// TestimonialsSection always sits between it and Long Run, forming
-// one continuous Long-Run→Testimonials→CTA tinted band with a clean
-// white→tint seam right above Long Run's own headline (see that
-// file's own comment). Testimonials is itself hidden-until-ready
-// (`showTestimonials` toggle, plus needs ≥1 real document) — with it
-// hidden, this section sits directly against Long Run instead, and
-// Long Run is now plain `bg-background` white (see LongRunSection.tsx
-// — the tint moved to SupplySection), so keeping this section tinted
-// in that state would put a lone colored band directly under a white
-// one with no Testimonials in between to justify it. Passed down from
-// `(site)/page.tsx`, computed there with the exact same condition
-// TestimonialsSection already applies internally to decide whether it
-// renders anything (`showTestimonials && testimonials.length > 0`) —
-// kept as one prop rather than re-deriving it here, so the two
-// components can never disagree about whether Testimonials is
-// actually showing.
-export function CTANudgeSection({
-  copy,
-  testimonialsVisible,
-}: {
-  copy: CtaNudgeCopyContent;
-  testimonialsVisible: boolean;
-}) {
+// `testimonialsVisible` prop, added then removed same day (3 Sep
+// 2026) — first pass made this section's background conditional
+// (white when Testimonials is hidden, matching Long Run). **Reversed
+// on the very next round** (owner: "when the testimonials aren't
+// showing... built for the long run along with have a requirement in
+// mind... stays that sage green background") — the owner's actual
+// preference is the opposite of that first pass: this section stays
+// tinted in BOTH states, and it's Long Run/Supply that swap which one
+// carries the tint instead (see LongRunSection.tsx's and
+// SupplySection.tsx's own matching comments for that mechanism). With
+// this section's own tint now constant either way, it no longer needs
+// to know whether Testimonials is showing at all — back to a plain,
+// unconditional background, same as its very first version.
+export function CTANudgeSection({ copy }: { copy: CtaNudgeCopyContent }) {
   const { open } = useTalkToKibo();
 
   return (
@@ -120,11 +105,7 @@ export function CTANudgeSection({
     // continuation. `sm:bg-sage-green/10` restores the original shared
     // tint at tablet/desktop — unchanged there, per the owner's own
     // caveat above.
-    <section
-      className={`w-full ${
-        testimonialsVisible ? "bg-sage-green/20 sm:bg-sage-green/10" : "bg-background"
-      }`}
-    >
+    <section className="w-full bg-sage-green/20 sm:bg-sage-green/10">
       {/* Bottom reverted, same day, after live review (owner: "give me
           more gap between talk to keyboard button and our story...
           keep it the same as the six thumbnails bottom line and you

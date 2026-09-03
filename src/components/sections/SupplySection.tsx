@@ -56,9 +56,27 @@ import type { SupplySectionCopyContent } from "@/lib/content";
 // sm:pb-[4.9rem]` (56px/78.4px, already a deliberate exception to the
 // site's shared rhythm value — see the comment above) to `pb-20
 // sm:pb-24` (80px/96px).
-export function SupplySection({ copy }: { copy: SupplySectionCopyContent }) {
+// **Made conditional on `testimonialsVisible`, 3 Sep 2026, later
+// follow-up** (owner: "when the testimonials aren't showing, you
+// build your market stays in white... built for the long run...
+// stays that sage green background") — this section's tint was
+// always standing in for "whichever section leads into the tinted
+// band," which shifts depending on whether Testimonials renders
+// between Long Run and the CTA nudge (see LongRunSection.tsx's own
+// matching comment for the full mechanism — exactly one of
+// {this section, Long Run} is tinted at a time, never both). White
+// when Testimonials is hidden, so this section reads as a continuation
+// of Custom's own white above it instead of an isolated tinted island
+// with white on both sides.
+export function SupplySection({
+  copy,
+  testimonialsVisible,
+}: {
+  copy: SupplySectionCopyContent;
+  testimonialsVisible: boolean;
+}) {
   return (
-    <section className="w-full bg-sage-green/10">
+    <section className={`w-full ${testimonialsVisible ? "bg-sage-green/10" : "bg-background"}`}>
       {/* `py-10 sm:py-14` — the site's standardized inter-section
           rhythm (30 Aug 2026, "consistent rule of white space between
           topic changes"), unchanged by this relayout. */}

@@ -121,9 +121,10 @@ export default async function Home() {
   const testimonials = await getTestimonials();
   // Shared visibility check (3 Sep 2026) — the exact same condition
   // TestimonialsSection applies internally to decide whether it
-  // renders anything, computed once here so CTANudgeSection can key
-  // its own background off it too (see that component's own comment)
-  // without the two ever risking disagreement.
+  // renders anything, computed once here so CustomSection, SupplySection,
+  // and LongRunSection can each key their own background/spacing off
+  // it too (see those components' own comments) without ever risking
+  // disagreement with each other or with TestimonialsSection itself.
   const testimonialsVisible = settings.showTestimonials && testimonials.length > 0;
   return (
     <>
@@ -133,9 +134,9 @@ export default async function Home() {
         categories={productCategories}
         getInTouchLabel={settings.getInTouchLabel}
       />
-      <CustomSection media={customSectionMedia} copy={customSectionCopy} />
-      <SupplySection copy={supplySectionCopy} />
-      <LongRunSection copy={longRunSectionCopy} />
+      <CustomSection media={customSectionMedia} copy={customSectionCopy} testimonialsVisible={testimonialsVisible} />
+      <SupplySection copy={supplySectionCopy} testimonialsVisible={testimonialsVisible} />
+      <LongRunSection copy={longRunSectionCopy} testimonialsVisible={testimonialsVisible} />
       {/* Testimonials, 3 Sep 2026 — placed here (between Long Run and
           the CTA nudge) per the owner's own reasoning: trust content
           right before the page's one conversion ask reads better than
@@ -147,7 +148,7 @@ export default async function Home() {
         desktopSpeed={settings.testimonialsDesktopSpeed}
         mobileSpeed={settings.testimonialsMobileSpeed}
       />
-      <CTANudgeSection copy={ctaNudgeCopy} testimonialsVisible={testimonialsVisible} />
+      <CTANudgeSection copy={ctaNudgeCopy} />
       <WeStartedByListeningSection media={ourStory.listeningMedia} copy={ourStoryCopy} carouselSeconds={settings.carouselIntervalSeconds} />
       <TiruppurStorySection media={ourStory.tiruppurMedia} copy={ourStoryCopy} carouselSeconds={settings.carouselIntervalSeconds} />
       <FounderSection media={ourStory.founderMedia} copy={ourStoryCopy} carouselSeconds={settings.carouselIntervalSeconds} />
