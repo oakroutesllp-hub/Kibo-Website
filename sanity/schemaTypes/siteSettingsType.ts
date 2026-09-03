@@ -91,6 +91,54 @@ export const siteSettingsType = defineType({
       type: "boolean",
       initialValue: false,
     }),
+    defineField({
+      // 3 Sep 2026, owner: "let's do testimonials section" — same
+      // hidden-until-ready pattern as Show Blog in navigation above.
+      name: "showTestimonials",
+      title: "Show Testimonials on Home",
+      description:
+        "OFF (default): the Testimonials section doesn't render on Home at all, even if Testimonial documents exist. Turn this ON once you have real testimonials published and are ready for visitors to see them. Also requires at least one Testimonial document to actually show anything — this toggle alone with zero testimonials still shows nothing. Takes effect within about a minute of saving.",
+      type: "boolean",
+      initialValue: false,
+    }),
+    defineField({
+      // 3 Sep 2026, owner: "I want to have three testimonials or four
+      // testimonials in there, but show only one... to test how it
+      // looks like when there is one testimonial, two, three, or four."
+      // A testing/preview control, not something a visitor-facing site
+      // normally needs — lets the owner keep several real Testimonial
+      // documents published and preview the layout at different counts
+      // without actually deleting or unpublishing any of them.
+      name: "testimonialsLimit",
+      title: "Testimonials — how many to show (for testing layouts)",
+      description:
+        "Leave blank to show every published Testimonial. Set a number (e.g. 1, 2, or 3) to show only that many on the live site, even if more exist — useful for previewing how the section looks with different counts before deciding how many testimonials to actually keep visible.",
+      type: "number",
+      validation: (rule) => rule.min(1).integer(),
+    }),
+    defineField({
+      // 3 Sep 2026, owner: "the number of seconds needs to be different
+      // from desktop versus mobile... I want these fields to be
+      // changeable in Sanity." Desktop shows 3 testimonials at once (a
+      // sliding window, once there are more than 3 total) — see
+      // TestimonialsDesktopCarousel.tsx.
+      name: "testimonialsDesktopSpeed",
+      title: "Testimonials — desktop auto-advance speed (seconds)",
+      description:
+        "Only matters once there are more than 3 testimonials (desktop shows 3 at a time and slides through the rest). How long each set of 3 shows before automatically advancing by one. Leave blank for the default (6 seconds).",
+      type: "number",
+      validation: (rule) => rule.min(2).max(20),
+      initialValue: 6,
+    }),
+    defineField({
+      name: "testimonialsMobileSpeed",
+      title: "Testimonials — mobile auto-advance speed (seconds)",
+      description:
+        "Mobile shows one testimonial at a time. How long each one shows before automatically advancing to the next. Leave blank for the default (7 seconds) — a little longer than desktop's, since reading one full quote alone takes longer than glancing at a set of 3.",
+      type: "number",
+      validation: (rule) => rule.min(2).max(20),
+      initialValue: 7,
+    }),
     // `getInTouchLabel` + nav labels (1 Sep 2026, owner: "make everything
     // editable") — one shared button label used everywhere the site
     // opens the enquiry form (nav bar, mobile sticky bar, footer, CTA

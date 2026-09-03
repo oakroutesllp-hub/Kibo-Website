@@ -63,6 +63,7 @@ import type {
   CtaNudgeCopyContent,
   OurStoryCopyContent,
   Seo,
+  TestimonialContent,
 } from "./types";
 
 // The public content API for the app. Every page should read content
@@ -354,13 +355,18 @@ type RawSiteSettings = {
   navLabelBlog?: string;
   navLabelOurStory?: string;
   carouselIntervalSeconds?: number;
+  showTestimonials?: boolean;
+  testimonialsLimit?: number;
+  testimonialsDesktopSpeed?: number;
+  testimonialsMobileSpeed?: number;
 };
 
 const siteSettingsQuery = `*[_type == "siteSettings"][0]{
   footerBrandLines, footerAddress, footerEmail, enquiryEmail,
   linkedInUrl, instagramUrl, whatsappNumber, requireCatalogGate, showBlogInNav,
   getInTouchLabel, navLabelHome, navLabelProducts, navLabelCatalog, navLabelBlog, navLabelOurStory,
-  carouselIntervalSeconds
+  carouselIntervalSeconds, showTestimonials, testimonialsLimit,
+  testimonialsDesktopSpeed, testimonialsMobileSpeed
 }`;
 
 // Hardcoded defaults for the global CTA label + nav labels (1 Sep
@@ -446,6 +452,17 @@ export async function getSiteSettings(): Promise<SiteSettingsContent> {
       // field's fallback style in this function.
       carouselIntervalSeconds:
         doc.carouselIntervalSeconds ?? sampleSiteSettings.carouselIntervalSeconds,
+      // `??`, not `||` — same reasoning as `showBlogInNav` above.
+      showTestimonials: doc.showTestimonials ?? sampleSiteSettings.showTestimonials,
+      // No fallback — `undefined` (never set, or intentionally left
+      // blank) genuinely means "show all," not "use some default
+      // number." See this field's own description in
+      // siteSettingsType.ts.
+      testimonialsLimit: doc.testimonialsLimit,
+      testimonialsDesktopSpeed:
+        doc.testimonialsDesktopSpeed ?? sampleSiteSettings.testimonialsDesktopSpeed,
+      testimonialsMobileSpeed:
+        doc.testimonialsMobileSpeed ?? sampleSiteSettings.testimonialsMobileSpeed,
     };
   } catch {
     return {
@@ -454,6 +471,45 @@ export async function getSiteSettings(): Promise<SiteSettingsContent> {
       enquiryEmail: sampleSiteSettings.footerEmail,
       whatsappDigits: toWhatsAppDigits(sampleSiteSettings.whatsappNumber),
     };
+  }
+}
+
+// Testimonials (3 Sep 2026) — see testimonialType.ts's own comment.
+// Deliberately NO sample/fallback testimonials, unlike every other
+// content type in this file — a placeholder photo or a placeholder
+// headline is an obviously-fake stand-in, but a placeholder
+// testimonial (a fake quote attributed to a fake person) would read as
+// a real claim about a real customer. Empty array when unconfigured,
+// on error, or when nothing's published yet; TestimonialsSection.tsx
+// simply doesn't render when this is empty, same "hidden until
+// there's something real to show" rule `showTestimonials` (Site
+// Settings) already applies at the toggle level.
+type RawTestimonial = {
+  quote: string;
+  authorName: string;
+  authorRole: string;
+};
+
+const testimonialsQuery = `*[_type == "testimonial"] | order(order asc){
+  quote, authorName, authorRole
+}`;
+
+export async function getTestimonials(): Promise<TestimonialContent[]> {
+  if (!isSanityConfigured) return [];
+
+  try {
+    const docs = await sanityClient.fetch<RawTestimonial[]>(
+      testimonialsQuery,
+      {},
+      { next: { revalidate: 60 } },
+    );
+    return docs.map((doc) => ({
+      quote: doc.quote,
+      authorName: doc.authorName,
+      authorRole: doc.authorRole,
+    }));
+  } catch {
+    return [];
   }
 }
 
@@ -908,4 +964,5 @@ export type {
   ContentImage,
   Media,
   Seo,
+  TestimonialContent,
 } from "./types";

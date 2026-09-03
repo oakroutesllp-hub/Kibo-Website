@@ -4,6 +4,7 @@ import { ProductsGridSection } from "@/components/sections/ProductsGridSection";
 import { CustomSection } from "@/components/sections/CustomSection";
 import { SupplySection } from "@/components/sections/SupplySection";
 import { LongRunSection } from "@/components/sections/LongRunSection";
+import { TestimonialsSection } from "@/components/sections/TestimonialsSection";
 import { CTANudgeSection } from "@/components/sections/CTANudgeSection";
 import { WeStartedByListeningSection } from "@/components/sections/WeStartedByListeningSection";
 import { TiruppurStorySection } from "@/components/sections/TiruppurStorySection";
@@ -19,6 +20,7 @@ import {
   getCtaNudgeCopy,
   getOurStoryCopy,
   getSiteSettings,
+  getTestimonials,
 } from "@/lib/content";
 
 // `description` fallback added 3 Sep 2026 — found via a real Lighthouse
@@ -111,6 +113,12 @@ export default async function Home() {
   const ctaNudgeCopy = await getCtaNudgeCopy();
   const ourStoryCopy = await getOurStoryCopy();
   const settings = await getSiteSettings();
+  // `getTestimonials()` (3 Sep 2026) — fetched regardless of the
+  // `showTestimonials` toggle's state; TestimonialsSection itself
+  // decides whether to render anything (see that component's own
+  // comment) rather than branching here, same pattern every other
+  // conditionally-shown piece of content on this page already follows.
+  const testimonials = await getTestimonials();
   return (
     <>
       <Hero content={homepage} carouselSeconds={settings.carouselIntervalSeconds} />
@@ -122,6 +130,17 @@ export default async function Home() {
       <CustomSection media={customSectionMedia} copy={customSectionCopy} />
       <SupplySection copy={supplySectionCopy} />
       <LongRunSection copy={longRunSectionCopy} />
+      {/* Testimonials, 3 Sep 2026 — placed here (between Long Run and
+          the CTA nudge) per the owner's own reasoning: trust content
+          right before the page's one conversion ask reads better than
+          after it. */}
+      <TestimonialsSection
+        testimonials={testimonials}
+        show={settings.showTestimonials}
+        limit={settings.testimonialsLimit}
+        desktopSpeed={settings.testimonialsDesktopSpeed}
+        mobileSpeed={settings.testimonialsMobileSpeed}
+      />
       <CTANudgeSection copy={ctaNudgeCopy} />
       <WeStartedByListeningSection media={ourStory.listeningMedia} copy={ourStoryCopy} carouselSeconds={settings.carouselIntervalSeconds} />
       <TiruppurStorySection media={ourStory.tiruppurMedia} copy={ourStoryCopy} carouselSeconds={settings.carouselIntervalSeconds} />

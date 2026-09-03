@@ -45,6 +45,21 @@ export const structure: StructureResolver = (S) =>
       // data migration needed), only Studio-facing labels change.
       S.documentTypeListItem("article").title("Blog"),
       S.divider(),
+      // "Testimonials" added 3 Sep 2026 (owner: "let's do testimonials
+      // section") — same repeatable-list-with-custom-order pattern as
+      // Product Categories above (`S.documentTypeList`, not the plain
+      // alphabetical `S.documentTypeListItem` Blog uses, since display
+      // order here is deliberate, not alphabetical-by-author-name).
+      // Hidden from visitors until Site Settings → "Show Testimonials
+      // on Home" is switched on — see siteSettingsType.ts.
+      S.listItem()
+        .title("Testimonials")
+        .child(
+          S.documentTypeList("testimonial")
+            .title("Testimonials")
+            .defaultOrdering([{ field: "order", direction: "asc" }]),
+        ),
+      S.divider(),
       // "Custom Section Media" and "Catalog" added 31 Aug 2026, same
       // pass as Product Categories above — see each schema's own file
       // for what it covers.

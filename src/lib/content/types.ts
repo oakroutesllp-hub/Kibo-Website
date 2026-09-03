@@ -126,6 +126,30 @@ export type SiteSettingsContent = {
   // field description. Falls back to 5 (seconds) when unset, same
   // default MediaCarousel.tsx always used before this field existed.
   carouselIntervalSeconds: number;
+  // Testimonials-on-Home toggle (3 Sep 2026) — see siteSettingsType.ts's
+  // own field description. Defaults to `false` (hidden), same
+  // hidden-until-ready pattern as `showBlogInNav`.
+  showTestimonials: boolean;
+  // Testimonials display-count testing control (3 Sep 2026) — see
+  // siteSettingsType.ts's own field description. `undefined` (field
+  // left blank) means "show all" — TestimonialsSection.tsx only slices
+  // the array when this is an actual number.
+  testimonialsLimit?: number;
+  // Testimonials auto-advance speeds, desktop and mobile separately
+  // (3 Sep 2026) — see siteSettingsType.ts's own field descriptions.
+  // Fall back to 6/7 seconds respectively when unset.
+  testimonialsDesktopSpeed: number;
+  testimonialsMobileSpeed: number;
+};
+
+// Testimonial (3 Sep 2026) — see testimonialType.ts's own comment.
+// Deliberately no `ContentImage`/photo field — not asked for, and a
+// text-only card is simpler to keep uniform height across a grid (see
+// TestimonialsSection.tsx's own comment on the line-clamp approach).
+export type TestimonialContent = {
+  quote: string;
+  authorName: string;
+  authorRole: string;
 };
 
 // Product Categories (31 Aug 2026) — see productCategoryType.ts's own

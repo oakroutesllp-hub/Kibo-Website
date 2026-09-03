@@ -11,6 +11,7 @@ import { supplySectionCopyType } from "./supplySectionCopyType";
 import { longRunSectionCopyType } from "./longRunSectionCopyType";
 import { ctaNudgeCopyType } from "./ctaNudgeCopyType";
 import { ourStoryCopyType } from "./ourStoryCopyType";
+import { testimonialType } from "./testimonialType";
 
 export const schemaTypes = [
   seoType,
@@ -26,4 +27,5 @@ export const schemaTypes = [
   longRunSectionCopyType,
   ctaNudgeCopyType,
   ourStoryCopyType,
+  testimonialType,
 ];

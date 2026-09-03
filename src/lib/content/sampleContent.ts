@@ -105,6 +105,9 @@ export const sampleSiteSettings: SiteSettingsContent = {
   navLabelBlog: "Blog",
   navLabelOurStory: "Our Story",
   carouselIntervalSeconds: 5,
+  showTestimonials: false,
+  testimonialsDesktopSpeed: 6,
+  testimonialsMobileSpeed: 7,
 };
 
 // A second sample post added 31 Aug 2026, same time as the Blog page
