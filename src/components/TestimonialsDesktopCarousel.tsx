@@ -56,13 +56,35 @@ export function TestimonialsDesktopCarousel({
 
   return (
     <div
-      className="relative w-full max-w-[1230px]"
+      // `mx-auto` added 3 Sep 2026 — found live, not assumed: this
+      // wrapper's parent (TestimonialsSection.tsx's `xl:block
+      // xl:w-full` div) is a plain block element that stretches to
+      // the section's FULL width, and a block child with `max-w` but
+      // no `mx-auto` defaults to flush-left inside a wider parent
+      // (confirmed: measured 0px left margin, 115px right margin at
+      // 1440px before this fix — visible in the owner's own
+      // screenshot as cards hugging the left edge). The static-row
+      // version never had this bug because IT sits directly inside a
+      // `flex flex-col items-center` parent, which centers any
+      // narrower child automatically — this carousel needed its own
+      // explicit centering since it's one extra wrapper level removed
+      // from that parent.
+      className="relative mx-auto w-full max-w-[1230px]"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
       onFocus={() => setPaused(true)}
       onBlur={() => setPaused(false)}
     >
-      <div className="flex flex-wrap justify-center gap-6">
+      {/* `items-stretch` made explicit (was relying on flexbox's
+          unspecified default, which resolves to the same behavior but
+          isn't guaranteed identical across every render path) after
+          the owner reported visibly unequal card heights live —
+          couldn't reproduce the imbalance locally with matching test
+          content (measured all 3 cards at an identical 266.5px), but
+          this is a zero-cost, strictly-safer belt-and-suspenders fix
+          regardless of the exact mechanism, and removes any ambiguity
+          for future debugging. */}
+      <div className="flex flex-wrap items-stretch justify-center gap-6">
         {visible.map((testimonial, slot) => (
           <div
             key={slot}

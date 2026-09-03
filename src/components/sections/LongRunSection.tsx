@@ -86,9 +86,19 @@ import type { LongRunSectionCopyContent } from "@/lib/content";
 // `copy` (1 Sep 2026, owner: "make everything editable") — reverses
 // this file's own "fixed, code-level" call; see longRunSectionCopyType.ts
 // for why each paragraph keeps its own 2-line split as two fields.
+// `bg-sage-green/10` → `bg-background`, 3 Sep 2026 — owner: "remove the
+// green gray sage background from built for the long run... add it to
+// you build your market we build the supply behind it [Supply]." The
+// tinted band moves one section earlier (to Supply) instead of
+// disappearing — Long Run reverts to plain white, the same treatment
+// Custom/Supply/Testimonials' own white siblings already use. See
+// SupplySection.tsx's own comment for where the tint actually lives
+// now, and TestimonialsSection.tsx's for the new tinted pair it forms
+// with CTANudgeSection (which keeps its own unchanged background —
+// see that file's own comment on why it doesn't need updating).
 export function LongRunSection({ copy }: { copy: LongRunSectionCopyContent }) {
   return (
-    <section className="w-full bg-sage-green/10">
+    <section className="w-full bg-background">
       {/* Band height increased, same pass (owner: "increase the
           height... a little wider height wise... nice presence to it")
           — `py-10 sm:py-14` (40px/56px) → `py-20 sm:py-28` (80px/112px),

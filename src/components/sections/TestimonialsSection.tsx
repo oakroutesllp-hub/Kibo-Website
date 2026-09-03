@@ -75,7 +75,20 @@ export function TestimonialsSection({
   if (visible.length === 0) return null;
 
   return (
-    <section className="w-full bg-background">
+    // `bg-background` → `bg-sage-green/10`, 3 Sep 2026 (owner: "the
+    // next section, which is 'what our partners say,' that along with
+    // 'get in touch'... needs to be the sage green gray background")
+    // — same token Long Run used to carry (see LongRunSection.tsx's
+    // own comment), forming one continuous tinted band with
+    // CTANudgeSection right below it. CTANudgeSection's own background
+    // needs NO change for this to work — it already darkens itself
+    // slightly on mobile (`bg-sage-green/20`) specifically to stay
+    // visually distinct from whatever same-tinted section precedes it,
+    // a mechanism built for exactly this "two tinted sections back to
+    // back" case (originally written for Long Run, now applies to
+    // Testimonials instead by the same construction, no change needed
+    // on CTA's side).
+    <section className="w-full bg-sage-green/10">
       <div className="mx-auto flex w-full max-w-[1728px] flex-col items-center gap-10 px-6 py-16 sm:px-10 sm:py-20">
         <h2 className="text-center text-h2 font-bold leading-[1.1] tracking-tight text-charcoal">
           What our <span className="text-sage-green">partners say</span>

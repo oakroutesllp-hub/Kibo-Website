@@ -41,9 +41,24 @@ import type { SupplySectionCopyContent } from "@/lib/content";
 // (zipped positionally against `copy.rows`, same convention as
 // CustomSection.tsx's own copy wiring) — only label/copy text and the
 // two headline/supporting lines are now Sanity-editable.
+// `bg-background` → `bg-sage-green/10`, 3 Sep 2026 (owner: "remove the
+// green gray sage background from built for the long run... add it to
+// you build your market we build the supply behind it") — this
+// section is now the one carrying the tinted band Long Run used to
+// have (same exact token, `sage-green/10`), not a new color. Padding
+// increased along with it, same request, same day ("add some more
+// padding on the top and some more padding on the bottom") — matches
+// the scale Long Run's own tinted-band padding used before this
+// change (`pt-16 sm:pt-[5.6rem]`), since a tinted "band" section reads
+// better with more breathing room than a plain white one, same
+// reasoning that section's own history already documents. Bottom
+// bumped proportionally from this section's own existing `pb-14
+// sm:pb-[4.9rem]` (56px/78.4px, already a deliberate exception to the
+// site's shared rhythm value — see the comment above) to `pb-20
+// sm:pb-24` (80px/96px).
 export function SupplySection({ copy }: { copy: SupplySectionCopyContent }) {
   return (
-    <section className="w-full bg-background">
+    <section className="w-full bg-sage-green/10">
       {/* `py-10 sm:py-14` — the site's standardized inter-section
           rhythm (30 Aug 2026, "consistent rule of white space between
           topic changes"), unchanged by this relayout. */}
@@ -78,7 +93,7 @@ export function SupplySection({ copy }: { copy: SupplySectionCopyContent }) {
           exception to the shared rhythm value, not a silent drift from
           it — Supply's own `pt` and every other seam on the site keep
           the standard value. */}
-      <div className="mx-auto flex w-full max-w-[1728px] flex-col items-center gap-10 px-6 pt-7 pb-14 text-center sm:px-10 sm:pt-[2.45rem] sm:pb-[4.9rem]">
+      <div className="mx-auto flex w-full max-w-[1728px] flex-col items-center gap-10 px-6 pt-16 pb-20 text-center sm:px-10 sm:pt-[5.6rem] sm:pb-24">
         {/* Headline + supporting line — centered (was right-hugging a
             central rule; that rule and the two-column grid it lived in
             are both gone now, see file comment). `text-h2` (30px)/
