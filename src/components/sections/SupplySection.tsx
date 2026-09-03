@@ -198,7 +198,7 @@ export function SupplySection({ copy }: { copy: SupplySectionCopyContent }) {
                   <h3 className="flex min-h-[46.8px] items-start justify-center text-h3 font-semibold text-charcoal">
                     {rowCopy.label}
                   </h3>
-                  <p className="text-support text-charcoal/60">{rowCopy.copy}</p>
+                  <p className="text-support text-charcoal/70">{rowCopy.copy}</p>
                 </div>
               </div>
             </div>

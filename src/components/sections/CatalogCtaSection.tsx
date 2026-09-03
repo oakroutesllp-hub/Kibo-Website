@@ -77,7 +77,7 @@ export function CatalogCtaSection({
             <path d="M12 18v-6M9.5 15.5 12 18l2.5-2.5" />
           </svg>
         )}
-        <span className="rounded-full bg-background/85 px-3 py-1 text-micro font-medium text-charcoal/60">
+        <span className="rounded-full bg-background/85 px-3 py-1 text-micro font-medium text-charcoal/70">
           Download PDF
         </span>
       </button>

@@ -20,7 +20,7 @@ export function MediaPlaceholder({
     <div
       className={`relative flex items-center justify-center overflow-hidden border border-charcoal/10 bg-charcoal/[0.04] bg-[repeating-linear-gradient(135deg,color-mix(in_srgb,var(--color-charcoal)_8%,transparent)_0,color-mix(in_srgb,var(--color-charcoal)_8%,transparent)_1px,transparent_1px,transparent_14px)] ${className ?? ""}`}
     >
-      <span className="rounded-full bg-background/85 px-3 py-1 text-micro font-medium text-charcoal/60">
+      <span className="rounded-full bg-background/85 px-3 py-1 text-micro font-medium text-charcoal/70">
         {label}
       </span>
     </div>

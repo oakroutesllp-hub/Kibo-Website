@@ -35,6 +35,18 @@
      wherever it doesn't carry white text on top of it. */
   --color-green-gray-deep: #5f6b5e;
 
+  /* `--color-sage-green-deep` (3 Sep 2026) — same derived-accessibility
+     pattern as `--color-green-gray-deep` above, for the same reason: a
+     real Lighthouse audit measured plain `sage-green` TEXT (not a
+     background) at 15px/normal-weight on white at 4.25:1 — just under
+     WCAG's 4.5:1 minimum for that size/weight (FounderSection.tsx's
+     closing "...KIBO." accent). `sage-green` itself is untouched and
+     still used everywhere else it already works (large/bold headline
+     accents, dots, icons) — this only replaces it where sage-green is
+     small body-sized text sitting directly on a white background.
+     Darkened ~35% (same hue, same family), landing at ~7:1. */
+  --color-sage-green-deep: #485348;
+
   /* Base surface — brand spec calls for "white or very light neutral" */
   --color-background: #ffffff;
   --color-foreground: var(--color-charcoal);
@@ -45,6 +57,7 @@
   --color-sage-green: var(--color-sage-green);
   --color-green-gray: var(--color-green-gray);
   --color-green-gray-deep: var(--color-green-gray-deep);
+  --color-sage-green-deep: var(--color-sage-green-deep);
   --color-warm-stone: var(--color-warm-stone);
   --color-soft-taupe: var(--color-soft-taupe);
   --color-charcoal: var(--color-charcoal);

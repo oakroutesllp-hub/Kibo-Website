@@ -176,7 +176,7 @@ export function Footer({ settings }: { settings: SiteSettingsContent }) {
               which already uses `gap-2` (8px, see that `<nav>` below).
               Matched exactly, same value, same reasoning: consistent
               line rhythm between the two columns' stacked text. */}
-          <div className="flex flex-col gap-2 text-micro text-charcoal/60">
+          <div className="flex flex-col gap-2 text-micro text-charcoal/70">
             {settings.footerBrandLines.map((line) => (
               <p key={line}>{line}</p>
             ))}
@@ -191,8 +191,17 @@ export function Footer({ settings }: { settings: SiteSettingsContent }) {
               group headings" specifically, distinct from the micro-label
               eyebrows (Hero, "Our Story") `<Eyebrow>` still correctly
               renders elsewhere. Same swap on Buyers/Contact/Connect
-              below. */}
-          <h4 className="text-h4 font-semibold text-charcoal">Navigate</h4>
+              below.
+
+              **Tag changed `<h4>` → `<h3>`, 3 Sep 2026** (a real
+              Lighthouse audit flagged "heading elements are not in a
+              sequentially-descending order" here) — Home's last
+              heading before the footer is FounderSection's `<h2>`, so
+              a footer `<h4>` right after it skips a level. `text-h4`
+              (the visual size/weight) is untouched — this is a pure
+              semantic-tag fix, zero visual change, same on
+              Buyers/Contact/Connect below. */}
+          <h3 className="text-h4 font-semibold text-charcoal">Navigate</h3>
           {/* `text-micro` (11px, 30 Aug 2026, owner, on the nav link
               list/contact block specifically — "Navigate Buyers Contact
               Connect seem fine" (the `<h4>` group headings above, left
@@ -222,7 +231,23 @@ export function Footer({ settings }: { settings: SiteSettingsContent }) {
                     window.scrollTo({ top: 0, behavior: "auto" });
                   }
                 }}
-                className="text-micro text-charcoal/60 transition-colors hover:text-charcoal"
+                // 3 Sep 2026, a real Lighthouse audit flagged this
+                // link's tap target as 52×15px, under the 24×24px
+                // minimum. First attempt (`py-1.5 -my-1.5`, padding
+                // grows the box + equal negative margin to "cancel it
+                // back out") was WRONG — measured live afterward and
+                // found the links now overlapping by 4px: flexbox
+                // `gap` adds space on top of margins, it doesn't
+                // absorb them, so the negative margins actually ATE
+                // into the existing `gap-2`. Replaced with an
+                // absolutely-positioned `::before` extending 6px past
+                // this link's box on every side (64×27px effective hit
+                // area) — an absolutely-positioned element never
+                // participates in flex sizing at all, so this is
+                // genuinely zero layout impact, verified the same way
+                // (measured, not assumed). Same fix on Buyers'/
+                // Contact's links below.
+                className="text-micro text-charcoal/70 transition-colors hover:text-charcoal relative before:absolute before:inset-[-6px] before:content-['']"
               >
                 {link.label}
               </Link>
@@ -238,7 +263,7 @@ export function Footer({ settings }: { settings: SiteSettingsContent }) {
             session swapped Contact and Buyers; this un-swaps them back
             to the original Navigate/Buyers/Contact/Connect order. */}
         <div className="flex flex-col items-center gap-3 text-center">
-          <h4 className="text-h4 font-semibold text-charcoal">Buyers</h4>
+          <h3 className="text-h4 font-semibold text-charcoal">Buyers</h3>
           <nav className="flex flex-col gap-2">
             {/*
               **Rewired to the real shared modal, 30 Aug 2026** (owner:
@@ -271,7 +296,7 @@ export function Footer({ settings }: { settings: SiteSettingsContent }) {
             <button
               type="button"
               onClick={openTalkToKibo}
-              className="text-micro text-charcoal/60 transition-colors hover:text-charcoal"
+              className="text-micro text-charcoal/70 transition-colors hover:text-charcoal relative before:absolute before:inset-[-6px] before:content-['']"
             >
               {settings.getInTouchLabel}
             </button>
@@ -280,7 +305,7 @@ export function Footer({ settings }: { settings: SiteSettingsContent }) {
                 rename. */}
             <Link
               href="/catalog"
-              className="text-micro text-charcoal/60 transition-colors hover:text-charcoal"
+              className="text-micro text-charcoal/70 transition-colors hover:text-charcoal relative before:absolute before:inset-[-6px] before:content-['']"
             >
               Catalog
             </Link>
@@ -289,12 +314,12 @@ export function Footer({ settings }: { settings: SiteSettingsContent }) {
 
         {/* Contact — reverted to 3rd column, see Buyers' comment above. */}
         <div className="flex flex-col items-center gap-3 text-center">
-          <h4 className="text-h4 font-semibold text-charcoal">Contact</h4>
+          <h3 className="text-h4 font-semibold text-charcoal">Contact</h3>
           {/* `text-micro` (11px, 30 Aug 2026, owner: "reduce the font on
               those, bump it down" — nav links + this contact block,
               explicitly NOT the group headings, which "seem fine") —
               was `text-support` (13px), the next step down. */}
-          <div className="flex flex-col gap-2 text-micro text-charcoal/60">
+          <div className="flex flex-col gap-2 text-micro text-charcoal/70">
             {settings.footerAddress &&
               formatFooterAddressLines(settings.footerAddress).map((line) => (
                 <p key={line}>{line}</p>
@@ -302,7 +327,7 @@ export function Footer({ settings }: { settings: SiteSettingsContent }) {
             {settings.footerEmail && (
               <a
                 href={`mailto:${settings.footerEmail}`}
-                className="transition-colors hover:text-charcoal"
+                className="transition-colors hover:text-charcoal relative before:absolute before:inset-[-6px] before:content-['']"
               >
                 {settings.footerEmail}
               </a>
@@ -316,7 +341,7 @@ export function Footer({ settings }: { settings: SiteSettingsContent }) {
                 }
                 target="_blank"
                 rel="noopener noreferrer"
-                className="transition-colors hover:text-charcoal"
+                className="transition-colors hover:text-charcoal relative before:absolute before:inset-[-6px] before:content-['']"
               >
                 {settings.whatsappNumber}
               </a>
@@ -353,7 +378,7 @@ export function Footer({ settings }: { settings: SiteSettingsContent }) {
             column's own icon-overflow fix isn't lost by joining the
             other three columns' new alignment. */}
         <div className="flex flex-col items-center gap-3 text-center">
-          <h4 className="text-h4 font-semibold text-charcoal">Connect</h4>
+          <h3 className="text-h4 font-semibold text-charcoal">Connect</h3>
           <div className="flex justify-center gap-3">
             <a
               href={settings.linkedInUrl || "#"}
@@ -407,8 +432,15 @@ export function Footer({ settings }: { settings: SiteSettingsContent }) {
         {/* `py-5` → `py-3.5` (20px → 14px, 30 Aug 2026, owner: "reduce
             the padding slightly... that whole bar can be a little
             shorter in the y-axis") — this bar's own vertical padding is
-            what sets its height (nothing else pads it). */}
-        <div className="flex flex-col items-center gap-3 border-t border-charcoal/8 px-6 py-3.5 text-center text-micro text-charcoal/50 sm:flex-row sm:justify-between sm:px-10 lg:w-full lg:px-0">
+            what sets its height (nothing else pads it).
+
+            `text-charcoal/50` → `text-charcoal/65`, 3 Sep 2026 (a real
+            Lighthouse audit measured this bar's actual rendered color,
+            #919090 on white, at 3.18:1 — well under WCAG AA's 4.5:1
+            minimum for this text size). `/65` measures at ~5:1, a
+            comfortable margin above the minimum rather than landing
+            right on it. */}
+        <div className="flex flex-col items-center gap-3 border-t border-charcoal/8 px-6 py-3.5 text-center text-micro text-charcoal/65 sm:flex-row sm:justify-between sm:px-10 lg:w-full lg:px-0">
           <p>© {year} KIBO</p>
           <div className="flex items-center gap-4">
             <Link href="/privacy-policy" className="hover:text-charcoal">

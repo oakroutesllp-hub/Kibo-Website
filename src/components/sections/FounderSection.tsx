@@ -347,7 +347,12 @@ export function FounderSection({
               <p className="max-w-sm text-body text-charcoal/70">{copy.founderParagraph2}</p>
               <p className="max-w-sm text-body text-charcoal/70">
                 {paragraph3Prefix}
-                <span className="text-sage-green">KIBO.</span>
+                {/* `text-sage-green` → `text-sage-green-deep`, 3 Sep
+                    2026 (a real Lighthouse audit measured plain
+                    sage-green at this 15px/normal-weight size at
+                    4.25:1, under WCAG's 4.5:1 minimum) — see
+                    globals.css's own comment on the new token. */}
+                <span className="text-sage-green-deep">KIBO.</span>
               </p>
             </div>
           </div>

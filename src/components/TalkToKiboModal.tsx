@@ -89,7 +89,7 @@ export function TalkToKiboModal({ onClose, label }: { onClose: () => void; label
           <h2 id="talk-to-kibo-heading" className="text-h3 font-semibold text-charcoal">
             Thanks — we&apos;ll be in touch.
           </h2>
-          <p className="max-w-xs text-support text-charcoal/60">
+          <p className="max-w-xs text-support text-charcoal/70">
             We&apos;ve received your enquiry. Someone from KIBO will get back to you shortly.
           </p>
           {/* "Download the catalog" cross-offer — see file comment above. */}
@@ -116,7 +116,7 @@ export function TalkToKiboModal({ onClose, label }: { onClose: () => void; label
           <h2 id="talk-to-kibo-heading" className="pr-8 text-h3 font-semibold text-charcoal">
             {label}
           </h2>
-          <p className="mt-1.5 text-support text-charcoal/60">
+          <p className="mt-1.5 text-support text-charcoal/70">
             Looking for men&apos;s apparel? Tell us what you need.
           </p>
 

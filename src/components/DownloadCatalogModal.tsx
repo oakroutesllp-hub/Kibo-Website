@@ -157,7 +157,7 @@ export function DownloadCatalogModal({
               Download PDF
             </a>
           ) : (
-            <p className="max-w-xs text-support text-charcoal/60">
+            <p className="max-w-xs text-support text-charcoal/70">
               Our catalog PDF is being finalized — we&apos;ll email it to you as soon
               as it&apos;s ready.
             </p>
@@ -188,7 +188,7 @@ export function DownloadCatalogModal({
               </button>
             </>
           ) : (
-            <p className="text-support text-charcoal/60">Sending…</p>
+            <p className="text-support text-charcoal/70">Sending…</p>
           )}
         </div>
       ) : (
@@ -196,7 +196,7 @@ export function DownloadCatalogModal({
           <h2 id="download-catalog-heading" className="pr-8 text-h3 font-semibold text-charcoal">
             Download Catalog
           </h2>
-          <p className="mt-1.5 text-support text-charcoal/60">
+          <p className="mt-1.5 text-support text-charcoal/70">
             Enter your details to get the KIBO product catalog.
           </p>
 

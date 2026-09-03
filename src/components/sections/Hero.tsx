@@ -185,7 +185,7 @@ export function Hero({
       */}
       <div
         aria-hidden="true"
-        className="absolute inset-x-0 bottom-6 z-10 flex flex-col items-center gap-1 text-charcoal/60"
+        className="absolute inset-x-0 bottom-6 z-10 flex flex-col items-center gap-1 text-charcoal/70"
       >
         {/* Was text-[10px] — scaled to 70% along with the rest of the
             site's type, 28 Aug 2026 site-wide font-size reduction.

@@ -220,7 +220,7 @@ export function Nav({ settings }: { settings: SiteSettingsContent }) {
                 }}
                 aria-current={active ? "page" : undefined}
                 className={`text-support font-medium transition-colors ${
-                  active ? "text-charcoal" : "text-charcoal/60 hover:text-charcoal"
+                  active ? "text-charcoal" : "text-charcoal/70 hover:text-charcoal"
                 }`}
               >
                 {link.label}
@@ -356,7 +356,7 @@ export function Nav({ settings }: { settings: SiteSettingsContent }) {
                   }
                 }}
                 aria-current={active ? "page" : undefined}
-                className={`py-3 text-body font-medium ${active ? "text-charcoal" : "text-charcoal/60"}`}
+                className={`py-3 text-body font-medium ${active ? "text-charcoal" : "text-charcoal/70"}`}
               >
                 {link.label}
               </Link>

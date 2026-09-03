@@ -90,7 +90,7 @@ export function BlogGrid({ articles }: { articles: ArticleContent[] }) {
       )}
 
       {filtered.length === 0 ? (
-        <p className="py-10 text-center text-body text-charcoal/60">
+        <p className="py-10 text-center text-body text-charcoal/70">
           No posts in this category yet.
         </p>
       ) : (
@@ -161,9 +161,12 @@ function BlogCard({ article }: { article: ArticleContent }) {
             badge slightly darker than the same pill style elsewhere —
             MediaPlaceholder.tsx and CatalogCtaSection.tsx both already
             use `/60`, so this one moves to match rather than the other
-            two. */}
+            two. All three moved back to `/70` together, 3 Sep 2026 —
+            a real Lighthouse audit flagged `/60` (4.29:1) as under
+            WCAG AA's 4.5:1 minimum; same fix applied site-wide
+            wherever `text-charcoal/60` appeared, not just here. */}
         {article.category && (
-          <span className="absolute right-3 top-3 rounded-full bg-background/85 px-3 py-1 text-micro font-medium text-charcoal/60">
+          <span className="absolute right-3 top-3 rounded-full bg-background/85 px-3 py-1 text-micro font-medium text-charcoal/70">
             {article.category}
           </span>
         )}

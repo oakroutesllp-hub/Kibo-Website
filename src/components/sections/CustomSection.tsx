@@ -514,7 +514,7 @@ export function CustomSection({
                       replaces). Same change applied to the attribute
                       labels below, which this element is required to
                       match exactly. */}
-                  <span className="max-w-[8rem] text-micro font-semibold uppercase leading-snug tracking-[0.16em] text-charcoal/60">
+                  <span className="max-w-[8rem] text-micro font-semibold uppercase leading-snug tracking-[0.16em] text-charcoal/70">
                     {copy.processSteps[i]?.trackerLabel ?? step.trackerLabel}
                   </span>
                 </li>
@@ -607,7 +607,7 @@ export function CustomSection({
                       differs, never the image's own top position. */}
                   <div className="mx-auto w-[80%] lg:hidden">
                     <div className="flex h-8 items-end justify-center">
-                      <span className="text-center text-micro font-semibold uppercase tracking-[0.16em] text-charcoal/60">
+                      <span className="text-center text-micro font-semibold uppercase tracking-[0.16em] text-charcoal/70">
                         {stepCopy.trackerLabel}
                       </span>
                     </div>
@@ -799,7 +799,7 @@ export function CustomSection({
                     list of the four values this replaces; the tracker
                     label above is required to match this exactly, so it
                     moved to the same value in the same pass). */}
-                <h4 className="max-w-[8rem] text-micro font-semibold uppercase leading-snug tracking-[0.16em] text-charcoal/60">
+                <h4 className="max-w-[8rem] text-micro font-semibold uppercase leading-snug tracking-[0.16em] text-charcoal/70">
                   {attrCopy.label}
                 </h4>
                 {/*
