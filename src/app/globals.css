@@ -1,5 +1,25 @@
 @import "tailwindcss";
 
+/* Clickable `<button>`s show a pointer cursor, 3 Sep 2026 (owner:
+   noticed the footer's "Get in touch" kept the plain arrow on hover,
+   while every link nearby correctly showed a hand) — this isn't one
+   button's bug, it's every `<button>` site-wide: Tailwind v4's
+   Preflight dropped the "buttons get a pointer cursor" convenience
+   v3 used to add, reverting to the plain HTML/browser default
+   (`cursor: default`) unless a page opts back in. Confirmed live
+   before fixing: `getComputedStyle` on the footer button really did
+   read `cursor: default`. One global rule here restores the expected
+   behavior everywhere at once (every "Talk to KIBO"/"Get in touch"
+   trigger, the hamburger menu, gallery arrows, the Specs pill, modal
+   close buttons, filter tabs) rather than adding `cursor-pointer` to
+   every individual button across a dozen-plus files and risking
+   missing one. `:not(:disabled)` so a genuinely disabled button still
+   correctly shows the "not-allowed"/default cursor, not a pointer
+   promising an action that won't happen. */
+button:not(:disabled) {
+  cursor: pointer;
+}
+
 /*
  * KIBO design tokens — Phase 1 foundation.
  *
