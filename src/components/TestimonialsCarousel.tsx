@@ -98,11 +98,30 @@ export function TestimonialsCarousel({
 
       {count > 1 && (
         <>
+          {/* Circle chrome (`rounded-full bg-background shadow-md` +
+              hover fill) removed, 3 Sep 2026 (owner: "the arrows...
+              look very big proportionately as compared to the text
+              itself... I feel that the arrow should not be within the
+              circle. It makes it look too big... instead can we just
+              have the chevron... and an invisible radius... touch
+              sensor around it without having that circle outlined
+              with shadow") — same fix applied to both this mobile
+              carousel and TestimonialsDesktopCarousel.tsx (owner's own
+              "your call" on mobile-only vs. both; picked both so the
+              arrow doesn't read as two different styles across
+              breakpoints). The `h-8 w-8` box itself is UNCHANGED — it's
+              still the full invisible tap target, just with no visible
+              fill/border/shadow now; card padding (`px-11 sm:px-12`,
+              this file's own earlier comment) was already tuned against
+              this exact box footprint, so text-clearing the arrow still
+              holds without touching that separately. Hover now shifts
+              the icon's own color (`hover:text-charcoal/50`) instead of
+              painting a circle behind it. */}
           <button
             type="button"
             aria-label="Previous testimonial"
             onClick={() => goTo(index - 1)}
-            className="absolute left-2 top-1/2 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-background text-charcoal shadow-md transition-colors hover:bg-charcoal/[0.06]"
+            className="absolute left-2 top-1/2 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center text-charcoal/70 transition-colors hover:text-charcoal"
           >
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4" aria-hidden="true">
               <polyline points="15 18 9 12 15 6" />
@@ -112,7 +131,7 @@ export function TestimonialsCarousel({
             type="button"
             aria-label="Next testimonial"
             onClick={() => goTo(index + 1)}
-            className="absolute right-2 top-1/2 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-background text-charcoal shadow-md transition-colors hover:bg-charcoal/[0.06]"
+            className="absolute right-2 top-1/2 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center text-charcoal/70 transition-colors hover:text-charcoal"
           >
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4" aria-hidden="true">
               <polyline points="9 18 15 12 9 6" />

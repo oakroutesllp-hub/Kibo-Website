@@ -127,11 +127,16 @@ export function TestimonialsDesktopCarousel({
         ))}
       </div>
 
+      {/* Circle chrome removed, 3 Sep 2026 — same fix, same reasoning
+          as TestimonialsCarousel.tsx's own matching comment (owner
+          flagged this on mobile, applied here too for consistency
+          across breakpoints — see that file's comment for the full
+          quote). `h-9 w-9` invisible tap target unchanged. */}
       <button
         type="button"
         aria-label="Previous testimonial"
         onClick={() => goTo(start - 1)}
-        className="absolute left-0 top-1/2 z-10 flex h-9 w-9 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-background text-charcoal shadow-md transition-colors hover:bg-charcoal/[0.06]"
+        className="absolute left-0 top-1/2 z-10 flex h-9 w-9 -translate-x-1/2 -translate-y-1/2 items-center justify-center text-charcoal/70 transition-colors hover:text-charcoal"
       >
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4" aria-hidden="true">
           <polyline points="15 18 9 12 15 6" />
@@ -141,7 +146,7 @@ export function TestimonialsDesktopCarousel({
         type="button"
         aria-label="Next testimonial"
         onClick={() => goTo(start + 1)}
-        className="absolute right-0 top-1/2 z-10 flex h-9 w-9 -translate-y-1/2 translate-x-1/2 items-center justify-center rounded-full bg-background text-charcoal shadow-md transition-colors hover:bg-charcoal/[0.06]"
+        className="absolute right-0 top-1/2 z-10 flex h-9 w-9 -translate-y-1/2 translate-x-1/2 items-center justify-center text-charcoal/70 transition-colors hover:text-charcoal"
       >
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4" aria-hidden="true">
           <polyline points="9 18 15 12 9 6" />
