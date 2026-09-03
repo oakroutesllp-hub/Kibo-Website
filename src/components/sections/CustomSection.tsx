@@ -494,7 +494,14 @@ export function CustomSection({
                       Bumped to `text-support` (13px, 30 Aug 2026, owner:
                       "increase the font size of 01-06") — the next step
                       up in the type scale from micro. */}
-                  <span className="text-support font-semibold text-sage-green">{step.number}</span>
+                  {/* `text-sage-green` → `text-sage-green-deep`, 3 Sep
+                      2026 — a desktop-only Lighthouse pass (this
+                      tracker only renders at `lg:`+, so the earlier
+                      mobile-only run never saw it) measured plain
+                      sage-green at this 13px/semibold size at the same
+                      ~4.25:1 as FounderSection.tsx's "KIBO." — see
+                      globals.css's own comment on the token. */}
+                  <span className="text-support font-semibold text-sage-green-deep">{step.number}</span>
                   <div className="flex w-full items-center">
                     <div className={`h-px flex-1 ${i === 0 ? "bg-transparent" : "bg-charcoal/15"}`} />
                     <span aria-hidden="true" className="mx-1.5 h-2.5 w-2.5 shrink-0 rounded-full bg-sage-green" />
