@@ -209,7 +209,25 @@ export function Footer({ settings }: { settings: SiteSettingsContent }) {
               reduce the font on those, bump it down") — was
               `text-support` (13px), the next step down. Same change on
               Buyers' two links and the Contact block below. */}
-          <nav className="flex flex-col gap-2">
+          {/* `gap-2` → `gap-0` + `py-[5px]` on each link, 3 Sep 2026 —
+              third attempt at this fix, see the long history on this
+              exact problem: attempt 1 (`py-1.5 -my-1.5`) broke the
+              visible gap (flexbox `gap` adds on top of margins, it
+              doesn't absorb them — measured a 4px overlap). Attempt 2
+              (an absolutely-positioned `::before` expanding the hit
+              area with zero layout impact) was functionally correct
+              for real clicks but Lighthouse's automated checker only
+              measures the element's own box, not a pseudo-element's
+              hit area, so it kept reporting a failure. This attempt
+              grows the REAL box instead, accepting the small honest
+              trade-off: moving the 8px gap from the container onto
+              each link's own `py-[5px]` (10px between two links, 5+5)
+              is a 2px increase, not zero — but it's the only way to
+              satisfy the letter of the check, and 2px is imperceptible
+              next to the previous 8px rhythm. Link height goes from
+              15.4px to 25.4px, clearing the 24px minimum. Same pattern
+              on Buyers'/Contact's items below. */}
+          <nav className="flex flex-col gap-0">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
@@ -231,23 +249,7 @@ export function Footer({ settings }: { settings: SiteSettingsContent }) {
                     window.scrollTo({ top: 0, behavior: "auto" });
                   }
                 }}
-                // 3 Sep 2026, a real Lighthouse audit flagged this
-                // link's tap target as 52×15px, under the 24×24px
-                // minimum. First attempt (`py-1.5 -my-1.5`, padding
-                // grows the box + equal negative margin to "cancel it
-                // back out") was WRONG — measured live afterward and
-                // found the links now overlapping by 4px: flexbox
-                // `gap` adds space on top of margins, it doesn't
-                // absorb them, so the negative margins actually ATE
-                // into the existing `gap-2`. Replaced with an
-                // absolutely-positioned `::before` extending 6px past
-                // this link's box on every side (64×27px effective hit
-                // area) — an absolutely-positioned element never
-                // participates in flex sizing at all, so this is
-                // genuinely zero layout impact, verified the same way
-                // (measured, not assumed). Same fix on Buyers'/
-                // Contact's links below.
-                className="text-micro text-charcoal/70 transition-colors hover:text-charcoal relative before:absolute before:inset-[-6px] before:content-['']"
+                className="text-micro text-charcoal/70 transition-colors hover:text-charcoal py-[5px]"
               >
                 {link.label}
               </Link>
@@ -264,7 +266,7 @@ export function Footer({ settings }: { settings: SiteSettingsContent }) {
             to the original Navigate/Buyers/Contact/Connect order. */}
         <div className="flex flex-col items-center gap-3 text-center">
           <h3 className="text-h4 font-semibold text-charcoal">Buyers</h3>
-          <nav className="flex flex-col gap-2">
+          <nav className="flex flex-col gap-0">
             {/*
               **Rewired to the real shared modal, 30 Aug 2026** (owner:
               "all Talk to KIBO and Get in touch buttons should open up
@@ -296,7 +298,7 @@ export function Footer({ settings }: { settings: SiteSettingsContent }) {
             <button
               type="button"
               onClick={openTalkToKibo}
-              className="text-micro text-charcoal/70 transition-colors hover:text-charcoal relative before:absolute before:inset-[-6px] before:content-['']"
+              className="text-micro text-charcoal/70 transition-colors hover:text-charcoal py-[5px]"
             >
               {settings.getInTouchLabel}
             </button>
@@ -305,7 +307,7 @@ export function Footer({ settings }: { settings: SiteSettingsContent }) {
                 rename. */}
             <Link
               href="/catalog"
-              className="text-micro text-charcoal/70 transition-colors hover:text-charcoal relative before:absolute before:inset-[-6px] before:content-['']"
+              className="text-micro text-charcoal/70 transition-colors hover:text-charcoal py-[5px]"
             >
               Catalog
             </Link>
@@ -319,15 +321,28 @@ export function Footer({ settings }: { settings: SiteSettingsContent }) {
               those, bump it down" — nav links + this contact block,
               explicitly NOT the group headings, which "seem fine") —
               was `text-support` (13px), the next step down. */}
-          <div className="flex flex-col gap-2 text-micro text-charcoal/70">
+          {/* `gap-2` → `gap-0` + per-item `py-*`, 3 Sep 2026 — see
+              Navigate's own comment above for the full "3 attempts"
+              history. This block is mixed content (plain address
+              lines + 2 clickable links sharing one container), so each
+              gets its own padding rather than one blanket value: the
+              address `<p>` lines get `py-1` (4px each = 8px between
+              two lines, exactly matching the original `gap-2`); the 2
+              links get `py-[5px]` (matching Navigate/Buyers) so THEIR
+              own box clears the 24px minimum. The one seam where an
+              address line meets a link (4px+5px=9px) is 1px off the
+              original 8px — imperceptible. */}
+          <div className="flex flex-col gap-0 text-micro text-charcoal/70">
             {settings.footerAddress &&
               formatFooterAddressLines(settings.footerAddress).map((line) => (
-                <p key={line}>{line}</p>
+                <p key={line} className="py-1">
+                  {line}
+                </p>
               ))}
             {settings.footerEmail && (
               <a
                 href={`mailto:${settings.footerEmail}`}
-                className="transition-colors hover:text-charcoal relative before:absolute before:inset-[-6px] before:content-['']"
+                className="py-[5px] transition-colors hover:text-charcoal"
               >
                 {settings.footerEmail}
               </a>
@@ -341,7 +356,7 @@ export function Footer({ settings }: { settings: SiteSettingsContent }) {
                 }
                 target="_blank"
                 rel="noopener noreferrer"
-                className="transition-colors hover:text-charcoal relative before:absolute before:inset-[-6px] before:content-['']"
+                className="py-[5px] transition-colors hover:text-charcoal"
               >
                 {settings.whatsappNumber}
               </a>
