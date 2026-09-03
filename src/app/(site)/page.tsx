@@ -21,11 +21,23 @@ import {
   getSiteSettings,
 } from "@/lib/content";
 
+// `description` fallback added 3 Sep 2026 — found via a real Lighthouse
+// audit run (not a code review guess): the live homepage was serving
+// NO <meta name="description"> tag at all, because the Sanity
+// `homepage` document exists but has never had its SEO description
+// field filled in, and `metaDescription` was passed straight through
+// with no fallback (unlike `title` two lines above, which already had
+// one) — an explicit `description: undefined` here doesn't fall back
+// to the root layout's own default description, it drops the tag
+// entirely. Needs its own explicit fallback, same pattern `title`
+// already used.
 export async function generateMetadata(): Promise<Metadata> {
   const homepage = await getHomepage();
   return {
     title: homepage.seo.metaTitle || "KIBO",
-    description: homepage.seo.metaDescription,
+    description:
+      homepage.seo.metaDescription ||
+      "KIBO — B2B men's apparel merchant exporter from India.",
   };
 }
 
