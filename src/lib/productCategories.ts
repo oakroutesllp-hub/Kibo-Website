@@ -61,13 +61,18 @@ export type ProductCategory = {
 // data once the card-face subtext it fed was removed as redundant with
 // `Style` — same "don't leave it orphaned" call as the Phase 1 Sanity
 // `product` schema removal (see PROJECT-SUMMARY.md).
-// MOQ added 31 Aug 2026 (owner: "not sure what MOQ actually works in
-// the market yet — we're going to let buyers ask, then figure it out —
-// but add MOQ 1,000 for all cards [as a starting placeholder]") — a
-// deliberate placeholder number, not a researched/locked commitment;
-// revisit once real buyer conversations establish what MOQ actually
-// works. First in the spec list on purpose — a qualifying number a
-// buyer needs to self-select on before reading anything else.
+// MOQ added 31 Aug 2026, owner: "add MOQ 1,000 for all cards." NOT an
+// arbitrary/unresearched guess (corrected 3 Sep 2026, owner: "let it
+// pass the other time, but... MoQ is not unresearched") — a sourcing
+// consultant advised that realistic first orders from a new buyer land
+// in the 500-1,000 unit range; listing 1,000 here is a deliberate
+// anchor-high figure, leaving room to negotiate down to 500 in an
+// actual conversation, rather than starting from the lower bound and
+// having nowhere to concede. The site's long-term target per order is
+// higher still (3,000-5,000 units) once repeat business is established
+// — 1,000 is the honest number for a FIRST order, not the business's
+// actual goal size. First in the spec list on purpose — a qualifying
+// number a buyer needs to self-select on before reading anything else.
 const KNIT_TEE_SPECS: ProductSpec[] = [
   { label: "MOQ", value: "1,000 units" },
   { label: "Style", value: "Plain, Striped, Printed" },
