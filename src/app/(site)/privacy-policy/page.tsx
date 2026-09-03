@@ -104,7 +104,8 @@ export default function PrivacyPolicyPage() {
           You can ask us at any time to tell you what information we hold
           about you, to correct it, or to delete it. Contact us using the
           email address in the footer of this site to make any of these
-          requests.
+          requests. These choices reflect rights recognized under
+          India&apos;s Digital Personal Data Protection Act, 2023.
         </p>
 
         <h2 className="text-body font-semibold text-charcoal">Children</h2>
