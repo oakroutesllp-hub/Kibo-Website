@@ -77,11 +77,22 @@ export function TestimonialsCarousel({
         {/* `line-clamp-6` — one line more than the grid cards' `line-clamp-5`
             (CustomSection.tsx's own precedent for length caps), since
             this view has no neighboring card forcing a shared row
-            height — a little more room reads better alone. */}
-        <p className="mb-5 line-clamp-6 text-body text-charcoal/80">{current.quote}</p>
+            height — a little more room reads better alone.
+            `min-h-[144px]` (6 lines × 24px) added 3 Sep 2026 alongside
+            the same fix on the desktop carousel — without it, this
+            card's own height (and the arrow buttons' vertical
+            position, since they're centered on the card) still jumped
+            between a short quote and a long one as the mobile
+            carousel auto-advanced. */}
+        <p className="mb-5 line-clamp-6 min-h-[144px] text-body text-charcoal/80">{current.quote}</p>
+        {/* `line-clamp-2` + `min-h`, name and role — same fix, same
+            reasoning as the desktop carousel's own comment: without
+            it, this card's own height (and the arrow buttons centered
+            on it) still jumped between a short author block and a
+            long one. */}
         <div className="mt-auto">
-          <p className="text-support font-semibold text-charcoal">{current.authorName}</p>
-          <p className="text-micro text-charcoal/60">{current.authorRole}</p>
+          <p className="line-clamp-2 min-h-[40.3px] text-support font-semibold text-charcoal">{current.authorName}</p>
+          <p className="line-clamp-2 min-h-[30.8px] text-micro text-charcoal/60">{current.authorRole}</p>
         </div>
       </div>
 

@@ -47,12 +47,19 @@ const MAX_STATIC_ROW = 3;
 // them. `xl` guarantees real slack (~57px at exactly 1280px) rather
 // than landing 3px short.
 //
-// Equal card height regardless of quote length, two mechanisms
-// together: `items-stretch` (flexbox default) matches every card in
-// the same row to the tallest one, AND each card's own `line-clamp-5`
-// caps a genuinely long quote so even a lone long-quote row doesn't
-// tower over the row below it — same reasoning CustomSection.tsx's
-// attribute blurbs already use `line-clamp-3` for.
+// Equal card height regardless of quote length: the quote paragraph
+// carries both `line-clamp-5` (caps a long quote, same reasoning
+// CustomSection.tsx's attribute blurbs use `line-clamp-3` for) AND
+// `min-h-[120px]` (reserves that same 5-line height even for a SHORT
+// quote — `line-clamp` alone only caps a maximum, it doesn't reserve
+// a minimum, so without this a short quote's card would still shrink
+// on its own). `items-stretch` (flexbox default) then matches every
+// card in one row to the tallest — belt-and-suspenders alongside the
+// min-height, not a substitute for it. See
+// TestimonialsDesktopCarousel.tsx's own comment for the live
+// measurement that found this — the actual owner-reported bug was
+// each AUTO-ADVANCE STATE rendering a different row height from the
+// next, not cards mismatching within one single row.
 export function TestimonialsSection({
   testimonials,
   show,
@@ -107,10 +114,13 @@ export function TestimonialsSection({
                 <span aria-hidden="true" className="mb-3 text-3xl leading-none text-sage-green">
                   &ldquo;
                 </span>
-                <p className="mb-5 line-clamp-5 text-body text-charcoal/80">{testimonial.quote}</p>
+                <p className="mb-5 line-clamp-5 min-h-[120px] text-body text-charcoal/80">{testimonial.quote}</p>
+                {/* `line-clamp-2` + `min-h`, name and role — see
+                    TestimonialsDesktopCarousel.tsx's own comment for
+                    why this needed the same treatment as the quote. */}
                 <div className="mt-auto">
-                  <p className="text-support font-semibold text-charcoal">{testimonial.authorName}</p>
-                  <p className="text-micro text-charcoal/60">{testimonial.authorRole}</p>
+                  <p className="line-clamp-2 min-h-[40.3px] text-support font-semibold text-charcoal">{testimonial.authorName}</p>
+                  <p className="line-clamp-2 min-h-[30.8px] text-micro text-charcoal/60">{testimonial.authorRole}</p>
                 </div>
               </div>
             ))}

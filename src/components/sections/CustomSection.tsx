@@ -294,7 +294,27 @@ export function CustomSection({
           matching `pb-8 sm:pb-11` bump — 64px/88px total, still a
           symmetric-halves seam like every other section boundary, just
           no longer equal to the two gaps inside this section. */}
-      <div className="mx-auto flex w-full max-w-[1728px] flex-col gap-12 px-6 pt-8 pb-8 sm:gap-16 sm:px-10 sm:pt-11 sm:pb-11">
+      {/* Bottom padding `pb-8 sm:pb-11` → `pb-16 sm:pb-[5.5rem]`
+          (32px/44px → 64px/88px, a flat doubling), 3 Sep 2026 (owner,
+          on a screenshot of this seam after SupplySection's background
+          became tinted: "the gap between the six thumbnails of built
+          around your requirements and the top of the green sage green
+          band... currently it's too close") — measured live first:
+          the visible WHITE gap here was exactly 44px (this section's
+          own `sm:pb-11`, confirmed via getBoundingClientRect against
+          the last attribute thumbnail's bottom edge) — SupplySection's
+          own top padding sits INSIDE its now-tinted band, so it reads
+          as colored space, not part of this white gap, meaning only
+          this section's bottom padding was actually available to
+          widen. Same "a white→tinted seam reads tighter than the
+          identical pixel value on a white→white seam" finding
+          SupplySection.tsx's own bottom-padding comment already
+          documents for its neighboring seam (Supply→Long Run, also
+          doubled for the same reason) — applied here by the same
+          logic, this time on the seam ABOVE the tinted section rather
+          than below it. Top padding (`pt-8 sm:pt-11`) intentionally
+          left untouched — the owner only flagged this one seam. */}
+      <div className="mx-auto flex w-full max-w-[1728px] flex-col gap-12 px-6 pt-8 pb-16 sm:gap-16 sm:px-10 sm:pt-11 sm:pb-[5.5rem]">
         {/* Headline — stays full-width (not part of the narrower
             container below it), unaffected by this section's whitespace
             tuning. */}

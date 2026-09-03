@@ -77,13 +77,10 @@ export function TestimonialsDesktopCarousel({
     >
       {/* `items-stretch` made explicit (was relying on flexbox's
           unspecified default, which resolves to the same behavior but
-          isn't guaranteed identical across every render path) after
-          the owner reported visibly unequal card heights live —
-          couldn't reproduce the imbalance locally with matching test
-          content (measured all 3 cards at an identical 266.5px), but
-          this is a zero-cost, strictly-safer belt-and-suspenders fix
-          regardless of the exact mechanism, and removes any ambiguity
-          for future debugging. */}
+          isn't guaranteed identical across every render path) — kept
+          as a belt-and-suspenders fix, but it was never the actual
+          cause of the height report (see `min-h-[120px]` below for
+          the real fix, 3 Sep 2026). */}
       <div className="flex flex-wrap items-stretch justify-center gap-6">
         {visible.map((testimonial, slot) => (
           <div
@@ -93,10 +90,38 @@ export function TestimonialsDesktopCarousel({
             <span aria-hidden="true" className="mb-3 text-3xl leading-none text-sage-green">
               &ldquo;
             </span>
-            <p className="mb-5 line-clamp-5 text-body text-charcoal/80">{testimonial.quote}</p>
+            {/* `min-h-[120px]` (5 lines × 24px line-height, measured
+                live), added 3 Sep 2026 — the real root cause of the
+                owner's "tile size still changing" report, confirmed by
+                measurement: `line-clamp-5` only caps a LONG quote's
+                height, it doesn't reserve space for a SHORT one — a
+                short quote's <p> shrinks to fit its own 1-2 lines, so
+                `mt-auto` pulls the whole card shorter too. Because this
+                sliding carousel reshuffles which 3 testimonials are
+                visible every few seconds, that made the row's overall
+                height visibly grow and shrink between auto-advance
+                states (measured 220.6px vs. 265.7px for the same 3
+                slots, seconds apart) even though every card WITHIN one
+                row already matched (`items-stretch` alone can't fix
+                this — it only equalizes cards against each other in
+                a single row, not against a row that hasn't rendered
+                yet). Reserving the full 5-line height regardless of
+                actual quote length makes every card the same height
+                in every state, not just within each individual row. */}
+            <p className="mb-5 line-clamp-5 min-h-[120px] text-body text-charcoal/80">{testimonial.quote}</p>
+            {/* `line-clamp-2` + matching `min-h` on BOTH name and role,
+                3 Sep 2026 — a second, distinct cause of the same
+                "row height changes between states" report: capping
+                only the quote (above) left the author block itself
+                free to grow (a 2-line name and a long role together
+                measured 40px/46px live, against 20px/15px for a short
+                one), which alone reshuffled the row's overall height
+                between auto-advance states just as much as the quote
+                did before its own fix. Same mechanism, applied to the
+                one other piece of free-text content in this card. */}
             <div className="mt-auto">
-              <p className="text-support font-semibold text-charcoal">{testimonial.authorName}</p>
-              <p className="text-micro text-charcoal/60">{testimonial.authorRole}</p>
+              <p className="line-clamp-2 min-h-[40.3px] text-support font-semibold text-charcoal">{testimonial.authorName}</p>
+              <p className="line-clamp-2 min-h-[30.8px] text-micro text-charcoal/60">{testimonial.authorRole}</p>
             </div>
           </div>
         ))}

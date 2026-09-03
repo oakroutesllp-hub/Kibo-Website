@@ -119,6 +119,12 @@ export default async function Home() {
   // comment) rather than branching here, same pattern every other
   // conditionally-shown piece of content on this page already follows.
   const testimonials = await getTestimonials();
+  // Shared visibility check (3 Sep 2026) — the exact same condition
+  // TestimonialsSection applies internally to decide whether it
+  // renders anything, computed once here so CTANudgeSection can key
+  // its own background off it too (see that component's own comment)
+  // without the two ever risking disagreement.
+  const testimonialsVisible = settings.showTestimonials && testimonials.length > 0;
   return (
     <>
       <Hero content={homepage} carouselSeconds={settings.carouselIntervalSeconds} />
@@ -141,7 +147,7 @@ export default async function Home() {
         desktopSpeed={settings.testimonialsDesktopSpeed}
         mobileSpeed={settings.testimonialsMobileSpeed}
       />
-      <CTANudgeSection copy={ctaNudgeCopy} />
+      <CTANudgeSection copy={ctaNudgeCopy} testimonialsVisible={testimonialsVisible} />
       <WeStartedByListeningSection media={ourStory.listeningMedia} copy={ourStoryCopy} carouselSeconds={settings.carouselIntervalSeconds} />
       <TiruppurStorySection media={ourStory.tiruppurMedia} copy={ourStoryCopy} carouselSeconds={settings.carouselIntervalSeconds} />
       <FounderSection media={ourStory.founderMedia} copy={ourStoryCopy} carouselSeconds={settings.carouselIntervalSeconds} />
