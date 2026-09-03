@@ -13,7 +13,11 @@ export const metadata: Metadata = {
 // practices, not a generic downloaded template — see each section's
 // own comment for exactly which file/behavior it describes. This is a
 // solid starting point, not a substitute for a lawyer's review before
-// treating it as final — see the one placeholder still marked below.
+// treating it as final.
+//
+// Legal entity name confirmed by the owner, 3 Sep 2026: "OakRoutes
+// Ventures LLP" — the one bracketed placeholder this page carried
+// since it was written is now filled in below.
 //
 // Layout matches the Blog post page's own reading-width convention
 // (`max-w-2xl`, `text-body leading-relaxed`) — this is long-form text
@@ -23,7 +27,7 @@ export default function PrivacyPolicyPage() {
     <div className="mx-auto flex w-full max-w-2xl flex-1 flex-col gap-8 px-6 py-16">
       <div className="flex flex-col gap-2">
         <h1 className="text-h1 font-semibold text-charcoal">Privacy Policy</h1>
-        <p className="text-support text-charcoal/50">Last updated: 2 September 2026</p>
+        <p className="text-support text-charcoal/50">Last updated: 3 September 2026</p>
       </div>
 
       <div className="flex flex-col gap-6 text-body leading-relaxed text-charcoal/80">
@@ -33,10 +37,9 @@ export default function PrivacyPolicyPage() {
           wearkibo.com and every page on it.
         </p>
         <p className="text-support text-charcoal/50">
-          KIBO is operated by [legal entity name to be added here before this
-          policy is treated as final — e.g. the registered business name
-          behind the KIBO brand]. Everywhere this policy says &ldquo;we,&rdquo;
-          &ldquo;us,&rdquo; or &ldquo;KIBO,&rdquo; it means that entity.
+          KIBO is operated by OakRoutes Ventures LLP. Everywhere this policy
+          says &ldquo;we,&rdquo; &ldquo;us,&rdquo; or &ldquo;KIBO,&rdquo; it
+          means that entity.
         </p>
 
         <h2 className="text-h3 font-semibold text-charcoal">Information we collect</h2>
