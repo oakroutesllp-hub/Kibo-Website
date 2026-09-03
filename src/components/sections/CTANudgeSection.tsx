@@ -89,23 +89,30 @@ export function CTANudgeSection({ copy }: { copy: CtaNudgeCopyContent }) {
   const { open } = useTalkToKibo();
 
   return (
-    // Mobile-only patch treatment, 31 Aug 2026 (owner, testing live on
-    // /products' Long Run → this section: "it almost reads like a third
-    // pointer under Built for the Long Run... can we remove the last
-    // horizontal line... but use that vertical line to create a patch
-    // that is maybe slightly less transparent than the sage green grey,
-    // so it looks like a separate patch" — explicitly mobile-only: "I
-    // don't think it will look good on desktop") — this section shares
-    // Long Run's exact `bg-sage-green/10` tint AND the exact same dash
-    // device Long Run uses between its own two paragraphs (see file
-    // comment below), so on a continuous mobile scroll the two read as
-    // one uninterrupted list rather than two distinct sections. Below
-    // `sm`: a visibly darker tint (`bg-sage-green/20`, double Long Run's
-    // /10) makes this its own shaded patch instead of a same-toned
-    // continuation. `sm:bg-sage-green/10` restores the original shared
-    // tint at tablet/desktop — unchanged there, per the owner's own
-    // caveat above.
-    <section className="w-full bg-sage-green/20 sm:bg-sage-green/10">
+    // Mobile-only darker patch treatment, 31 Aug 2026 (owner, testing
+    // live on /products' Long Run → this section: "it almost reads like
+    // a third pointer under Built for the Long Run... can we remove the
+    // last horizontal line... but use that vertical line to create a
+    // patch that is maybe slightly less transparent than the sage green
+    // grey, so it looks like a separate patch" — explicitly mobile-
+    // only: "I don't think it will look good on desktop") — built when
+    // this section always sat directly under a same-toned Long Run on
+    // mobile, needing its own visual "this is separate" cue.
+    //
+    // **Removed, 3 Sep 2026** (owner, on mobile: "there is a darker
+    // band where we are saying 'have a requirement in mind, get in
+    // touch'... I think we can just match it with the built for the
+    // long run lighter band. We don't need a darker band there") — now
+    // that Long Run and this section deliberately form ONE continuous
+    // tinted band together whenever Testimonials is hidden (see
+    // LongRunSection.tsx's own comment on that swap), the darker patch
+    // this section used to need reads as a mismatched seam INSIDE that
+    // one intended band, not a helpful separator — the exact opposite
+    // of what it was built for. `bg-sage-green/20 sm:bg-sage-green/10`
+    // → flat `bg-sage-green/10` at every breakpoint, the same token
+    // Long Run and Supply already use, so mobile now matches
+    // desktop/tablet instead of carrying its own darker shade.
+    <section className="w-full bg-sage-green/10">
       {/* Bottom reverted, same day, after live review (owner: "give me
           more gap between talk to keyboard button and our story...
           keep it the same as the six thumbnails bottom line and you
