@@ -26,6 +26,15 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: "KIBO",
   description: "KIBO — B2B men's apparel merchant exporter from India.",
+  // Google Search Console site-ownership verification (3 Sep 2026,
+  // owner priority: set up now that a real sitemap exists) — Next's
+  // built-in `verification.google` field renders the exact
+  // `<meta name="google-site-verification" content="...">` tag Google
+  // asked for, so ownership is proven the moment this deploys, without
+  // waiting on a DNS record to propagate.
+  verification: {
+    google: "qNheJY44R4GJrv1ioTt0rEK4y0uKvcB_b0m7VNBfPhg",
+  },
 };
 
 // Organization structured data (JSON-LD), 2 Sep 2026 (SEO pass) —
