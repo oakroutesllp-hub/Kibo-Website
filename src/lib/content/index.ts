@@ -362,6 +362,7 @@ type RawSiteSettings = {
   testimonialsMobileSpeed?: number;
   testimonialsCompactQuote?: boolean;
   showCertifications?: boolean;
+  certificationsScrollSpeed?: number;
 };
 
 const siteSettingsQuery = `*[_type == "siteSettings"][0]{
@@ -370,7 +371,7 @@ const siteSettingsQuery = `*[_type == "siteSettings"][0]{
   getInTouchLabel, navLabelHome, navLabelProducts, navLabelCatalog, navLabelBlog, navLabelOurStory,
   carouselIntervalSeconds, showTestimonials, testimonialsLimit,
   testimonialsDesktopSpeed, testimonialsMobileSpeed, testimonialsCompactQuote,
-  showCertifications
+  showCertifications, certificationsScrollSpeed
 }`;
 
 // Hardcoded defaults for the global CTA label + nav labels (1 Sep
@@ -470,6 +471,8 @@ export async function getSiteSettings(): Promise<SiteSettingsContent> {
       testimonialsCompactQuote:
         doc.testimonialsCompactQuote ?? sampleSiteSettings.testimonialsCompactQuote,
       showCertifications: doc.showCertifications ?? sampleSiteSettings.showCertifications,
+      certificationsScrollSpeed:
+        doc.certificationsScrollSpeed ?? sampleSiteSettings.certificationsScrollSpeed,
     };
   } catch {
     return {
@@ -527,12 +530,17 @@ export async function getTestimonials(): Promise<TestimonialContent[]> {
 // unconfigured, on error, or when nothing's published yet.
 type RawCertification = {
   name: string;
-  logo?: Image;
+  icon?: Image;
   verificationUrl?: string;
 };
 
+// `"icon": logo` — aliases Sanity's own field name (which deliberately
+// stays `logo` at the schema level, see certificationType.ts's own
+// comment on why) to the clean name every other file in this codebase
+// uses. Everything downstream of this query never needs to know the
+// underlying field is still literally called `logo`.
 const certificationsQuery = `*[_type == "certification"] | order(order asc){
-  name, logo, verificationUrl
+  name, "icon": logo, verificationUrl
 }`;
 
 export async function getCertifications(): Promise<CertificationContent[]> {
@@ -546,12 +554,11 @@ export async function getCertifications(): Promise<CertificationContent[]> {
     );
     return docs.map((doc) => ({
       name: doc.name,
-      // `width(400)` — a logo displays at a small fixed height in the
-      // strip (see CertificationsSection.tsx), nowhere near the
-      // 1600px `resolveImage` callers elsewhere in this file use for
-      // full-width photography; a smaller request is enough even at
-      // 2x pixel density and saves real bandwidth across every visit.
-      logo: doc.logo?.asset ? { url: urlForImage(doc.logo).width(400).url(), alt: doc.name } : null,
+      // `width(200)` — an icon displays even smaller than the old
+      // logo-strip size did (see CertificationsSection.tsx), nowhere
+      // near the 1600px `resolveImage` callers elsewhere in this file
+      // use for full-width photography.
+      icon: doc.icon?.asset ? { url: urlForImage(doc.icon).width(200).url(), alt: doc.name } : null,
       verificationUrl: doc.verificationUrl,
     }));
   } catch {

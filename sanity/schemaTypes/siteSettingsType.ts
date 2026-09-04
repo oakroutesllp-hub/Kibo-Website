@@ -165,6 +165,23 @@ export const siteSettingsType = defineType({
       type: "boolean",
       initialValue: false,
     }),
+    defineField({
+      // 4 Sep 2026, owner: "if we have more certifications than can fit
+      // on the page, then they will also slow scroll, and I should be
+      // able to change how fast or slow they scroll... we don't need a
+      // slider bar here." A continuous auto-scroll, not a Testimonials-
+      // style advance-and-pause carousel — only ever activates when the
+      // certifications genuinely don't fit in one centered row at the
+      // viewer's own screen width; otherwise the row just stays static
+      // and centered, same as it always has.
+      name: "certificationsScrollSpeed",
+      title: "Certifications — auto-scroll speed (seconds per loop)",
+      description:
+        "Only matters if you have enough certifications that they don't all fit in one row on a visitor's screen — at that point the row scrolls continuously and slowly rather than showing everything cramped or requiring a click. This is how many seconds one full loop takes: a bigger number scrolls slower, a smaller number scrolls faster. Leave blank for the default (30 seconds).",
+      type: "number",
+      validation: (rule) => rule.min(10).max(90),
+      initialValue: 30,
+    }),
     // `getInTouchLabel` + nav labels (1 Sep 2026, owner: "make everything
     // editable") — one shared button label used everywhere the site
     // opens the enquiry form (nav bar, mobile sticky bar, footer, CTA

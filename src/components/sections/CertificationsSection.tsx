@@ -1,3 +1,4 @@
+import { CertificationsRow } from "@/components/CertificationsRow";
 import type { CertificationContent } from "@/lib/content";
 
 // Certifications — new Home section, 4 Sep 2026, owner: "let's build
@@ -10,97 +11,53 @@ import type { CertificationContent } from "@/lib/content";
 //
 // **Layout, brainstormed with 3 mocked-up options before building**
 // (owner: "I like A" — a minimal trust bar, not cards with
-// descriptions) — a centered `flex flex-wrap justify-center` row,
-// same centering mechanism TestimonialsSection.tsx's own static grid
-// uses: correctly centers 1 logo, 2, 5, or any count, and would still
-// center a wrapped second row if enough certifications are ever added
-// — no special-casing needed per count, by construction.
+// descriptions). Centering (1 entry dead center, 2 mirrored, 3 with
+// the middle one centered and one flanking each side, and so on) and
+// the auto-scroll-when-it-overflows behavior both live in
+// CertificationsRow.tsx (a Client Component, since it measures its
+// own width) — see that file's own comment for the full mechanism.
 //
-// **Logo color, owner's own explicit call, immediate follow-up**: "I
-// am not very kicked about the greyscale logos... build them in the
-// sage green color, the same color as the text... I don't want
-// hovering and brightening... flat color... modest presence." Each
-// logo renders as a flat solid-color SILHOUETTE via a CSS mask (the
-// logo image supplies only its alpha-channel shape; the visible color
-// is a plain `background-color`, not the logo's own original colors)
-// rather than a `filter: grayscale()` approximation — precise
-// regardless of what colors the uploaded logo file actually contains,
-// and with no hover state at all (no `transition`, no hover class) per
-// the explicit "no brightening" instruction. Text-fallback entries
-// (no logo uploaded) use the exact same color token, so a mixed
-// logo/text row still reads as one consistent, monotone strip.
+// **Icon + name, always paired, every entry — 4 Sep 2026, confirmed
+// through two follow-up rounds** (owner: "a lot of suggestions I'm
+// getting are that we cannot use government marks as logos... we'll
+// use icons and names instead," then: "why will OEKO-TEX not have an
+// icon? Everything will have an icon. We build it for that.") — a
+// generic icon (never the certifying body's own official logo/
+// trademark) is created for every certification as part of adding it,
+// so there's no supported "name only" display case anymore. Both icon
+// and name render in flat `sage-green-deep` (owner: "in the sage
+// green gray color... to match the font"), no hover state.
 //
-// **Placement**: owner chose "Home, near Testimonials." Deliberately
-// placed AFTER the CTA nudge (not directly beside Testimonials) — my
-// own call, disclosed rather than silently made: Supply/Long Run/
-// Testimonials/CTA already form a fragile, deliberately-conditional
-// color-banding cluster (exactly one of Supply/Long Run is tinted at
-// a time, swapping based on whether Testimonials is visible — see
-// SupplySection.tsx's own comment). Inserting a new section INSIDE
-// that cluster would mean either duplicating that conditional logic a
-// third time or risking a white gap splitting an otherwise-continuous
-// tinted band on the "Testimonials off" path. Sitting just after it
-// instead keeps Certifications in the same general "trust content"
-// neighborhood without touching that fragile system — plain,
-// unconditional white background, no coupling to any other section's
-// visibility.
+// **Placement**: owner's final call — below The Person Behind KIBO
+// (the last Our Story section), just above the footer, NOT before Our
+// Story. See `(site)/page.tsx` for the actual insertion point — this
+// section no longer needs to avoid Supply/Long Run/Testimonials/CTA's
+// conditional color-banding cluster the way its first placement did,
+// since it now sits well past all of that; kept as a plain,
+// unconditional white background regardless.
 export function CertificationsSection({
   certifications,
   show,
+  scrollSpeed,
 }: {
   certifications: CertificationContent[];
   show: boolean;
+  scrollSpeed?: number;
 }) {
   if (!show || certifications.length === 0) return null;
 
   return (
     <section className="w-full bg-background">
       <div className="mx-auto flex w-full max-w-[1728px] flex-col items-center gap-8 px-6 py-12 sm:px-10 sm:py-16">
+        {/* "Certifications" alone, not "Certifications / Registrations"
+            — asked directly, owner left the final call open: at this
+            small uppercase tracked-label size, the longer phrase reads
+            dense rather than clean. Easy to change if the owner wants
+            the fuller phrase back — just this one string. */}
         <p className="text-center text-micro font-semibold uppercase tracking-[0.16em] text-sage-green-deep">
           Certifications
         </p>
-        <div className="flex w-full max-w-[1230px] flex-wrap items-center justify-center gap-x-10 gap-y-6">
-          {certifications.map((cert) =>
-            cert.logo ? (
-              <a
-                key={cert.name}
-                // Only wrapped in a link when a verification URL exists —
-                // otherwise a plain non-interactive marker, no dead link,
-                // no misleading pointer cursor.
-                {...(cert.verificationUrl
-                  ? { href: cert.verificationUrl, target: "_blank", rel: "noopener noreferrer" }
-                  : {})}
-                role="img"
-                aria-label={cert.name}
-                className="h-10 w-28 flex-none bg-sage-green-deep"
-                style={{
-                  maskImage: `url(${cert.logo.url})`,
-                  WebkitMaskImage: `url(${cert.logo.url})`,
-                  maskSize: "contain",
-                  WebkitMaskSize: "contain",
-                  maskRepeat: "no-repeat",
-                  WebkitMaskRepeat: "no-repeat",
-                  maskPosition: "center",
-                  WebkitMaskPosition: "center",
-                }}
-              />
-            ) : (
-              // Text fallback (owner: "in case some of those don't have
-              // logos") — same `text-sage-green-deep` color token as the
-              // logo masks above, so a mixed row still reads as one
-              // consistent monotone strip rather than an odd one out.
-              <a
-                key={cert.name}
-                {...(cert.verificationUrl
-                  ? { href: cert.verificationUrl, target: "_blank", rel: "noopener noreferrer" }
-                  : {})}
-                className="flex h-10 items-center text-support font-semibold text-sage-green-deep"
-              >
-                {cert.name}
-              </a>
-            ),
-          )}
-        </div>
+        <CertificationsRow certifications={certifications} scrollSpeed={scrollSpeed} />
       </div>
     </section>
   );

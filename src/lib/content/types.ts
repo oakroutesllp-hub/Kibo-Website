@@ -147,6 +147,9 @@ export type SiteSettingsContent = {
   // Certifications toggle (4 Sep 2026) — same hidden-until-ready
   // pattern as showTestimonials/showBlogInNav above.
   showCertifications: boolean;
+  // Auto-scroll speed, only used once certifications overflow one row
+  // (4 Sep 2026) — see siteSettingsType.ts's own field description.
+  certificationsScrollSpeed: number;
 };
 
 // Testimonial (3 Sep 2026) — see testimonialType.ts's own comment.
@@ -160,16 +163,18 @@ export type TestimonialContent = {
 };
 
 // Certification (4 Sep 2026) — see certificationType.ts's own comment.
-// `logo` is nullable (unlike most `ContentImage` slots elsewhere on
-// this site, which fall back to a placeholder block when unset) —
-// owner explicitly asked for a text fallback instead: when `logo` is
-// null, CertificationsSection.tsx renders `name` as text in the same
-// row rather than a placeholder image, since a gray placeholder box
-// would look like a broken/missing logo, not an intentional text
-// entry.
+// `icon` (renamed from `logo` same day, once the owner learned
+// official certifying-body logos generally can't be reproduced
+// without permission — a generic icon instead, required in Sanity now
+// — "everything will have an icon. We build it for that.") stays
+// nullable in this TS type only as a defensive fallback against an
+// unexpected gap between the required-in-Studio rule and what's
+// actually published — CertificationsSection.tsx still renders `name`
+// alone if it's ever missing, rather than crashing, but that's no
+// longer a supported/designed-for state, just a safety net.
 export type CertificationContent = {
   name: string;
-  logo: ContentImage;
+  icon: ContentImage;
   verificationUrl?: string;
 };
 

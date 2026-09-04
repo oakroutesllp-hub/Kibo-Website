@@ -156,14 +156,15 @@ export default async function Home() {
         compactQuote={settings.testimonialsCompactQuote}
       />
       <CTANudgeSection copy={ctaNudgeCopy} />
-      {/* Certifications, 4 Sep 2026 — placed after the CTA nudge, not
-          directly beside Testimonials, per CertificationsSection.tsx's
-          own comment on why (avoids entangling with the Supply/Long
-          Run/Testimonials/CTA conditional color-banding cluster). */}
-      <CertificationsSection certifications={certifications} show={settings.showCertifications} />
       <WeStartedByListeningSection media={ourStory.listeningMedia} copy={ourStoryCopy} carouselSeconds={settings.carouselIntervalSeconds} />
       <TiruppurStorySection media={ourStory.tiruppurMedia} copy={ourStoryCopy} carouselSeconds={settings.carouselIntervalSeconds} />
       <FounderSection media={ourStory.founderMedia} copy={ourStoryCopy} carouselSeconds={settings.carouselIntervalSeconds} />
+      {/* Certifications, 4 Sep 2026 — moved here, same day, owner's
+          final placement call: "certifications should appear below
+          the story... and above the footer, not before our story." —
+          the very last section on Home, right before the footer
+          (rendered by the root layout, not this page). */}
+      <CertificationsSection certifications={certifications} show={settings.showCertifications} scrollSpeed={settings.certificationsScrollSpeed} />
     </>
   );
 }
