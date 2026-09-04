@@ -108,6 +108,7 @@ export const sampleSiteSettings: SiteSettingsContent = {
   showTestimonials: false,
   testimonialsDesktopSpeed: 6,
   testimonialsMobileSpeed: 7,
+  testimonialsCompactQuote: false,
 };
 
 // A second sample post added 31 Aug 2026, same time as the Blog page

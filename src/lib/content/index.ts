@@ -359,6 +359,7 @@ type RawSiteSettings = {
   testimonialsLimit?: number;
   testimonialsDesktopSpeed?: number;
   testimonialsMobileSpeed?: number;
+  testimonialsCompactQuote?: boolean;
 };
 
 const siteSettingsQuery = `*[_type == "siteSettings"][0]{
@@ -366,7 +367,7 @@ const siteSettingsQuery = `*[_type == "siteSettings"][0]{
   linkedInUrl, instagramUrl, whatsappNumber, requireCatalogGate, showBlogInNav,
   getInTouchLabel, navLabelHome, navLabelProducts, navLabelCatalog, navLabelBlog, navLabelOurStory,
   carouselIntervalSeconds, showTestimonials, testimonialsLimit,
-  testimonialsDesktopSpeed, testimonialsMobileSpeed
+  testimonialsDesktopSpeed, testimonialsMobileSpeed, testimonialsCompactQuote
 }`;
 
 // Hardcoded defaults for the global CTA label + nav labels (1 Sep
@@ -463,6 +464,8 @@ export async function getSiteSettings(): Promise<SiteSettingsContent> {
         doc.testimonialsDesktopSpeed ?? sampleSiteSettings.testimonialsDesktopSpeed,
       testimonialsMobileSpeed:
         doc.testimonialsMobileSpeed ?? sampleSiteSettings.testimonialsMobileSpeed,
+      testimonialsCompactQuote:
+        doc.testimonialsCompactQuote ?? sampleSiteSettings.testimonialsCompactQuote,
     };
   } catch {
     return {

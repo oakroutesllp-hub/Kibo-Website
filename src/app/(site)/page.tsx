@@ -147,6 +147,7 @@ export default async function Home() {
         limit={settings.testimonialsLimit}
         desktopSpeed={settings.testimonialsDesktopSpeed}
         mobileSpeed={settings.testimonialsMobileSpeed}
+        compactQuote={settings.testimonialsCompactQuote}
       />
       <CTANudgeSection copy={ctaNudgeCopy} />
       <WeStartedByListeningSection media={ourStory.listeningMedia} copy={ourStoryCopy} carouselSeconds={settings.carouselIntervalSeconds} />

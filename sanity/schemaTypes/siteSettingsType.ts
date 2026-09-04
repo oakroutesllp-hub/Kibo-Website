@@ -139,6 +139,21 @@ export const siteSettingsType = defineType({
       validation: (rule) => rule.min(2).max(20),
       initialValue: 7,
     }),
+    defineField({
+      // 4 Sep 2026, owner: "provide me with two options, the current
+      // text size and the bumped down text size... in case we are not
+      // able to fit testimonials in the size, I would like to have the
+      // option to bump it down one size." A fallback for a quote that
+      // genuinely can't be trimmed under the recommended 180-character
+      // guideline (see the Quote field's own description) — not meant
+      // to be the everyday setting.
+      name: "testimonialsCompactQuote",
+      title: "Testimonials — use smaller quote text",
+      description:
+        "OFF (default, current/tested look): quote text at the site's normal size — fits about 190 characters on desktop before it gets cut off, ~220 on mobile. ON: quote text one size smaller, raising that to about 225 characters on desktop — use ONLY if a real testimonial genuinely can't be trimmed to fit at the normal size. This affects EVERY testimonial's quote at once, not just one long one, so short quotes will also render slightly smaller. Takes effect within about a minute of saving.",
+      type: "boolean",
+      initialValue: false,
+    }),
     // `getInTouchLabel` + nav labels (1 Sep 2026, owner: "make everything
     // editable") — one shared button label used everywhere the site
     // opens the enquiry form (nav bar, mobile sticky bar, footer, CTA

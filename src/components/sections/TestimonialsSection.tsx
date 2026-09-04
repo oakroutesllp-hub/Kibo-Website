@@ -66,6 +66,7 @@ export function TestimonialsSection({
   limit,
   desktopSpeed,
   mobileSpeed,
+  compactQuote,
 }: {
   testimonials: TestimonialContent[];
   show: boolean;
@@ -76,6 +77,11 @@ export function TestimonialsSection({
   limit?: number;
   desktopSpeed?: number;
   mobileSpeed?: number;
+  // Fallback quote-size toggle (4 Sep 2026) — see siteSettingsType.ts's
+  // own "testimonialsCompactQuote" field description. Threaded down to
+  // the static grid below AND both carousel components, since all
+  // three render their own quote paragraph independently.
+  compactQuote?: boolean;
 }) {
   if (!show || testimonials.length === 0) return null;
   const visible = typeof limit === "number" ? testimonials.slice(0, limit) : testimonials;
@@ -137,7 +143,20 @@ export function TestimonialsSection({
                 <span aria-hidden="true" className="mb-3 text-3xl leading-none text-sage-green">
                   &ldquo;
                 </span>
-                <p className="mb-5 line-clamp-5 min-h-[120px] text-body text-charcoal/80">{testimonial.quote}</p>
+                {/* Compact-quote fallback (4 Sep 2026) — `min-h` value
+                    changes with the font swap since `text-support`'s
+                    line-height (20.15px) differs from `text-body`'s
+                    (24px); 5 lines × 20.15px ≈ 100.75px, measured live
+                    as 101px at the 5-line boundary — see
+                    siteSettingsType.ts's own field description for the
+                    full character-count trade-off this toggle makes. */}
+                <p
+                  className={`mb-5 line-clamp-5 text-charcoal/80 ${
+                    compactQuote ? "min-h-[101px] text-support" : "min-h-[120px] text-body"
+                  }`}
+                >
+                  {testimonial.quote}
+                </p>
                 {/* `line-clamp-2` + `min-h`, name and role — see
                     TestimonialsDesktopCarousel.tsx's own comment for
                     why this needed the same treatment as the quote. */}
@@ -150,7 +169,11 @@ export function TestimonialsSection({
           </div>
         ) : (
           <div className="hidden xl:block xl:w-full">
-            <TestimonialsDesktopCarousel testimonials={visible} intervalSeconds={desktopSpeed} />
+            <TestimonialsDesktopCarousel
+              testimonials={visible}
+              intervalSeconds={desktopSpeed}
+              compactQuote={compactQuote}
+            />
           </div>
         )}
 
@@ -159,7 +182,11 @@ export function TestimonialsSection({
             not a stacked list — see TestimonialsCarousel.tsx's own
             comment on why). */}
         <div className="w-full max-w-md xl:hidden">
-          <TestimonialsCarousel testimonials={visible} intervalSeconds={mobileSpeed} />
+          <TestimonialsCarousel
+            testimonials={visible}
+            intervalSeconds={mobileSpeed}
+            compactQuote={compactQuote}
+          />
         </div>
       </div>
     </section>

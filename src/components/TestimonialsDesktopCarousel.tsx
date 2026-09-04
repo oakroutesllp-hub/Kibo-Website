@@ -32,9 +32,11 @@ const WINDOW_SIZE = 3;
 export function TestimonialsDesktopCarousel({
   testimonials,
   intervalSeconds = 6,
+  compactQuote,
 }: {
   testimonials: TestimonialContent[];
   intervalSeconds?: number;
+  compactQuote?: boolean;
 }) {
   const [start, setStart] = useState(0);
   const [paused, setPaused] = useState(false);
@@ -108,7 +110,16 @@ export function TestimonialsDesktopCarousel({
                 yet). Reserving the full 5-line height regardless of
                 actual quote length makes every card the same height
                 in every state, not just within each individual row. */}
-            <p className="mb-5 line-clamp-5 min-h-[120px] text-body text-charcoal/80">{testimonial.quote}</p>
+            {/* Compact-quote fallback (4 Sep 2026) — see
+                TestimonialsSection.tsx's own matching comment for the
+                min-height math behind the two size options. */}
+            <p
+              className={`mb-5 line-clamp-5 text-charcoal/80 ${
+                compactQuote ? "min-h-[101px] text-support" : "min-h-[120px] text-body"
+              }`}
+            >
+              {testimonial.quote}
+            </p>
             {/* `line-clamp-2` + matching `min-h` on BOTH name and role,
                 3 Sep 2026 — a second, distinct cause of the same
                 "row height changes between states" report: capping

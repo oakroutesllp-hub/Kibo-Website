@@ -31,9 +31,11 @@ import type { TestimonialContent } from "@/lib/content";
 export function TestimonialsCarousel({
   testimonials,
   intervalSeconds = 7,
+  compactQuote,
 }: {
   testimonials: TestimonialContent[];
   intervalSeconds?: number;
+  compactQuote?: boolean;
 }) {
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
@@ -84,7 +86,17 @@ export function TestimonialsCarousel({
             position, since they're centered on the card) still jumped
             between a short quote and a long one as the mobile
             carousel auto-advanced. */}
-        <p className="mb-5 line-clamp-6 min-h-[144px] text-body text-charcoal/80">{current.quote}</p>
+        {/* Compact-quote fallback (4 Sep 2026) — 6 lines × 20.15px
+            (text-support's line-height) ≈ 120.9px, measured live as
+            121px at the boundary — see TestimonialsSection.tsx's own
+            matching comment for the full trade-off. */}
+        <p
+          className={`mb-5 line-clamp-6 text-charcoal/80 ${
+            compactQuote ? "min-h-[121px] text-support" : "min-h-[144px] text-body"
+          }`}
+        >
+          {current.quote}
+        </p>
         {/* `line-clamp-2` + `min-h`, name and role — same fix, same
             reasoning as the desktop carousel's own comment: without
             it, this card's own height (and the arrow buttons centered

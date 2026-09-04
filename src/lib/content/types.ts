@@ -140,6 +140,10 @@ export type SiteSettingsContent = {
   // Fall back to 6/7 seconds respectively when unset.
   testimonialsDesktopSpeed: number;
   testimonialsMobileSpeed: number;
+  // Fallback for a quote that can't be trimmed under the 180-char
+  // guideline (4 Sep 2026) — see siteSettingsType.ts's own field
+  // description. Defaults false (current/tested quote size).
+  testimonialsCompactQuote: boolean;
 };
 
 // Testimonial (3 Sep 2026) — see testimonialType.ts's own comment.
