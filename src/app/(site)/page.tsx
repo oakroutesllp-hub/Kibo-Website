@@ -5,6 +5,7 @@ import { CustomSection } from "@/components/sections/CustomSection";
 import { SupplySection } from "@/components/sections/SupplySection";
 import { LongRunSection } from "@/components/sections/LongRunSection";
 import { TestimonialsSection } from "@/components/sections/TestimonialsSection";
+import { CertificationsSection } from "@/components/sections/CertificationsSection";
 import { CTANudgeSection } from "@/components/sections/CTANudgeSection";
 import { WeStartedByListeningSection } from "@/components/sections/WeStartedByListeningSection";
 import { TiruppurStorySection } from "@/components/sections/TiruppurStorySection";
@@ -21,6 +22,7 @@ import {
   getOurStoryCopy,
   getSiteSettings,
   getTestimonials,
+  getCertifications,
 } from "@/lib/content";
 
 // `description` fallback added 3 Sep 2026 — found via a real Lighthouse
@@ -126,6 +128,10 @@ export default async function Home() {
   // it too (see those components' own comments) without ever risking
   // disagreement with each other or with TestimonialsSection itself.
   const testimonialsVisible = settings.showTestimonials && testimonials.length > 0;
+  // Certifications (4 Sep 2026) — same "fetch regardless of the
+  // toggle, let the section itself decide whether to render" pattern
+  // as Testimonials above.
+  const certifications = await getCertifications();
   return (
     <>
       <Hero content={homepage} carouselSeconds={settings.carouselIntervalSeconds} />
@@ -150,6 +156,11 @@ export default async function Home() {
         compactQuote={settings.testimonialsCompactQuote}
       />
       <CTANudgeSection copy={ctaNudgeCopy} />
+      {/* Certifications, 4 Sep 2026 — placed after the CTA nudge, not
+          directly beside Testimonials, per CertificationsSection.tsx's
+          own comment on why (avoids entangling with the Supply/Long
+          Run/Testimonials/CTA conditional color-banding cluster). */}
+      <CertificationsSection certifications={certifications} show={settings.showCertifications} />
       <WeStartedByListeningSection media={ourStory.listeningMedia} copy={ourStoryCopy} carouselSeconds={settings.carouselIntervalSeconds} />
       <TiruppurStorySection media={ourStory.tiruppurMedia} copy={ourStoryCopy} carouselSeconds={settings.carouselIntervalSeconds} />
       <FounderSection media={ourStory.founderMedia} copy={ourStoryCopy} carouselSeconds={settings.carouselIntervalSeconds} />

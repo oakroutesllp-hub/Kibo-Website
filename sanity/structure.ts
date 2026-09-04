@@ -59,6 +59,18 @@ export const structure: StructureResolver = (S) =>
             .title("Testimonials")
             .defaultOrdering([{ field: "order", direction: "asc" }]),
         ),
+      // "Certifications" added 4 Sep 2026 (owner: "let's build the
+      // certifications section") — same repeatable-list-with-custom-
+      // order pattern as Testimonials/Product Categories above. Hidden
+      // from visitors until Site Settings → "Show Certifications on
+      // Home" is switched on — see siteSettingsType.ts.
+      S.listItem()
+        .title("Certifications")
+        .child(
+          S.documentTypeList("certification")
+            .title("Certifications")
+            .defaultOrdering([{ field: "order", direction: "asc" }]),
+        ),
       S.divider(),
       // "Custom Section Media" and "Catalog" added 31 Aug 2026, same
       // pass as Product Categories above — see each schema's own file

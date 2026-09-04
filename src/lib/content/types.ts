@@ -144,6 +144,9 @@ export type SiteSettingsContent = {
   // guideline (4 Sep 2026) — see siteSettingsType.ts's own field
   // description. Defaults false (current/tested quote size).
   testimonialsCompactQuote: boolean;
+  // Certifications toggle (4 Sep 2026) — same hidden-until-ready
+  // pattern as showTestimonials/showBlogInNav above.
+  showCertifications: boolean;
 };
 
 // Testimonial (3 Sep 2026) — see testimonialType.ts's own comment.
@@ -154,6 +157,20 @@ export type TestimonialContent = {
   quote: string;
   authorName: string;
   authorRole: string;
+};
+
+// Certification (4 Sep 2026) — see certificationType.ts's own comment.
+// `logo` is nullable (unlike most `ContentImage` slots elsewhere on
+// this site, which fall back to a placeholder block when unset) —
+// owner explicitly asked for a text fallback instead: when `logo` is
+// null, CertificationsSection.tsx renders `name` as text in the same
+// row rather than a placeholder image, since a gray placeholder box
+// would look like a broken/missing logo, not an intentional text
+// entry.
+export type CertificationContent = {
+  name: string;
+  logo: ContentImage;
+  verificationUrl?: string;
 };
 
 // Product Categories (31 Aug 2026) — see productCategoryType.ts's own

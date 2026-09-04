@@ -154,6 +154,17 @@ export const siteSettingsType = defineType({
       type: "boolean",
       initialValue: false,
     }),
+    defineField({
+      // 4 Sep 2026, owner: "let's build the certifications section" —
+      // same hidden-until-ready pattern as Show Testimonials/Show Blog
+      // above.
+      name: "showCertifications",
+      title: "Show Certifications on Home",
+      description:
+        "OFF (default): the Certifications section doesn't render on Home at all, even if Certification documents exist. Turn this ON once you have real certifications published and are ready for visitors to see them. Also requires at least one Certification document to actually show anything — this toggle alone with zero certifications still shows nothing. Takes effect within about a minute of saving.",
+      type: "boolean",
+      initialValue: false,
+    }),
     // `getInTouchLabel` + nav labels (1 Sep 2026, owner: "make everything
     // editable") — one shared button label used everywhere the site
     // opens the enquiry form (nav bar, mobile sticky bar, footer, CTA

@@ -64,6 +64,7 @@ import type {
   OurStoryCopyContent,
   Seo,
   TestimonialContent,
+  CertificationContent,
 } from "./types";
 
 // The public content API for the app. Every page should read content
@@ -360,6 +361,7 @@ type RawSiteSettings = {
   testimonialsDesktopSpeed?: number;
   testimonialsMobileSpeed?: number;
   testimonialsCompactQuote?: boolean;
+  showCertifications?: boolean;
 };
 
 const siteSettingsQuery = `*[_type == "siteSettings"][0]{
@@ -367,7 +369,8 @@ const siteSettingsQuery = `*[_type == "siteSettings"][0]{
   linkedInUrl, instagramUrl, whatsappNumber, requireCatalogGate, showBlogInNav,
   getInTouchLabel, navLabelHome, navLabelProducts, navLabelCatalog, navLabelBlog, navLabelOurStory,
   carouselIntervalSeconds, showTestimonials, testimonialsLimit,
-  testimonialsDesktopSpeed, testimonialsMobileSpeed, testimonialsCompactQuote
+  testimonialsDesktopSpeed, testimonialsMobileSpeed, testimonialsCompactQuote,
+  showCertifications
 }`;
 
 // Hardcoded defaults for the global CTA label + nav labels (1 Sep
@@ -466,6 +469,7 @@ export async function getSiteSettings(): Promise<SiteSettingsContent> {
         doc.testimonialsMobileSpeed ?? sampleSiteSettings.testimonialsMobileSpeed,
       testimonialsCompactQuote:
         doc.testimonialsCompactQuote ?? sampleSiteSettings.testimonialsCompactQuote,
+      showCertifications: doc.showCertifications ?? sampleSiteSettings.showCertifications,
     };
   } catch {
     return {
@@ -510,6 +514,45 @@ export async function getTestimonials(): Promise<TestimonialContent[]> {
       quote: doc.quote,
       authorName: doc.authorName,
       authorRole: doc.authorRole,
+    }));
+  } catch {
+    return [];
+  }
+}
+
+// Certifications (4 Sep 2026) — see certificationType.ts's own
+// comment. Same "no fake fallback content" rule as Testimonials above,
+// arguably stronger here — an invented certification is a specific,
+// checkable false claim, not a harmless placeholder. Empty array when
+// unconfigured, on error, or when nothing's published yet.
+type RawCertification = {
+  name: string;
+  logo?: Image;
+  verificationUrl?: string;
+};
+
+const certificationsQuery = `*[_type == "certification"] | order(order asc){
+  name, logo, verificationUrl
+}`;
+
+export async function getCertifications(): Promise<CertificationContent[]> {
+  if (!isSanityConfigured) return [];
+
+  try {
+    const docs = await sanityClient.fetch<RawCertification[]>(
+      certificationsQuery,
+      {},
+      { next: { revalidate: 60 } },
+    );
+    return docs.map((doc) => ({
+      name: doc.name,
+      // `width(400)` — a logo displays at a small fixed height in the
+      // strip (see CertificationsSection.tsx), nowhere near the
+      // 1600px `resolveImage` callers elsewhere in this file use for
+      // full-width photography; a smaller request is enough even at
+      // 2x pixel density and saves real bandwidth across every visit.
+      logo: doc.logo?.asset ? { url: urlForImage(doc.logo).width(400).url(), alt: doc.name } : null,
+      verificationUrl: doc.verificationUrl,
     }));
   } catch {
     return [];
@@ -968,4 +1011,5 @@ export type {
   Media,
   Seo,
   TestimonialContent,
+  CertificationContent,
 } from "./types";
