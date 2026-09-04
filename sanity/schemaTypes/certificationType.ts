@@ -75,7 +75,7 @@ export const certificationType = defineType({
       name: "logo",
       title: "Icon",
       description:
-        "A generic icon or badge shape representing this certification (a seal, a checkmark, a shield — whatever reads as \"certified\") — NOT the certifying body's own official logo or trademark, which this business may not be licensed to reproduce. Shown at a small, fixed size next to the certification's name, in a flat single color (not the icon file's own colors) — upload it on a transparent background so that color swap looks clean. Every certification gets one — ask a Claude Code session to create a simple original icon for this entry if you don't have one yet, rather than leaving it blank.",
+        "A generic icon or badge shape representing this certification (a seal, a checkmark, a shield — whatever reads as \"certified\") — NOT the certifying body's own official logo or trademark, which this business may not be licensed to reproduce. Shown at a small, fixed size next to the certification's name, in a flat single color (not the icon file's own colors) — the file MUST have a transparent background, not just a white one, or it renders as a solid colored square instead of the icon's actual shape (this happened on the very first real upload — if that's what you're seeing live, that's the fix). Ask a Claude Code session to create a simple original icon for this entry if you don't have one, or to strip the background from an existing icon file if it isn't already transparent.",
       type: "image",
       options: { hotspot: true },
       validation: (rule) => rule.required(),
