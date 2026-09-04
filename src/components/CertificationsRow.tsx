@@ -72,13 +72,19 @@ export function CertificationsRow({
     // become a real bug in production). `i` is each item's actual
     // index in whichever array is being mapped (the doubled track or
     // the single static row), always unique within that render.
+    // Icon on top, name below — owner's own follow-up ask, tried live:
+    // "can we try this iteration - logo on top text below it?" — swaps
+    // the `<a>` wrapper from a horizontal row to a centered column.
+    // Divider height bumped from `h-6` to `h-10` to match the new
+    // taller stacked entry (icon + gap + text line) instead of the old
+    // single-line height.
     <div key={`${keyPrefix}-${i}`} className="flex flex-none items-center gap-8">
-      {i > 0 && <span aria-hidden="true" className="h-6 w-px flex-none bg-charcoal/15" />}
+      {i > 0 && <span aria-hidden="true" className="h-10 w-px flex-none bg-charcoal/15" />}
       <a
         {...(cert.verificationUrl
           ? { href: cert.verificationUrl, target: "_blank", rel: "noopener noreferrer" }
           : {})}
-        className="flex flex-none items-center gap-2.5"
+        className="flex flex-none flex-col items-center gap-2"
       >
         {cert.icon && (
           <span
