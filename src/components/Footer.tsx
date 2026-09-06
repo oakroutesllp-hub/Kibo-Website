@@ -59,16 +59,19 @@ export function Footer({ settings }: { settings: SiteSettingsContent }) {
   const { open: openTalkToKibo } = useTalkToKibo();
 
   return (
-    <footer>
-      {/* Top divider inset from both edges, centered, instead of a
-          full-bleed `border-t` on the `<footer>` itself (30 Aug 2026,
-          owner, on a screenshot of this line: "don't keep it end to
-          end... inset it to come in further, maybe an inch or so from
-          both sides but centered" — the previous edge-to-edge line
-          "looks very very flaky"). `mx-24` (96px each side, ≈1 inch at
-          96dpi) on a plain `<div>` replacing the `<footer>`'s own
-          `border-t`. */}
-      <div className="mx-24 h-px bg-charcoal/10" />
+    // `bg-green-gray-deep`, 4 Sep 2026 — owner, comparing 4 mocked
+    // section-separation options live: "I am leaning more towards
+    // [a dark footer] with maybe sage green gray as the darkest
+    // background." Verified before shipping: white text at 90%
+    // opacity against this exact background computes to a 4.9:1
+    // contrast ratio (WCAG AA needs 4.5:1 for normal text) — a real
+    // measurement, not assumed from how the color looks. The old
+    // inset top divider this section used to open with is removed
+    // entirely — a plain color change from Certifications' white
+    // straight into this dark surface IS the separation now; a thin
+    // line doing the same job at that exact boundary would be
+    // redundant.
+    <footer className="bg-green-gray-deep">
       {/*
         gap-x wider than gap-y deliberately (owner feedback, 21 Aug
         2026): with equal-width columns but very different content
@@ -149,7 +152,31 @@ export function Footer({ settings }: { settings: SiteSettingsContent }) {
               on a live mobile screenshot. Desktop (`sm:w-[68.51px]`) has
               never been touched by any of Nav's mobile-only changes, so
               it stays as-is here too. */}
-          <Logo width={124} className="h-auto w-[54px] sm:w-[68.51px]" />
+          {/* Sized up + vertically re-anchored, 4 Sep 2026 (owner, on a
+              screenshot of the new dark footer: "the size of the logo
+              needs to be increased so it looks proportional to
+              Navigate/Buyers/Contact... it should also be vertically
+              aligned with [that] line") — was `w-[54px] sm:w-[68.51px]`,
+              matched to Nav.tsx's own logo size, which reads too small
+              once every heading around it went bold white on a dark
+              background instead of quietly sharing a white page with
+              the rest of the site. Bumped to `w-[70px] sm:w-[110px]`.
+              The column's own top edge already lined up exactly with
+              "Navigate"'s own top (measured live: identical
+              `getBoundingClientRect().top`, since both columns are
+              plain siblings in the same row) — the actual mismatch was
+              that the logo's own image box is taller than the heading
+              TEXT it sits beside, so their visual CENTERS differed by
+              ~10px even with matching tops. Fixed by wrapping the logo
+              in a fixed `h-5` (20px) band with `items-center` — close
+              to "Navigate"'s own measured ~19px line height — so the
+              (now taller) logo centers itself within that band instead
+              of hanging from its own top. Self-adjusting if the logo's
+              size ever changes again, not a one-off magic-number
+              margin tuned to today's specific dimensions. */}
+          <div className="flex h-5 items-center">
+            <Logo variant="light" width={124} className="h-auto w-[70px] sm:w-[110px]" />
+          </div>
           {/* Bumped onto the real type scale, `text-micro` (11px, 30 Aug
               2026, owner: "increase description size bump up" — per the
               standing rule, "bump up" always lands on the next named
@@ -176,7 +203,7 @@ export function Footer({ settings }: { settings: SiteSettingsContent }) {
               which already uses `gap-2` (8px, see that `<nav>` below).
               Matched exactly, same value, same reasoning: consistent
               line rhythm between the two columns' stacked text. */}
-          <div className="flex flex-col gap-2 text-micro text-charcoal/70">
+          <div className="flex flex-col gap-2 text-micro text-background/90">
             {settings.footerBrandLines.map((line) => (
               <p key={line}>{line}</p>
             ))}
@@ -201,7 +228,7 @@ export function Footer({ settings }: { settings: SiteSettingsContent }) {
               (the visual size/weight) is untouched — this is a pure
               semantic-tag fix, zero visual change, same on
               Buyers/Contact/Connect below. */}
-          <h3 className="text-h4 font-semibold text-charcoal">Navigate</h3>
+          <h3 className="text-h4 font-semibold text-background">Navigate</h3>
           {/* `text-micro` (11px, 30 Aug 2026, owner, on the nav link
               list/contact block specifically — "Navigate Buyers Contact
               Connect seem fine" (the `<h4>` group headings above, left
@@ -249,7 +276,7 @@ export function Footer({ settings }: { settings: SiteSettingsContent }) {
                     window.scrollTo({ top: 0, behavior: "auto" });
                   }
                 }}
-                className="text-micro text-charcoal/70 transition-colors hover:text-charcoal py-[5px]"
+                className="text-micro text-background/90 transition-colors hover:text-background py-[5px]"
               >
                 {link.label}
               </Link>
@@ -265,7 +292,7 @@ export function Footer({ settings }: { settings: SiteSettingsContent }) {
             session swapped Contact and Buyers; this un-swaps them back
             to the original Navigate/Buyers/Contact/Connect order. */}
         <div className="flex flex-col items-center gap-3 text-center">
-          <h3 className="text-h4 font-semibold text-charcoal">Buyers</h3>
+          <h3 className="text-h4 font-semibold text-background">Buyers</h3>
           <nav className="flex flex-col gap-0">
             {/*
               **Rewired to the real shared modal, 30 Aug 2026** (owner:
@@ -298,7 +325,7 @@ export function Footer({ settings }: { settings: SiteSettingsContent }) {
             <button
               type="button"
               onClick={openTalkToKibo}
-              className="text-micro text-charcoal/70 transition-colors hover:text-charcoal py-[5px]"
+              className="text-micro text-background/90 transition-colors hover:text-background py-[5px]"
             >
               {settings.getInTouchLabel}
             </button>
@@ -307,7 +334,7 @@ export function Footer({ settings }: { settings: SiteSettingsContent }) {
                 rename. */}
             <Link
               href="/catalog"
-              className="text-micro text-charcoal/70 transition-colors hover:text-charcoal py-[5px]"
+              className="text-micro text-background/90 transition-colors hover:text-background py-[5px]"
             >
               Catalog
             </Link>
@@ -316,7 +343,7 @@ export function Footer({ settings }: { settings: SiteSettingsContent }) {
 
         {/* Contact — reverted to 3rd column, see Buyers' comment above. */}
         <div className="flex flex-col items-center gap-3 text-center">
-          <h3 className="text-h4 font-semibold text-charcoal">Contact</h3>
+          <h3 className="text-h4 font-semibold text-background">Contact</h3>
           {/* `text-micro` (11px, 30 Aug 2026, owner: "reduce the font on
               those, bump it down" — nav links + this contact block,
               explicitly NOT the group headings, which "seem fine") —
@@ -332,7 +359,7 @@ export function Footer({ settings }: { settings: SiteSettingsContent }) {
               own box clears the 24px minimum. The one seam where an
               address line meets a link (4px+5px=9px) is 1px off the
               original 8px — imperceptible. */}
-          <div className="flex flex-col gap-0 text-micro text-charcoal/70">
+          <div className="flex flex-col gap-0 text-micro text-background/90">
             {settings.footerAddress &&
               formatFooterAddressLines(settings.footerAddress).map((line) => (
                 <p key={line} className="py-1">
@@ -342,7 +369,7 @@ export function Footer({ settings }: { settings: SiteSettingsContent }) {
             {settings.footerEmail && (
               <a
                 href={`mailto:${settings.footerEmail}`}
-                className="py-[5px] transition-colors hover:text-charcoal"
+                className="py-[5px] transition-colors hover:text-background"
               >
                 {settings.footerEmail}
               </a>
@@ -356,7 +383,7 @@ export function Footer({ settings }: { settings: SiteSettingsContent }) {
                 }
                 target="_blank"
                 rel="noopener noreferrer"
-                className="py-[5px] transition-colors hover:text-charcoal"
+                className="py-[5px] transition-colors hover:text-background"
               >
                 {settings.whatsappNumber}
               </a>
@@ -393,7 +420,7 @@ export function Footer({ settings }: { settings: SiteSettingsContent }) {
             column's own icon-overflow fix isn't lost by joining the
             other three columns' new alignment. */}
         <div className="flex flex-col items-center gap-3 text-center">
-          <h3 className="text-h4 font-semibold text-charcoal">Connect</h3>
+          <h3 className="text-h4 font-semibold text-background">Connect</h3>
           <div className="flex justify-center gap-3">
             <a
               href={settings.linkedInUrl || "#"}
@@ -401,7 +428,7 @@ export function Footer({ settings }: { settings: SiteSettingsContent }) {
                 ? { target: "_blank", rel: "noopener noreferrer" }
                 : {})}
               aria-label="KIBO on LinkedIn"
-              className="flex h-9 w-9 items-center justify-center rounded-full border border-charcoal/15 text-charcoal/70 transition-colors hover:border-charcoal/40 hover:text-charcoal"
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-background/25 text-background/90 transition-colors hover:border-background/50 hover:text-background"
             >
               <LinkedInIcon className="h-4 w-4" />
             </a>
@@ -411,7 +438,7 @@ export function Footer({ settings }: { settings: SiteSettingsContent }) {
                 ? { target: "_blank", rel: "noopener noreferrer" }
                 : {})}
               aria-label="KIBO on Instagram"
-              className="flex h-9 w-9 items-center justify-center rounded-full border border-charcoal/15 text-charcoal/70 transition-colors hover:border-charcoal/40 hover:text-charcoal"
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-background/25 text-background/90 transition-colors hover:border-background/50 hover:text-background"
             >
               <InstagramIcon className="h-4 w-4" />
             </a>
@@ -455,13 +482,13 @@ export function Footer({ settings }: { settings: SiteSettingsContent }) {
             minimum for this text size). `/65` measures at ~5:1, a
             comfortable margin above the minimum rather than landing
             right on it. */}
-        <div className="flex flex-col items-center gap-3 border-t border-charcoal/8 px-6 py-3.5 text-center text-micro text-charcoal/65 sm:flex-row sm:justify-between sm:px-10 lg:w-full lg:px-0">
+        <div className="flex flex-col items-center gap-3 border-t border-background/15 px-6 py-3.5 text-center text-micro text-background/90 sm:flex-row sm:justify-between sm:px-10 lg:w-full lg:px-0">
           <p>© {year} KIBO</p>
           <div className="flex items-center gap-4">
-            <Link href="/privacy-policy" className="hover:text-charcoal">
+            <Link href="/privacy-policy" className="hover:text-background">
               Privacy Policy
             </Link>
-            <Link href="/terms-conditions" className="hover:text-charcoal">
+            <Link href="/terms-conditions" className="hover:text-background">
               Terms &amp; Conditions
             </Link>
           </div>

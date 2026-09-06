@@ -48,15 +48,35 @@ export function CertificationsSection({
 
   return (
     <section className="w-full bg-background">
+      {/* Top divider, 4 Sep 2026 — owner, comparing section-separation
+          options live: Our Story and this section both stay white, so
+          this inset line is what actually marks the boundary between
+          them (the footer right below picks up its own separation a
+          different way — a dark background, see Footer.tsx's own
+          comment — so this section doesn't need to also carry that
+          job on its bottom edge). Same inset-from-both-edges technique
+          Footer.tsx's own top divider used before it was replaced by a
+          background-color change instead (see that file) — reused
+          here rather than a full-bleed `border-t`, per the owner's own
+          standing preference against edge-to-edge lines on this site
+          ("looks very very flaky"). */}
+      <div className="mx-24 h-px bg-charcoal/10" />
       <div className="mx-auto flex w-full max-w-[1728px] flex-col items-center gap-8 px-6 py-12 sm:px-10 sm:py-16">
-        {/* "Certifications" alone, not "Certifications / Registrations"
-            — asked directly, owner left the final call open: at this
-            small uppercase tracked-label size, the longer phrase reads
-            dense rather than clean. Easy to change if the owner wants
-            the fuller phrase back — just this one string. */}
-        <p className="text-center text-micro font-semibold uppercase tracking-[0.16em] text-sage-green-deep">
+        {/* Heading matched exactly to Long Run/Supply/Testimonials' own
+            treatment, 4 Sep 2026 (owner: "certifications text cannot be
+            all caps... do it the same as built for the long run font
+            size and all the font parameters" — then, after seeing both
+            a same-size and one-size-down mockup: "Option 1 — exact
+            match... do this for certifications") — was an uppercase,
+            letter-spaced `text-micro` label, inconsistent with every
+            other major section heading on this page (all sentence
+            case, `text-h2 font-bold leading-[1.1] tracking-tight`, no
+            letter-spacing). Sentence case, identical classes, same
+            30px size as Long Run/Supply/Testimonials — genuinely the
+            same heading treatment, not just a similar one. */}
+        <h2 className="text-center text-h2 font-bold leading-[1.1] tracking-tight text-charcoal">
           Certifications
-        </p>
+        </h2>
         <CertificationsRow certifications={certifications} scrollSpeed={scrollSpeed} />
       </div>
     </section>
