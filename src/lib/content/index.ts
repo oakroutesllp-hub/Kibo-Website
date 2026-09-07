@@ -65,6 +65,7 @@ import type {
   Seo,
   TestimonialContent,
   CertificationContent,
+  CustomerContent,
 } from "./types";
 
 // The public content API for the app. Every page should read content
@@ -363,6 +364,8 @@ type RawSiteSettings = {
   testimonialsCompactQuote?: boolean;
   showCertifications?: boolean;
   certificationsScrollSpeed?: number;
+  showTrustedBy?: boolean;
+  trustedByScrollSpeed?: number;
 };
 
 const siteSettingsQuery = `*[_type == "siteSettings"][0]{
@@ -371,7 +374,8 @@ const siteSettingsQuery = `*[_type == "siteSettings"][0]{
   getInTouchLabel, navLabelHome, navLabelProducts, navLabelCatalog, navLabelBlog, navLabelOurStory,
   carouselIntervalSeconds, showTestimonials, testimonialsLimit,
   testimonialsDesktopSpeed, testimonialsMobileSpeed, testimonialsCompactQuote,
-  showCertifications, certificationsScrollSpeed
+  showCertifications, certificationsScrollSpeed,
+  showTrustedBy, trustedByScrollSpeed
 }`;
 
 // Hardcoded defaults for the global CTA label + nav labels (1 Sep
@@ -473,6 +477,9 @@ export async function getSiteSettings(): Promise<SiteSettingsContent> {
       showCertifications: doc.showCertifications ?? sampleSiteSettings.showCertifications,
       certificationsScrollSpeed:
         doc.certificationsScrollSpeed ?? sampleSiteSettings.certificationsScrollSpeed,
+      showTrustedBy: doc.showTrustedBy ?? sampleSiteSettings.showTrustedBy,
+      trustedByScrollSpeed:
+        doc.trustedByScrollSpeed ?? sampleSiteSettings.trustedByScrollSpeed,
     };
   } catch {
     return {
@@ -561,6 +568,75 @@ export async function getCertifications(): Promise<CertificationContent[]> {
       icon: doc.icon?.asset ? { url: urlForImage(doc.icon).width(200).url(), alt: doc.name } : null,
       verificationUrl: doc.verificationUrl,
     }));
+  } catch {
+    return [];
+  }
+}
+
+// Customers / "Trusted by" (4 Sep 2026) — see customerType.ts's own
+// comment, including why the underlying type is `customer` not
+// `brand`. Same "no fake fallback content" rule as Testimonials/
+// Certifications above — arguably the strongest case of the three: a
+// logo next to "Trusted by" is a specific, checkable claim that real
+// business happened, and the owner's own bar for using that label at
+// all is "every logo in it has to be a company that actually placed a
+// real order." Empty array when unconfigured, on error, or when
+// nothing's published yet; any entry missing its logo is dropped
+// entirely (see CustomerContent's own comment — unlike Certification,
+// there's no text fallback to show in its place).
+type RawCustomer = {
+  name: string;
+  logo?: Image;
+  // Real pixel dimensions of the uploaded file, straight from
+  // Sanity's own asset metadata — not something this codebase
+  // computes; needed so TrustedByRow.tsx can render every logo at a
+  // shared fixed height without distorting any of their very
+  // different natural aspect ratios (see CustomerContent's own
+  // comment in types.ts).
+  logoDimensions?: { width: number; height: number };
+  websiteUrl?: string;
+};
+
+const customersQuery = `*[_type == "customer"] | order(order asc){
+  name, logo, "logoDimensions": logo.asset->metadata.dimensions, websiteUrl
+}`;
+
+export async function getCustomers(): Promise<CustomerContent[]> {
+  if (!isSanityConfigured) return [];
+
+  try {
+    const docs = await sanityClient.fetch<RawCustomer[]>(
+      customersQuery,
+      {},
+      { next: { revalidate: 60 } },
+    );
+    return docs
+      .map((doc) => ({
+        name: doc.name,
+        // `width(300)` — a real logo, shown a little larger than
+        // Certifications' own generic icons (see TrustedByRow.tsx),
+        // but still nowhere near the 1600px `resolveImage` callers
+        // elsewhere in this file use for full-width photography.
+        // Falls back to `null` (dropped below) if either the image or
+        // its dimensions metadata is missing — Next/Image can't safely
+        // render without real width/height here, unlike the `fill`
+        // pattern every other media slot on this site uses.
+        logo:
+          doc.logo?.asset && doc.logoDimensions
+            ? {
+                url: urlForImage(doc.logo).width(300).url(),
+                alt: doc.name,
+                width: doc.logoDimensions.width,
+                height: doc.logoDimensions.height,
+              }
+            : null,
+        websiteUrl: doc.websiteUrl,
+      }))
+      // Drop any entry with no logo — this section shows the logo
+      // ALONE, no name/text fallback to render in its place the way
+      // Certifications has, so a logo-less entry would just be an
+      // invisible gap in the row.
+      .filter((customer) => customer.logo !== null);
   } catch {
     return [];
   }
@@ -1019,4 +1095,5 @@ export type {
   Seo,
   TestimonialContent,
   CertificationContent,
+  CustomerContent,
 } from "./types";

@@ -111,6 +111,8 @@ export const sampleSiteSettings: SiteSettingsContent = {
   testimonialsCompactQuote: false,
   showCertifications: false,
   certificationsScrollSpeed: 30,
+  showTrustedBy: false,
+  trustedByScrollSpeed: 30,
 };
 
 // A second sample post added 31 Aug 2026, same time as the Blog page

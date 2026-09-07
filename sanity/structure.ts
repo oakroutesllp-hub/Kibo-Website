@@ -71,6 +71,23 @@ export const structure: StructureResolver = (S) =>
             .title("Certifications")
             .defaultOrdering([{ field: "order", direction: "asc" }]),
         ),
+      // "Customers" added 4 Sep 2026 (owner: "let's move to brand
+      // section," then, mid-conversation, corrected the underlying
+      // concept from "brands" to "customers" — see customerType.ts's
+      // own comment) — same repeatable-list-with-custom-order pattern
+      // as Testimonials/Certifications above. Hidden from visitors
+      // until Site Settings → "Show Trusted By on Home" is switched
+      // on — see siteSettingsType.ts. Studio label is "Customers"
+      // (the underlying entity), not "Trusted By" (the page's own
+      // section label) — those are two different things, see
+      // TrustedBySection.tsx's own comment.
+      S.listItem()
+        .title("Customers")
+        .child(
+          S.documentTypeList("customer")
+            .title("Customers")
+            .defaultOrdering([{ field: "order", direction: "asc" }]),
+        ),
       S.divider(),
       // "Custom Section Media" and "Catalog" added 31 Aug 2026, same
       // pass as Product Categories above — see each schema's own file

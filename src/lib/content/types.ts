@@ -150,6 +150,13 @@ export type SiteSettingsContent = {
   // Auto-scroll speed, only used once certifications overflow one row
   // (4 Sep 2026) — see siteSettingsType.ts's own field description.
   certificationsScrollSpeed: number;
+  // "Trusted by" toggle + scroll speed (4 Sep 2026) — same
+  // hidden-until-ready + overflow-only-auto-scroll pattern as
+  // Certifications above. See siteSettingsType.ts's own field
+  // descriptions, and customerType.ts for why the underlying content
+  // type is `customer` even though the section label is "Trusted by."
+  showTrustedBy: boolean;
+  trustedByScrollSpeed: number;
 };
 
 // Testimonial (3 Sep 2026) — see testimonialType.ts's own comment.
@@ -176,6 +183,28 @@ export type CertificationContent = {
   name: string;
   icon: ContentImage;
   verificationUrl?: string;
+};
+
+// Customer (4 Sep 2026) — see customerType.ts's own comment, including
+// why this is `customer` and not `brand`, and why `name` is shown as
+// visible text now (reversed from an initial logo-only pass, same
+// conversation — an unrecognized company's logo alone conveys nothing
+// without its name attached). `logo` deliberately does NOT
+// reuse the shared `ContentImage` type every other media slot on this
+// site uses — those are all displayed via Next/Image's `fill` inside
+// a container with a fixed, known aspect ratio (a hero photo, a
+// square swatch), so they never need their own intrinsic dimensions.
+// A real customer logo's aspect ratio is different every time (a
+// square mark vs. a wide wordmark), and this section displays every
+// logo at the same fixed HEIGHT with natural width (see
+// TrustedByRow.tsx) — Next/Image needs real width/height to do that
+// without distorting or guessing, so `width`/`height` (the logo's own
+// real pixel dimensions, from Sanity's own asset metadata) travel
+// alongside `url`/`alt` here.
+export type CustomerContent = {
+  name: string;
+  logo: { url: string; alt: string; width: number; height: number } | null;
+  websiteUrl?: string;
 };
 
 // Product Categories (31 Aug 2026) — see productCategoryType.ts's own

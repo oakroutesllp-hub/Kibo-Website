@@ -13,6 +13,7 @@ import { ctaNudgeCopyType } from "./ctaNudgeCopyType";
 import { ourStoryCopyType } from "./ourStoryCopyType";
 import { testimonialType } from "./testimonialType";
 import { certificationType } from "./certificationType";
+import { customerType } from "./customerType";
 
 export const schemaTypes = [
   seoType,
@@ -30,4 +31,5 @@ export const schemaTypes = [
   ourStoryCopyType,
   testimonialType,
   certificationType,
+  customerType,
 ];

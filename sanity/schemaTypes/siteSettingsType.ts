@@ -182,6 +182,32 @@ export const siteSettingsType = defineType({
       validation: (rule) => rule.min(10).max(90),
       initialValue: 30,
     }),
+    defineField({
+      // 4 Sep 2026, owner: "let's move to brand section" — same
+      // hidden-until-ready pattern as Show Certifications/Show
+      // Testimonials above. Field name is `showTrustedBy` (matching the
+      // page's own section label, "Trusted by") even though the
+      // underlying Sanity document type is `customer` — see
+      // customerType.ts's own comment on why those two names differ.
+      name: "showTrustedBy",
+      title: "Show \"Trusted by\" on Home",
+      description:
+        "OFF (default): the \"Trusted by\" section doesn't render on Home at all, even if Customer documents exist. Turn this ON once you have real customer logos published and are ready for visitors to see them. Also requires at least one Customer document to actually show anything — this toggle alone with zero customers still shows nothing. Takes effect within about a minute of saving.",
+      type: "boolean",
+      initialValue: false,
+    }),
+    defineField({
+      // Same continuous-auto-scroll-only-if-it-overflows mechanism as
+      // Certifications' own scroll speed field above — see that
+      // field's own description for the full reasoning.
+      name: "trustedByScrollSpeed",
+      title: "\"Trusted by\" — auto-scroll speed (seconds per loop)",
+      description:
+        "Only matters if you have enough customer logos that they don't all fit in one row on a visitor's screen — at that point the row scrolls continuously and slowly rather than showing everything cramped or requiring a click. This is how many seconds one full loop takes: a bigger number scrolls slower, a smaller number scrolls faster. Leave blank for the default (30 seconds).",
+      type: "number",
+      validation: (rule) => rule.min(10).max(90),
+      initialValue: 30,
+    }),
     // `getInTouchLabel` + nav labels (1 Sep 2026, owner: "make everything
     // editable") — one shared button label used everywhere the site
     // opens the enquiry form (nav bar, mobile sticky bar, footer, CTA

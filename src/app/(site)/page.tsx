@@ -6,6 +6,7 @@ import { SupplySection } from "@/components/sections/SupplySection";
 import { LongRunSection } from "@/components/sections/LongRunSection";
 import { TestimonialsSection } from "@/components/sections/TestimonialsSection";
 import { CertificationsSection } from "@/components/sections/CertificationsSection";
+import { TrustedBySection } from "@/components/sections/TrustedBySection";
 import { CTANudgeSection } from "@/components/sections/CTANudgeSection";
 import { WeStartedByListeningSection } from "@/components/sections/WeStartedByListeningSection";
 import { TiruppurStorySection } from "@/components/sections/TiruppurStorySection";
@@ -23,6 +24,7 @@ import {
   getSiteSettings,
   getTestimonials,
   getCertifications,
+  getCustomers,
 } from "@/lib/content";
 
 // `description` fallback added 3 Sep 2026 — found via a real Lighthouse
@@ -132,6 +134,9 @@ export default async function Home() {
   // toggle, let the section itself decide whether to render" pattern
   // as Testimonials above.
   const certifications = await getCertifications();
+  // "Trusted by" (4 Sep 2026) — same fetch-regardless-of-toggle
+  // pattern as Testimonials/Certifications above.
+  const customers = await getCustomers();
   return (
     <>
       <Hero content={homepage} carouselSeconds={settings.carouselIntervalSeconds} />
@@ -140,6 +145,12 @@ export default async function Home() {
         categories={productCategories}
         getInTouchLabel={settings.getInTouchLabel}
       />
+      {/* "Trusted by," 4 Sep 2026 — right after Products, not grouped
+          with Certifications near the footer. See TrustedBySection.tsx's
+          own comment for the full placement reasoning (real-logo social
+          proof works best early, while a visitor is still deciding
+          whether to trust the products they're looking at). */}
+      <TrustedBySection customers={customers} show={settings.showTrustedBy} scrollSpeed={settings.trustedByScrollSpeed} />
       <CustomSection media={customSectionMedia} copy={customSectionCopy} testimonialsVisible={testimonialsVisible} />
       <SupplySection copy={supplySectionCopy} testimonialsVisible={testimonialsVisible} />
       <LongRunSection copy={longRunSectionCopy} testimonialsVisible={testimonialsVisible} />
