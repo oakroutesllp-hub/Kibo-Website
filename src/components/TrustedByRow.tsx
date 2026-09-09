@@ -141,13 +141,30 @@ export function TrustedByRow({
       // component's own box. Real bug, confirmed live via
       // `document.documentElement.scrollWidth` — 9 Sep 2026, owner:
       // "I can almost swipe to the left, and the display is bigger
-      // than the width of the mobile." Now unconditionally clipped
-      // except in the one state that legitimately needs its own
-      // horizontal scroll (`overflowing && reducedMotion`) — see
-      // `layout.tsx`'s own comment for the second, independent layer
-      // added the same day (`overflow-x-hidden` on `<body>`) so this
-      // exact failure mode can't escape a single component again.
-      className={`w-full max-w-[1230px] ${
+      // than the width of the mobile."
+      //
+      // **This div was also missing `relative`** — caught the SAME
+      // day, one deploy later: an `overflow-hidden` (temporarily also
+      // `overflow-x-hidden` on `<html>`/`<body>`, since reverted — see
+      // `layout.tsx`'s own comment) only clips an `absolute`
+      // descendant whose CONTAINING BLOCK it actually is. Without
+      // `position: relative` here, this div was never the measuring
+      // row's containing block at all — CSS bubbles that up to the
+      // nearest ancestor that IS positioned, which (with nothing else
+      // in between) is effectively the page root. So `overflow-hidden`
+      // right here was silently a no-op for this specific child the
+      // whole time; the ONLY thing actually clipping it was the
+      // now-reverted `<html>`/`<body>` rule, which is exactly why
+      // reverting that (to fix broken touch-scroll) un-clipped it
+      // again — this time surfacing as mobile Chrome rendering the
+      // whole HOME page (the only page with this row) at a shrunk-down
+      // scale to fit that invisible content, squeezing everything
+      // visible into the left portion of the screen (owner: "the
+      // white space reads yuck... only home has this issue"). Adding
+      // `relative` makes this div its own containing block, so its own
+      // `overflow-hidden` finally clips what it was always meant to —
+      // no dependency on any ancestor's overflow rule at all.
+      className={`relative w-full max-w-[1230px] ${
         overflowing && reducedMotion ? "overflow-x-auto" : "overflow-hidden"
       }`}
     >

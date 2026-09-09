@@ -119,9 +119,16 @@ export function CertificationsRow({
       // container unclipped in the default/non-overflowing state, that
       // full width silently expanded the whole PAGE's scrollable area on
       // mobile — this component has the identical structure, so it had
-      // the identical bug. Now unconditionally clipped except in the one
-      // state that legitimately needs its own horizontal scroll.
-      className={`w-full max-w-[1230px] ${
+      // the identical bug.
+      //
+      // **Also missing `relative`** — same fix, same day, one deploy
+      // later, see TrustedByRow.tsx's own comment for the full
+      // explanation: without it, this div was never the measuring row's
+      // actual containing block, so its own `overflow-hidden` was
+      // silently a no-op for that child — the only thing really
+      // clipping it was the (now-reverted) `<html>`/`<body>` rule in
+      // layout.tsx. `relative` makes this div genuinely self-sufficient.
+      className={`relative w-full max-w-[1230px] ${
         overflowing && reducedMotion ? "overflow-x-auto" : "overflow-hidden"
       }`}
     >
