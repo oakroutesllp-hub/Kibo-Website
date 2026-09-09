@@ -23,16 +23,21 @@ import { defineField, defineType } from "sanity";
 // business KIBO has sold to — calling the Sanity type `brand` would
 // have baked in the same wrong assumption at the data layer.
 //
-// **Logo AND name are both shown, both required** — first pass here
-// was logo-only (owner: "logos only, no names... I think it's just
-// the logo"), reversed almost immediately, same conversation: "these
-// brands might not be very big... it's not like I'm gonna see an
-// Apple logo and instantly recognize it... if I see just logos... who
-// are they?" A recognizable brand's logo carries meaning on its own;
-// an unfamiliar wholesaler or distributor's doesn't — the company
-// name is what actually makes the social proof legible when the
-// visitor has never heard of the company before. `name` is REQUIRED
-// for that reason now (not just alt text the way it briefly was).
+// **Logo required, name optional** — first pass here was logo-only
+// (owner: "logos only, no names... I think it's just the logo"),
+// reversed almost immediately, same conversation: "these brands might
+// not be very big... it's not like I'm gonna see an Apple logo and
+// instantly recognize it... if I see just logos... who are they?" A
+// recognizable brand's logo carries meaning on its own; an unfamiliar
+// wholesaler or distributor's doesn't — the company name is what
+// actually makes the social proof legible when the visitor has never
+// heard of the company before, so `name` is shown by default. `name`
+// was briefly REQUIRED for that reason (7 Sep 2026) — loosened to
+// optional the same day, owner: "I would like to keep the text
+// optional" — a well-known logo (or one the owner judges recognizable
+// enough on its own) can still be added without a name forcing a
+// caption underneath it; TrustedByRow.tsx simply skips rendering the
+// name line when it's blank rather than leaving an empty gap.
 //
 // **No transparent-background requirement, unlike Certification's own
 // icon** — that section recolors every icon to one flat brand color
@@ -48,10 +53,10 @@ export const customerType = defineType({
   fields: [
     defineField({
       name: "name",
-      title: "Company name",
-      description: "Shown as text below the logo, and also used as the logo image's alt text.",
+      title: "Company name (optional)",
+      description:
+        "Shown as text below the logo, and also used as the logo image's alt text. Leave blank to show the logo alone — recommended only for a company whose logo is recognizable on its own; for most B2B wholesalers/distributors, the name is what makes the logo mean anything to a visitor.",
       type: "string",
-      validation: (rule) => rule.required(),
     }),
     defineField({
       name: "logo",
@@ -86,5 +91,11 @@ export const customerType = defineType({
   ],
   preview: {
     select: { title: "name", media: "logo" },
+    // `name` is optional now — falls back to a plain label in the
+    // Studio document list instead of showing a blank title when it's
+    // left empty.
+    prepare({ title, media }) {
+      return { title: title || "(logo, no name)", media };
+    },
   },
 });

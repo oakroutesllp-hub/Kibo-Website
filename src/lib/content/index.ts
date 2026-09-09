@@ -585,7 +585,7 @@ export async function getCertifications(): Promise<CertificationContent[]> {
 // entirely (see CustomerContent's own comment — unlike Certification,
 // there's no text fallback to show in its place).
 type RawCustomer = {
-  name: string;
+  name?: string;
   logo?: Image;
   // Real pixel dimensions of the uploaded file, straight from
   // Sanity's own asset metadata — not something this codebase
@@ -625,7 +625,11 @@ export async function getCustomers(): Promise<CustomerContent[]> {
           doc.logo?.asset && doc.logoDimensions
             ? {
                 url: urlForImage(doc.logo).width(300).url(),
-                alt: doc.name,
+                // `alt` still needs real text even when `name` is
+                // left blank (a visual caption is optional; an accessible
+                // description isn't) — falls back to a generic label
+                // rather than an empty string.
+                alt: doc.name || "Company logo",
                 width: doc.logoDimensions.width,
                 height: doc.logoDimensions.height,
               }

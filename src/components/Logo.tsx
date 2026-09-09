@@ -25,11 +25,30 @@ const LOGO_ASPECT_RATIO = 933 / 363;
 // seam artifacts; checked this one directly by rendering it against
 // the actual footer background color before using it anywhere, and
 // it's a flat solid white silhouette with no gradient at all, so that
-// whole failure mode doesn't apply here). Own aspect ratio (953×532,
-// ≈1.79) since this file is cropped tightly to just the wordmark —
-// noticeably different from the original PNG's own ratio (933×363,
-// ≈2.57), which carries extra built-in margin the SVG doesn't.
-const LOGO_WHITE_ASPECT_RATIO = 953 / 532;
+// whole failure mode doesn't apply here).
+//
+// **Corrected 7 Sep 2026** — the line originally here claimed this
+// file was "cropped tightly to just the wordmark," which turned out
+// to be wrong: the owner caught the footer logo visibly NOT lining up
+// with the text below it on a live screenshot, and measuring the raw
+// SVG's own `getBBox()` against its `viewBox` showed the real artwork
+// only occupied the middle ~45% of the canvas — 27.4% of the width
+// was empty space sitting before the "K" even starts (Recraft AI
+// appears to export onto a fixed oversized canvas, centering the mark
+// within it, unlike a normal tight logo export). That invisible
+// margin was silently eating into every layout that assumed the
+// image's own bounding box WAS the visible logo (e.g. Footer.tsx's
+// flex alignment against the tagline text below it) — a plain
+// `getBoundingClientRect()` check against the `<img>` element itself
+// couldn't catch this, since the box really was aligned; only the ink
+// inside it wasn't. Fixed at the source: `kibo-logo-white.svg`'s own
+// `viewBox` was tightened directly to the artwork's real bounding box
+// (plus a small ~1% safety pad on every side, same idea as the PNG's
+// own tight crop above), rather than compensating with a magic-number
+// CSS offset here that would only be correct for this one file. New
+// ratio, from the new tight `viewBox` (446.16×165.35, ≈2.70) —
+// updated together with the file so the two never drift apart.
+const LOGO_WHITE_ASPECT_RATIO = 446.16 / 165.35;
 
 type LogoProps = {
   /** Rendered width in pixels; height is derived from the source aspect ratio. */

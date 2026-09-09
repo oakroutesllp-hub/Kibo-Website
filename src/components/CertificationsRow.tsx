@@ -112,8 +112,17 @@ export function CertificationsRow({
   return (
     <div
       ref={containerRef}
-      className={`w-full max-w-[1230px] ${active ? "overflow-hidden" : ""} ${
-        overflowing && reducedMotion ? "overflow-x-auto" : ""
+      // Was `overflow-hidden` only when `active` — see TrustedByRow.tsx's
+      // own comment (9 Sep 2026) for the real bug this left open: the
+      // invisible measuring copy below is `absolute` + un-wrapped to its
+      // full natural width regardless of container size, and with the
+      // container unclipped in the default/non-overflowing state, that
+      // full width silently expanded the whole PAGE's scrollable area on
+      // mobile — this component has the identical structure, so it had
+      // the identical bug. Now unconditionally clipped except in the one
+      // state that legitimately needs its own horizontal scroll.
+      className={`w-full max-w-[1230px] ${
+        overflowing && reducedMotion ? "overflow-x-auto" : "overflow-hidden"
       }`}
     >
       {/* Hidden measuring copy — always the single, undoubled row, so

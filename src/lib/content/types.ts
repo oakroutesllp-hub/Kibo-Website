@@ -202,7 +202,14 @@ export type CertificationContent = {
 // real pixel dimensions, from Sanity's own asset metadata) travel
 // alongside `url`/`alt` here.
 export type CustomerContent = {
-  name: string;
+  // Optional, 7 Sep 2026 (owner: "I would like to keep the text
+  // optional") — was required; TrustedByRow.tsx now skips the name
+  // line under a logo entirely when this is empty, rather than
+  // rendering a blank caption. Logo `alt` still needs SOME text
+  // regardless (screen readers, not a visual caption) — falls back to
+  // a generic string at the query layer (see getCustomers() in
+  // index.ts) when name is blank.
+  name?: string;
   logo: { url: string; alt: string; width: number; height: number } | null;
   websiteUrl?: string;
 };

@@ -57,14 +57,67 @@ export function TrustedBySection({
   show: boolean;
   scrollSpeed?: number;
 }) {
+  // Returns null entirely (not just hidden via CSS) when off — this
+  // means the `py-16 sm:py-20` below is never in the DOM in that
+  // state, so Products and CustomSection sit directly adjacent with
+  // their own original spacing, completely unaffected by this
+  // section's own padding either way. No separate "off" spacing case
+  // to maintain — there's nothing here to revert when this returns
+  // null.
   if (!show || customers.length === 0) return null;
 
   return (
     <section className="w-full bg-background">
-      <div className="mx-auto flex w-full max-w-[1728px] flex-col items-center gap-8 px-6 py-12 sm:px-10 sm:py-16">
+      {/* Top divider, 7 Sep 2026 (owner: "add some horizontal line
+          accents in the trusted by section because that is not
+          getting the same treatment as the rest... maybe use a longer
+          horizontal accent line to separate products from trusted
+          by") — same technique as Certifications' own top divider
+          (that file's own comment has the full reasoning): an
+          inset-from-both-edges line, not a full-bleed `border-t`
+          (owner's standing preference against edge-to-edge lines,
+          "looks very very flaky"), marking the boundary with Products
+          above, which shares this section's own white background and
+          so has no color change of its own to mark that seam.
+          Deliberately only ONE extra separator, not two (owner, same
+          message: "don't make it too many lines either") — Custom
+          ("From reference to finished garment") right below gets the
+          `py-16 sm:py-20` breathing room added just above instead of a
+          second line; Certifications' own precedent is the same
+          call — a divider on the boundary that actually needs one
+          (white-to-white), nothing added on the edge that doesn't
+          (its own bottom edge hands off to the footer's background
+          change instead). */}
+      <div className="mx-24 h-px bg-charcoal/10" />
+      {/* `py-12 sm:py-16` → `py-16 sm:py-20` (48/64px → 64/80px), 7
+          Sep 2026 — owner, live screenshot: "Trusted by... in
+          reference to finished garment section are getting too
+          mushed up together." Measured every section-heading seam on
+          the live page before changing anything: this one measured
+          108px on both sides, genuinely the tightest transition
+          anywhere on Home — every other seam measured 120–186px. A
+          new color band was considered and rejected (owner's own
+          call: "I'm not even liking all... too many bands" — and
+          this site's existing tint logic is reserved for covering
+          Testimonials' absence, not decorative separation, so a band
+          here for spacing alone would break that discipline). This
+          bump alone brings both seams to ~124–140px, in line with
+          Testimonials (120px) and Our Story (129px) — the two other
+          seams belonging to comparably lightweight sections, rather
+          than the airier 170px+ seams that belong to sections with
+          their own divider treatment. */}
+      <div className="mx-auto flex w-full max-w-[1728px] flex-col items-center gap-8 px-6 py-16 sm:px-10 sm:py-20">
         <h2 className="text-center text-h2 font-bold leading-[1.1] tracking-tight text-charcoal">
           Trusted by
         </h2>
+        {/* Small heading accent, 7 Sep 2026, same message as the top
+            divider above — this section was missing the `h-px w-12`
+            accent every other major section heading carries directly
+            under itself (Products, Supply, Long Run, Custom,
+            Certifications as of this same edit, Founder). Same class,
+            not a new variant — see CertificationsSection.tsx's own
+            comment on this same day for the parallel fix there. */}
+        <span aria-hidden="true" className="h-px w-12 bg-charcoal/20" />
         <TrustedByRow customers={customers} scrollSpeed={scrollSpeed} />
       </div>
     </section>

@@ -77,6 +77,19 @@ export function CertificationsSection({
         <h2 className="text-center text-h2 font-bold leading-[1.1] tracking-tight text-charcoal">
           Certifications
         </h2>
+        {/* Small heading accent, 7 Sep 2026 (owner: "same thing with
+            certifications also. It needs that small horizontal accent
+            line under certifications") — this section had the TOP
+            divider (above, marking the boundary with Our Story) but was
+            missing the small `h-px w-12` accent every other major
+            section heading on the page carries directly under its own
+            heading (Products, Supply, Built for the Long Run, Custom's
+            "Built around your requirements", Founder) — the two are
+            different jobs (one separates this section from its
+            neighbor, one is part of the heading treatment itself), and
+            this section only ever had the first one. Same exact class
+            as those other headings, not a new variant. */}
+        <span aria-hidden="true" className="h-px w-12 bg-charcoal/20" />
         <CertificationsRow certifications={certifications} scrollSpeed={scrollSpeed} />
       </div>
     </section>

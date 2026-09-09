@@ -71,6 +71,29 @@ export function TrustedByRow({
   // to `Image` below), not a shared fixed box — a wide wordmark and a
   // square mark both read at the same visual WEIGHT this way, rather
   // than one being stretched or letterboxed to match the other.
+  //
+  // `min-w-[90px]` on each entry — 7 Sep 2026, owner: "increase the
+  // space between two logos, especially when [both the logo and the
+  // name are short]... wherever the text spills over the logo width...
+  // that space seems fine... wherever the text fits within the logo
+  // width... that's where we need to increase the gap." Measured live
+  // with a placeholder mix (wide wordmark/long name vs. narrow
+  // mark/short name): the 56px flex gap alone gave a narrow-logo pair
+  // only 64px of real breathing room, vs. 97px for a pair where the
+  // name text naturally overflowed its logo. Tried a flat gap bump
+  // first (72px, 88px) — proved it moves BOTH cases up by the same
+  // fixed amount, so the imbalance itself never closes, only the
+  // whole row gets more spread out. A hard width CAP on the name was
+  // tried next — fixes the narrow case but also shrinks the
+  // already-fine wide case (capping "Borcelle Management" back down
+  // undoes the extra room its own long name was earning). `min-width`
+  // is the one lever that's asymmetric in the right direction: it's a
+  // floor, not a cap, so it only ever pulls narrow entries UP to
+  // 90px — an entry already wider than that (whether from its logo or
+  // its name) is untouched. 90px picked specifically because it sits
+  // just under the widest logo in the live test set (96px), so the
+  // already-approved pairs measured byte-identical before/after
+  // (97px, unchanged) while the cramped pair opened up to 114px.
   const entry = (customer: CustomerContent, i: number, keyPrefix: string) => {
     if (!customer.logo) return null;
     return (
@@ -79,7 +102,7 @@ export function TrustedByRow({
         {...(customer.websiteUrl
           ? { href: customer.websiteUrl, target: "_blank", rel: "noopener noreferrer" }
           : {})}
-        className="flex flex-none flex-col items-center gap-2"
+        className="flex min-w-[90px] flex-none flex-col items-center gap-2"
       >
         <Image
           src={customer.logo.url}
@@ -88,7 +111,14 @@ export function TrustedByRow({
           height={customer.logo.height}
           className="h-8 w-auto"
         />
-        <span className="whitespace-nowrap text-support text-charcoal/70">{customer.name}</span>
+        {/* Name is optional, 7 Sep 2026 — skip the line entirely
+            rather than render an empty caption under the logo (that
+            would just be dead space, not a graceful "no name" state,
+            since the `gap-2` above it would still reserve room for a
+            line of text that isn't there). */}
+        {customer.name && (
+          <span className="whitespace-nowrap text-support text-charcoal/70">{customer.name}</span>
+        )}
       </a>
     );
   };
@@ -98,8 +128,27 @@ export function TrustedByRow({
   return (
     <div
       ref={containerRef}
-      className={`w-full max-w-[1230px] ${active ? "overflow-hidden" : ""} ${
-        overflowing && reducedMotion ? "overflow-x-auto" : ""
+      // Was `overflow-hidden` only when `active` (i.e. only while the
+      // marquee is actually mid-animation) — meaning the DEFAULT,
+      // most-common state (not overflowing at all, or reduced-motion)
+      // left this container unclipped. That's harmless for the visible
+      // content itself (it already fits/wraps correctly either way),
+      // but the invisible measuring copy below is `position: absolute`
+      // + un-wrapped, sized to its own full natural width regardless
+      // of container size — with nothing clipping it, that full width
+      // (786px, measured live on a 375px mobile viewport) silently
+      // expanded the whole PAGE's scrollable area, not just this
+      // component's own box. Real bug, confirmed live via
+      // `document.documentElement.scrollWidth` — 9 Sep 2026, owner:
+      // "I can almost swipe to the left, and the display is bigger
+      // than the width of the mobile." Now unconditionally clipped
+      // except in the one state that legitimately needs its own
+      // horizontal scroll (`overflowing && reducedMotion`) — see
+      // `layout.tsx`'s own comment for the second, independent layer
+      // added the same day (`overflow-x-hidden` on `<body>`) so this
+      // exact failure mode can't escape a single component again.
+      className={`w-full max-w-[1230px] ${
+        overflowing && reducedMotion ? "overflow-x-auto" : "overflow-hidden"
       }`}
     >
       {/* Hidden measuring copy — see CertificationsRow.tsx's own

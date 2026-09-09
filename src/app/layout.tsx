@@ -79,8 +79,36 @@ async function OrganizationJsonLd() {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${montserrat.variable} h-full antialiased`}>
-      <body className="min-h-full flex flex-col font-sans">
+    <html lang="en" className={`${montserrat.variable} h-full overflow-x-hidden antialiased`}>
+      {/* `overflow-x-hidden` added 9 Sep 2026 — root-cause fix for a
+          real horizontal-scroll bug the owner found live on mobile
+          ("I can almost swipe to the left, and the display is bigger
+          than the width of the mobile... weird white patch"). Traced
+          to TrustedByRow.tsx/CertificationsRow.tsx: both render an
+          invisible `position: absolute` "measurement" copy (used to
+          decide whether the row should auto-scroll) that was only
+          clipped by its own container in ONE of that container's three
+          states — not the default, most common one — so its full
+          un-wrapped natural width (786px, measured live, vs. a 375px
+          mobile viewport) silently expanded the whole page's
+          scrollable area. Fixed at the source in both files (their own
+          container is now unconditionally clipped except in the one
+          state that legitimately needs to scroll). This is the second,
+          independent layer: no single component's own overflow mistake
+          — this one or a future one — can ever again expand the page's
+          own scrollable width, because the page itself refuses to
+          scroll sideways at all. Set on BOTH `<html>` and `<body>`
+          deliberately, not just `<body>` — `<body>` alone measured
+          clipped correctly (`document.body.scrollWidth` back to
+          375px) but `document.documentElement.scrollWidth` (the
+          `<html>` tag, the ACTUAL root scroller in most browsers when
+          both elements are in normal flow) still read 811px, proving
+          live that only clipping `<body>` doesn't stop the real page
+          scroll. Intentional horizontal scrollers (e.g. this same
+          reduced-motion fallback row) still work fine — this only
+          clips the two outermost elements, never an inner
+          element that explicitly opts into its own `overflow-x-auto`. */}
+      <body className="min-h-full flex flex-col overflow-x-hidden font-sans">
         <OrganizationJsonLd />
         {children}
         {/* Vercel Analytics, 2 Sep 2026 (owner priority-2 fix, after the

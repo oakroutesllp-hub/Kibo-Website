@@ -124,17 +124,18 @@ export function Footer({ settings }: { settings: SiteSettingsContent }) {
             side only. */}
         <div className="grid grid-cols-1 gap-y-10 gap-x-10 px-6 py-10 sm:px-10 md:grid-cols-2 lg:flex lg:flex-row lg:justify-between lg:gap-x-10 lg:gap-y-8 lg:px-0">
         {/* Brand */}
-        {/* Centered below `lg`, 31 Aug 2026 (owner, testing live mobile:
-            "the KIBO logo is... left aligned. I think it should be
-            aligned at the center... this looks kind of weird") — this
-            was the one column with no alignment override at all (every
-            other column already uses `items-center text-center`), so it
-            fell back to plain left-aligned block flow on the stacked
-            mobile/tablet layout, inconsistent with its four siblings.
-            `lg:items-start lg:text-left` keeps this column's original,
-            unedited desktop reading (a left-anchored first column in the
-            row) — this is a sub-`lg` change only. */}
-        <div className="flex flex-col items-center gap-3 text-center md:col-span-2 lg:col-span-2 lg:items-start lg:text-left">
+        {/* Reversed back to left-aligned, 7 Sep 2026 (owner, on a live
+            dark-footer screenshot: "align the logo... to the left with
+            the text underneath that says B2B men's apparel merchant
+            exporter from India") — supersedes the 31 Aug centering
+            decision right above (kept here for the record: that one was
+            made on the old light footer, before the logo grew and the
+            column gained real weight against Navigate/Buyers/Contact;
+            centered no longer reads as intentional now). Simplified to a
+            single `items-start`/`text-left` pair with no `lg:` override
+            since left is now the reading at every breakpoint, not just
+            `lg` and up. */}
+        <div className="flex flex-col items-start gap-3 text-left md:col-span-2 lg:col-span-2">
           {/* Sized to match Nav.tsx's logo exactly (30 Aug 2026, owner,
               on a screenshot of this column: "reduce logo size to match
               with top bar") — was a flat, non-responsive `width={112}`;
@@ -174,8 +175,37 @@ export function Footer({ settings }: { settings: SiteSettingsContent }) {
               of hanging from its own top. Self-adjusting if the logo's
               size ever changes again, not a one-off magic-number
               margin tuned to today's specific dimensions. */}
+          {/* Mobile matched to Nav.tsx, 7 Sep 2026 (owner, live mobile
+              screenshot: "the logo here and the logo on the sticky
+              strip up top is the same size... on the website it
+              doesn't seem to be the same") — base breakpoint set to
+              Nav.tsx's own literal mobile value (`w-[54px]`). Desktop
+              (`sm:w-[110px]`) deliberately kept LARGER than Nav's own
+              `sm:w-[68.51px]` at the time, and the owner was fine with
+              that mismatch — until `kibo-logo-white.svg`'s own
+              `viewBox` got tightened the same day (see Logo.tsx's own
+              comment): that file used to have ~27% of its own canvas
+              as invisible padding around the mark, so the same
+              `w-[110px]` box only ever rendered a visibly SMALLER logo
+              than the box implied. Once that padding was removed, the
+              same box size suddenly rendered a visibly much bigger
+              logo — confirmed live, owner: "that is too big at the
+              bottom" — an unintended side effect of the SVG fix, not a
+              deliberate second size bump. First reverted to a full,
+              exact match with Nav.tsx at every breakpoint (`w-[54px]
+              sm:w-[68.51px]`) — then, same day, owner looked at it live
+              again and asked for SMALLER than Nav, not equal to it
+              ("make this logo smaller than the top bar on the
+              website... it's looking too large"). Scaled both
+              breakpoints down together by the same ~82% factor (not
+              just the desktop value) so the mobile/desktop RATIO the
+              two logos share stays consistent — `w-[44px] sm:w-[56px]`.
+              Still looked too large on another live look, same day —
+              "make this logo even smaller. Maybe, like, another 20%
+              smaller." Same proportional-scale approach again, another
+              ~80% pass over the `44/56` pair — `w-[35px] sm:w-[45px]`. */}
           <div className="flex h-5 items-center">
-            <Logo variant="light" width={124} className="h-auto w-[70px] sm:w-[110px]" />
+            <Logo variant="light" width={124} className="h-auto w-[35px] sm:w-[45px]" />
           </div>
           {/* Bumped onto the real type scale, `text-micro` (11px, 30 Aug
               2026, owner: "increase description size bump up" — per the
