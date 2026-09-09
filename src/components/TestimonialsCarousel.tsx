@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { TestimonialContent } from "@/lib/content";
 
 // One-at-a-time testimonial view for narrow screens (below `lg` —
@@ -50,18 +50,67 @@ export function TestimonialsCarousel({
     return () => clearInterval(timer);
   }, [paused, count, intervalSeconds]);
 
+  const goTo = (next: number) => setIndex(((next % count) + count) % count);
+
+  // Swipe-to-advance, 9 Sep 2026 (owner: "Yes, go ahead and add
+  // swipe") — genuinely new, this component never had real touch-
+  // swipe support at any point in its history (confirmed via git log
+  // before building this); what briefly felt like swipe was actually
+  // a real bug — the whole PAGE could be dragged sideways (the same
+  // horizontal-overflow bug fixed earlier the same day), so dragging
+  // across this card was panning the entire page, not driving the
+  // carousel. Passive start/end tracking only (no `touchmove`
+  // handler, no `preventDefault` anywhere) — the browser's native
+  // vertical scroll is never interrupted mid-gesture; direction is
+  // decided ONCE, at `touchend`, from the net movement. Requires the
+  // drag to be both far enough (40px) AND more horizontal than
+  // vertical (`abs(deltaX) > abs(deltaY)`) before it counts as a
+  // swipe — an ordinary vertical scroll that happens to start on this
+  // card, even one with a little sideways wobble, never triggers it.
+  // `touch-pan-y` on the container (below) tells the browser up front
+  // that vertical panning is this element's own native gesture,
+  // keeping horizontal drags free for this logic without any
+  // scroll-vs-swipe ambiguity or input lag. Touch also pauses
+  // auto-advance the same way hover/focus already do, via the same
+  // `paused` state — a mid-swipe auto-advance firing under a visitor's
+  // thumb would be a jarring, confusing double-move.
+  //
+  // `touchStart` (a ref, not state) is declared here, ABOVE the
+  // `count === 0` early return below — React's Rules of Hooks require
+  // every hook to run on every render, so `useRef` can't sit after a
+  // conditional return. `goTo` (above) was moved up alongside it for
+  // the same reason, since these handlers close over it.
+  const touchStart = useRef<{ x: number; y: number } | null>(null);
+  const onTouchStart = (e: React.TouchEvent) => {
+    touchStart.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+    setPaused(true);
+  };
+  const onTouchEnd = (e: React.TouchEvent) => {
+    const start = touchStart.current;
+    touchStart.current = null;
+    setPaused(false);
+    if (!start) return;
+    const touch = e.changedTouches[0];
+    const deltaX = touch.clientX - start.x;
+    const deltaY = touch.clientY - start.y;
+    const SWIPE_THRESHOLD_PX = 40;
+    if (Math.abs(deltaX) < SWIPE_THRESHOLD_PX || Math.abs(deltaX) <= Math.abs(deltaY)) return;
+    goTo(index + (deltaX < 0 ? 1 : -1));
+  };
+
   if (count === 0) return null;
 
-  const goTo = (next: number) => setIndex(((next % count) + count) % count);
   const current = testimonials[index];
 
   return (
     <div
-      className="relative w-full"
+      className="relative w-full touch-pan-y"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
       onFocus={() => setPaused(true)}
       onBlur={() => setPaused(false)}
+      onTouchStart={onTouchStart}
+      onTouchEnd={onTouchEnd}
     >
       {/* `px-11 sm:px-12` (44px/48px), wider than the vertical `py-6
           sm:py-7` — the prev/next arrows below are absolutely
