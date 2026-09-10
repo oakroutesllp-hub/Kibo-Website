@@ -143,7 +143,19 @@ export function BlogGrid({ articles }: { articles: ArticleContent[] }) {
                 // each category now shows exactly as typed in Sanity
                 // (sentence case, matching the field's own example
                 // text: "Company News", not "COMPANY NEWS").
-                className={`flex flex-col items-center gap-1.5 text-micro font-semibold tracking-[0.16em] transition-colors ${
+                //
+                // `text-micro` → `text-support` (11px → 13px), same
+                // day, later — owner, on a live screenshot: "the text
+                // size of all Company News/Sourcing & Manufacturing
+                // cannot be less than the text size of Search posts...
+                // check if [that size is] one of the standard sizes in
+                // our template." It already is — the search input
+                // (below) was already `text-support`, one of the
+                // site's own named type-scale tokens (h1/h2/h3/body/
+                // support/micro), not a one-off value — so this just
+                // matches the tabs to that existing token rather than
+                // inventing a new size for either side.
+                className={`flex flex-col items-center gap-1.5 text-support font-semibold tracking-[0.16em] transition-colors ${
                   active ? "text-charcoal" : "text-charcoal/50 hover:text-charcoal"
                 }`}
               >
