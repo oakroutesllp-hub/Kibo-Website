@@ -131,14 +131,17 @@ export function TrustedBySection({
         <h2 className="text-center text-h2 font-bold leading-[1.1] tracking-tight text-charcoal">
           Trusted by
         </h2>
-        {/* Small heading accent, 7 Sep 2026, same message as the top
-            divider above — this section was missing the `h-px w-12`
-            accent every other major section heading carries directly
-            under itself (Products, Supply, Long Run, Custom,
-            Certifications as of this same edit, Founder). Same class,
-            not a new variant — see CertificationsSection.tsx's own
-            comment on this same day for the parallel fix there. */}
-        <span aria-hidden="true" className="h-px w-12 bg-charcoal/20" />
+        {/* Small heading accent (`h-px w-12 bg-charcoal/20`) added 7
+            Sep 2026, REMOVED 10 Sep 2026 (owner: "get rid of that
+            short horizontal line... the section is very well defined
+            with the two larger horizontal lines at the top and the
+            bottom") — those two dividers (added the same day, see
+            their own comments above/below) now do the "this section
+            has definition" job on their own; a small accent directly
+            under the heading became redundant rather than additive
+            once they existed, unlike Certifications/Products/etc.,
+            which have no other divider of their own and still use
+            this same small accent for that job. */}
         <TrustedByRow customers={customers} scrollSpeed={scrollSpeed} />
       </div>
       {/* Bottom divider, 10 Sep 2026 (owner: "place another horizontal
