@@ -435,8 +435,18 @@ export function TiruppurStorySection({
           bottom padding to 0 restores the original single-source-of-gap
           design Founder's own spacing already assumes, rather than
           shrinking Founder's own carefully-tuned value to compensate for
-          an unrelated new element. */}
-      <div className="flex w-full flex-col items-center gap-[1.05rem] bg-background px-6 pt-8 pb-0 text-center sm:px-10 lg:hidden">
+          an unrelated new element.
+
+          **`pt-8` → `pt-16` (32px → 64px), 10 Sep 2026, mobile-only**
+          (owner: "the gap between the bottom edge of the photo/video
+          placeholder for Tiruppur and 'A long heritage,' double that
+          gap... on mobile only, web is fine") — measured the real live
+          gap first (photo bottom → "A long heritage" heading top: 32px,
+          confirming this `pt-8` is the whole seam), then doubled it.
+          Already scoped to mobile/tablet only via this block's own
+          `lg:hidden` (the desktop version is the separate overlay panel
+          above, untouched) — no separate breakpoint logic needed. */}
+      <div className="flex w-full flex-col items-center gap-[1.05rem] bg-background px-6 pt-16 pb-0 text-center sm:px-10 lg:hidden">
         {panelBody}
       </div>
     </section>
