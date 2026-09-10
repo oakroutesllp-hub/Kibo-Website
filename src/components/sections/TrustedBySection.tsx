@@ -79,34 +79,55 @@ export function TrustedBySection({
           "looks very very flaky"), marking the boundary with Products
           above, which shares this section's own white background and
           so has no color change of its own to mark that seam.
-          Deliberately only ONE extra separator, not two (owner, same
-          message: "don't make it too many lines either") — Custom
-          ("From reference to finished garment") right below gets the
-          `py-16 sm:py-20` breathing room added just above instead of a
-          second line; Certifications' own precedent is the same
-          call — a divider on the boundary that actually needs one
-          (white-to-white), nothing added on the edge that doesn't
-          (its own bottom edge hands off to the footer's background
-          change instead). */}
-      <div className="mx-24 h-px bg-charcoal/10" />
-      {/* `py-12 sm:py-16` → `py-16 sm:py-20` (48/64px → 64/80px), 7
-          Sep 2026 — owner, live screenshot: "Trusted by... in
-          reference to finished garment section are getting too
-          mushed up together." Measured every section-heading seam on
-          the live page before changing anything: this one measured
-          108px on both sides, genuinely the tightest transition
-          anywhere on Home — every other seam measured 120–186px. A
-          new color band was considered and rejected (owner's own
-          call: "I'm not even liking all... too many bands" — and
-          this site's existing tint logic is reserved for covering
-          Testimonials' absence, not decorative separation, so a band
-          here for spacing alone would break that discipline). This
-          bump alone brings both seams to ~124–140px, in line with
-          Testimonials (120px) and Our Story (129px) — the two other
-          seams belonging to comparably lightweight sections, rather
-          than the airier 170px+ seams that belong to sections with
-          their own divider treatment. */}
-      <div className="mx-auto flex w-full max-w-[1728px] flex-col items-center gap-8 px-6 py-16 sm:px-10 sm:py-20">
+          Originally the ONLY extra separator, deliberately (owner,
+          same message: "don't make it too many lines either") — a
+          second one was added below 10 Sep 2026, see that divider's
+          own comment for why this changed.
+
+          **Position within the button→heading gap, 10 Sep 2026**
+          (owner, live screenshot: "the trusted by section needs a
+          little more definition... increase the gap between get in
+          touch and the horizontal line... make it one point five
+          x... reduce the gap between the horizontal line and trusted
+          by by the same point five x... push the horizontal line down
+          by point five x") — measured live before changing anything:
+          x (Get in touch's bottom → this line) was 32px/44px
+          (mobile/desktop, from Products' own `pb-8 sm:pb-11`, this
+          section contributing nothing before the divider); y (line →
+          "Trusted by" heading) was 64px/80px. Target: x→1.5x
+          (48px/66px), y→y−0.5x (48px/58px) — a wrapper here adds
+          exactly that 0.5x (16px/22px) of new top space before the
+          divider, entirely inside this component (so it vanishes
+          along with everything else when `show` is false — Products'
+          own padding above is untouched, same as before). */}
+      <div className="pt-4 sm:pt-[22px]">
+        {/* `mx-24` → `mx-[116px] sm:mx-[217px]`, 10 Sep 2026 (owner:
+            "reduce the horizontal line size... by about maybe twenty,
+            twenty five percent") — measured the line's own real
+            rendered width before changing anything (183px mobile,
+            1073px desktop), then picked an added inset that lands
+            inside that 20–25% band rather than an arbitrary-looking
+            round number: mobile 183px→143px (−21.9%), desktop
+            1073px→832px (−22.5%). Same divider used for both lines
+            below, so the width change applies to both automatically. */}
+        <div className="mx-[116px] h-px bg-charcoal/10 sm:mx-[217px]" />
+      </div>
+      {/* `py-16 sm:py-20` (64px/80px, 7 Sep 2026 — see git history for
+          that day's own full reasoning on why this section needed
+          more breathing room at all) → split into independent
+          `pt`/`pb`, 10 Sep 2026, same pass as the divider wrapper
+          above: top shrinks to the new y (48px/58px, this component's
+          own comment above has the math); bottom shrinks to the SAME
+          48px/58px, deliberately matching — the owner's own next
+          instruction ("whatever new gap between the horizontal line
+          and trusted by, that same gap I want between bottom of the
+          logos... and place another horizontal line underneath")
+          asks for this exact symmetry: row-bottom → new divider now
+          measures the same as divider-top → heading. The 16px/22px
+          this bottom side gives up (64−48, 80−58) reappears below the
+          new divider, mirroring the top wrapper exactly — see that
+          divider's own comment. */}
+      <div className="mx-auto flex w-full max-w-[1728px] flex-col items-center gap-8 px-6 pt-12 sm:px-10 sm:pt-[58px] pb-12 sm:pb-[58px]">
         <h2 className="text-center text-h2 font-bold leading-[1.1] tracking-tight text-charcoal">
           Trusted by
         </h2>
@@ -120,6 +141,25 @@ export function TrustedBySection({
         <span aria-hidden="true" className="h-px w-12 bg-charcoal/20" />
         <TrustedByRow customers={customers} scrollSpeed={scrollSpeed} />
       </div>
+      {/* Bottom divider, 10 Sep 2026 (owner: "place another horizontal
+          line underneath [the logos] so that trusted by section gets
+          a little more definition") — same inset technique as the top
+          divider, mirroring it: sits exactly 48px/58px below the
+          logos row (matching the new top gap, see that divider's own
+          comment), with the original 64px/80px bottom breathing room
+          reappearing below IT, split as a plain 16px/22px spacer here
+          — the same 0.5x this pass took from the top side, given back
+          on the bottom side, so the section's own total height versus
+          Custom below is unchanged from before this whole pass, only
+          redistributed. Still inside this component, same as
+          everything else — off when `show` is false, no separate
+          on/off spacing case to maintain (see this function's own
+          top-level comment). Width matched to the top divider's own
+          `mx-[116px] sm:mx-[217px]` reduction (see that divider's own
+          comment for the exact numbers) — same class, kept in sync
+          deliberately, not two independently-tuned lines. */}
+      <div className="mx-[116px] h-px bg-charcoal/10 sm:mx-[217px]" />
+      <div className="h-4 sm:h-[22px]" aria-hidden="true" />
     </section>
   );
 }
