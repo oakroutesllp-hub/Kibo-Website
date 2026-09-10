@@ -146,20 +146,33 @@ export function TrustedBySection({
           a little more definition") — same inset technique as the top
           divider, mirroring it: sits exactly 48px/58px below the
           logos row (matching the new top gap, see that divider's own
-          comment), with the original 64px/80px bottom breathing room
-          reappearing below IT, split as a plain 16px/22px spacer here
-          — the same 0.5x this pass took from the top side, given back
-          on the bottom side, so the section's own total height versus
-          Custom below is unchanged from before this whole pass, only
-          redistributed. Still inside this component, same as
-          everything else — off when `show` is false, no separate
-          on/off spacing case to maintain (see this function's own
-          top-level comment). Width matched to the top divider's own
+          comment). Still inside this component, same as everything
+          else — off when `show` is false, no separate on/off spacing
+          case to maintain (see this function's own top-level
+          comment). Width matched to the top divider's own
           `mx-[116px] sm:mx-[217px]` reduction (see that divider's own
           comment for the exact numbers) — same class, kept in sync
           deliberately, not two independently-tuned lines. */}
       <div className="mx-[116px] h-px bg-charcoal/10 sm:mx-[217px]" />
-      <div className="h-4 sm:h-[22px]" aria-hidden="true" />
+      {/* Spacer between this divider and Custom's own heading
+          ("From reference to finished garment") — originally the
+          plain 16px/22px left over once the top redistribution pass
+          (above) preserved the section's total footprint exactly.
+          Bumped to 1.5x the REAL measured gap, 10 Sep 2026 (owner,
+          live: "it's kind of looking crowded... increase that gap to
+          one point five x of what it is currently") — measured the
+          actual rendered gap (divider bottom → Custom's heading top,
+          which also includes Custom's OWN unrelated top padding, not
+          just this spacer) before changing anything: 48px mobile,
+          66px desktop. Target 72px/99px means this spacer specifically
+          grows by the delta (+24px/+33px), landing on 40px/55px —
+          Custom's own padding is untouched, so Products→Custom
+          spacing when Trusted By is OFF is completely unaffected; this
+          spacer lives inside the same `if (!show) return null` gate as
+          everything else in this component, so it (and both dividers)
+          disappear together the instant the section is switched off in
+          Sanity — nothing here can be left behind. */}
+      <div className="h-10 sm:h-[55px]" aria-hidden="true" />
     </section>
   );
 }
