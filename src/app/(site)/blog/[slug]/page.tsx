@@ -65,7 +65,15 @@ export default async function BlogPostPage(props: PageProps<"/blog/[slug]">) {
 
       {/* `text-h1`/`text-body` (29 Aug 2026, revised type scale) replacing
           `text-3xl`/`text-base`. */}
-      <h1 className="text-h1 font-semibold text-charcoal">{article.title}</h1>
+      {/* `text-h1` → `text-h2` (40px → 30px), 10 Sep 2026, owner: "reduce
+          the size of the title by one... bump it down by one size" —
+          per the standing "bump up/down lands on the next named token"
+          rule, one step down from `text-h1` on the type scale (h1 40 /
+          h2 30 / h3 18 / body 15 / support 13 / micro 11) is `text-h2`.
+          This is the individual POST page's own heading, a different
+          element from BlogGrid.tsx's card title (already bumped down a
+          separate step, same day, from text-h3 to text-body). */}
+      <h1 className="text-h2 font-semibold text-charcoal">{article.title}</h1>
 
       <div className="flex flex-col gap-4 text-body leading-relaxed text-charcoal/80">
         <PortableText value={article.body} />
