@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
+import { track } from "@vercel/analytics";
 import { Modal } from "@/components/Modal";
 import { getStoredLead, storeLead } from "@/lib/leadStorage";
 import { useDownloadCatalog } from "@/components/DownloadCatalogProvider";
@@ -69,6 +70,15 @@ export function TalkToKiboModal({ onClose, label }: { onClose: () => void; label
       }
 
       storeLead({ name, email, phone, productInterest });
+      // Goal tracking, 10 Sep 2026 (owner: Vercel Analytics only ever
+      // counted page VIEWS, no way to see whether a visit actually
+      // became a real enquiry) — a custom Vercel Analytics event, shows
+      // up in the same Analytics tab (Events, once real submissions
+      // start coming in) as a genuine conversion count, not just a
+      // traffic number. `productInterest` included as a property so
+      // it's visible per-event which product people are actually
+      // asking about, not just a raw count.
+      track("Enquiry Submitted", { productInterest: productInterest || "(not specified)" });
       setSubmitted(true);
     } catch {
       setError("Something went wrong sending your enquiry — please try again, or reach us directly.");

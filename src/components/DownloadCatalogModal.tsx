@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, type FormEvent } from "react";
+import { track } from "@vercel/analytics";
 import { Modal } from "@/components/Modal";
 import { getStoredLead, storeLead } from "@/lib/leadStorage";
 
@@ -90,6 +91,15 @@ export function DownloadCatalogModal({
     });
     if (!res.ok) throw new Error("Request failed");
     storeLead({ name, email });
+    // Goal tracking, 10 Sep 2026 — see TalkToKiboModal.tsx's own
+    // comment for the full reasoning. Covers both paths that call this
+    // function (the manual gate form, and the known-lead auto-submit
+    // effect below) — deliberately NOT added to the `requireGate: false`
+    // branch (no fetch happens there at all, and there's no real PDF to
+    // actually download yet per this file's own top comment, so an
+    // event on every modal open would over-count "downloads" that
+    // didn't really happen).
+    track("Catalog Download Submitted");
   };
 
   // Manual path — the plain gate form's submit, and the retry button
