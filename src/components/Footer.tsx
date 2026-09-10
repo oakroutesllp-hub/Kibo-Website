@@ -134,8 +134,19 @@ export function Footer({ settings }: { settings: SiteSettingsContent }) {
             centered no longer reads as intentional now). Simplified to a
             single `items-start`/`text-left` pair with no `lg:` override
             since left is now the reading at every breakpoint, not just
-            `lg` and up. */}
-        <div className="flex flex-col items-start gap-3 text-left md:col-span-2 lg:col-span-2">
+            `lg` and up.
+
+            **Split again, 10 Sep 2026** (owner, live on mobile: "on the
+            website, it is left aligned, leave it the way it is on the
+            website. But for mobile, I want this to be centered just
+            like Navigate/Buyers/Contact/Connect") — desktop (`lg`+)
+            keeps the left-aligned call directly above unchanged; below
+            `lg`, this column goes back to centered, matching the
+            31 Aug behavior (and matching its four sibling columns,
+            which are centered at every breakpoint) — this is now the
+            one column whose alignment genuinely differs by breakpoint,
+            not a full revert of the desktop decision. */}
+        <div className="flex flex-col items-center gap-3 text-center md:col-span-2 lg:col-span-2 lg:items-start lg:text-left">
           {/* Sized to match Nav.tsx's logo exactly (30 Aug 2026, owner,
               on a screenshot of this column: "reduce logo size to match
               with top bar") — was a flat, non-responsive `width={112}`;
