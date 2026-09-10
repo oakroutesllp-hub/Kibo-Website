@@ -59,8 +59,21 @@ export function CertificationsSection({
           background-color change instead (see that file) — reused
           here rather than a full-bleed `border-t`, per the owner's own
           standing preference against edge-to-edge lines on this site
-          ("looks very very flaky"). */}
-      <div className="mx-24 h-px bg-charcoal/10" />
+          ("looks very very flaky").
+          `mx-24` → `mx-[127px] sm:mx-[279px]`, 10 Sep 2026 (owner:
+          "make it the same length as other horizontal accent lines
+          above Our Story, above Built for the Long Run") — matches
+          the shared width every other divider added/reduced this same
+          week already uses (TrustedBySection.tsx's pair,
+          SupplySection.tsx's, CTANudgeSection.tsx's) — this one had
+          simply never been brought into that pass, still carrying its
+          original 4 Sep value. Still inside this component's own
+          `if (!show || certifications.length === 0) return null` gate
+          (unchanged, right above) — owner confirmed live that it
+          already disappears correctly when the section is off; this
+          edit doesn't move it outside that gate or touch the
+          condition, so that stays true. */}
+      <div className="mx-[127px] h-px bg-charcoal/10 sm:mx-[279px]" />
       <div className="mx-auto flex w-full max-w-[1728px] flex-col items-center gap-8 px-6 py-12 sm:px-10 sm:py-16">
         {/* Heading matched exactly to Long Run/Supply/Testimonials' own
             treatment, 4 Sep 2026 (owner: "certifications text cannot be
