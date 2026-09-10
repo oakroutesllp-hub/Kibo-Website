@@ -29,6 +29,15 @@ export const catalogType = defineType({
         "Shown in place of the gray placeholder card on the Catalog page — ideally the catalog's actual front cover. Leave empty to keep the placeholder even after the PDF above is uploaded.",
       type: "image",
       options: { hotspot: true },
+      fields: [
+        defineField({
+          name: "alt",
+          title: "Alt text (optional)",
+          description:
+            'Added 10 Sep 2026 — overrides the automatic default ("KIBO Catalog") whenever filled in. Leave blank to keep using that default. To deliberately have NO alt text at all, type a single hyphen ( - ) instead of leaving it blank.',
+          type: "string",
+        }),
+      ],
     }),
   ],
   preview: {

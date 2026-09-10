@@ -93,9 +93,21 @@ import type {
 // is only in how soon this SITE re-fetches, not in whether the edit
 // saved.
 
-function resolveImage(image: Image | undefined, alt: string): ContentImage {
+// `image.alt` — the nested per-image "Alt text (optional)" Sanity field
+// added 10 Sep 2026 (site-wide alt-text pass). When filled in, it
+// overrides the caller-supplied coded default (`alt` below) entirely;
+// typing a single hyphen ( - ) is the documented way to deliberately
+// force blank/no alt text, distinct from leaving the field empty
+// (which keeps the coded default). Left blank (`undefined`/`""`),
+// behavior is exactly what it was before this field existed.
+function overrideAlt(fieldValue: string | undefined, fallback: string): string {
+  if (fieldValue === "-") return "";
+  return fieldValue || fallback;
+}
+
+function resolveImage(image: (Image & { alt?: string }) | undefined, alt: string): ContentImage {
   if (!image?.asset) return null;
-  return { url: urlForImage(image).width(1600).url(), alt };
+  return { url: urlForImage(image).width(1600).url(), alt: overrideAlt(image.alt, alt) };
 }
 
 // Generalized from `resolveHeroMedia`, 30 Aug 2026, once the same
@@ -110,26 +122,38 @@ function resolveImage(image: Image | undefined, alt: string): ContentImage {
 // image since uploading several images is a deliberate multi-step
 // choice, unlikely to be left over by accident the way a single image
 // field might be.
+// `slotAltText` — added 10 Sep 2026, the shared top-level "Alt text /
+// description (optional)" Sanity field that exists once per media slot
+// (Hero, We Started by Listening, Where Apparel Runs Deep, The Person
+// Behind KIBO). One shared field, not one nested per image/video/
+// carousel sub-field, because only ONE of those three ever actually
+// renders at a time (see the precedence rule below) and this field
+// describes whichever that turns out to be. Same override-when-present,
+// hyphen-means-deliberately-blank convention as `resolveImage`'s own
+// per-image `alt` field.
 function resolveMedia(
   image: Image | undefined,
   videoUrl: string | undefined,
   alt: string,
   carouselImages?: Image[],
+  slotAltText?: string,
 ): Media {
+  const effectiveAlt = overrideAlt(slotAltText, alt);
   if (videoUrl) {
     return {
       type: "video",
       url: videoUrl,
-      poster: resolveImage(image, alt)?.url ?? null,
+      poster: resolveImage(image, effectiveAlt)?.url ?? null,
+      alt: effectiveAlt,
     };
   }
   if (carouselImages?.length) {
     const resolved = carouselImages
-      .map((img, i) => resolveImage(img, `${alt} — image ${i + 1}`))
+      .map((img, i) => resolveImage(img, `${effectiveAlt} — image ${i + 1}`))
       .filter((img): img is NonNullable<ContentImage> => img !== null);
     if (resolved.length) return { type: "carousel", images: resolved };
   }
-  const resolved = resolveImage(image, alt);
+  const resolved = resolveImage(image, effectiveAlt);
   return resolved ? { type: "image", url: resolved.url, alt: resolved.alt } : null;
 }
 
@@ -164,6 +188,7 @@ type RawHomepage = {
   heroMedia?: Image;
   heroVideoUrl?: string;
   heroCarousel?: Image[];
+  heroAltText?: string;
   seo?: RawSeo;
 };
 
@@ -171,6 +196,7 @@ const homepageQuery = `*[_type == "homepage"][0]{
   heroHeading, heroSubheading, heroMedia,
   "heroVideoUrl": heroVideo.asset->url,
   heroCarousel,
+  heroAltText,
   seo
 }`;
 
@@ -204,6 +230,7 @@ export async function getHomepage(): Promise<HomepageContent> {
           doc.heroVideoUrl,
           doc.heroHeading || "KIBO",
           doc.heroCarousel,
+          doc.heroAltText,
         ) ?? sampleHomepage.heroMedia,
       seo: resolveSeo(doc.seo),
     };
@@ -216,18 +243,21 @@ type RawOurStory = {
   listeningMedia?: Image;
   listeningVideoUrl?: string;
   listeningCarousel?: Image[];
+  listeningAltText?: string;
   tiruppurMedia?: Image;
   tiruppurVideoUrl?: string;
   tiruppurCarousel?: Image[];
+  tiruppurAltText?: string;
   founderMedia?: Image;
   founderVideoUrl?: string;
   founderCarousel?: Image[];
+  founderAltText?: string;
 };
 
 const ourStoryQuery = `*[_type == "ourStory"][0]{
-  listeningMedia, "listeningVideoUrl": listeningVideo.asset->url, listeningCarousel,
-  tiruppurMedia, "tiruppurVideoUrl": tiruppurVideo.asset->url, tiruppurCarousel,
-  founderMedia, "founderVideoUrl": founderVideo.asset->url, founderCarousel
+  listeningMedia, "listeningVideoUrl": listeningVideo.asset->url, listeningCarousel, listeningAltText,
+  tiruppurMedia, "tiruppurVideoUrl": tiruppurVideo.asset->url, tiruppurCarousel, tiruppurAltText,
+  founderMedia, "founderVideoUrl": founderVideo.asset->url, founderCarousel, founderAltText
 }`;
 
 // `/our-story` page media — see OurStoryContent's own comment. Same
@@ -247,13 +277,13 @@ export async function getOurStory(): Promise<OurStoryContent> {
 
     return {
       listeningMedia:
-        resolveMedia(doc.listeningMedia, doc.listeningVideoUrl, "", doc.listeningCarousel) ??
+        resolveMedia(doc.listeningMedia, doc.listeningVideoUrl, "", doc.listeningCarousel, doc.listeningAltText) ??
         sampleOurStory.listeningMedia,
       tiruppurMedia:
-        resolveMedia(doc.tiruppurMedia, doc.tiruppurVideoUrl, "", doc.tiruppurCarousel) ??
+        resolveMedia(doc.tiruppurMedia, doc.tiruppurVideoUrl, "", doc.tiruppurCarousel, doc.tiruppurAltText) ??
         sampleOurStory.tiruppurMedia,
       founderMedia:
-        resolveMedia(doc.founderMedia, doc.founderVideoUrl, "", doc.founderCarousel) ??
+        resolveMedia(doc.founderMedia, doc.founderVideoUrl, "", doc.founderCarousel, doc.founderAltText) ??
         sampleOurStory.founderMedia,
     };
   } catch {
@@ -537,7 +567,7 @@ export async function getTestimonials(): Promise<TestimonialContent[]> {
 // unconfigured, on error, or when nothing's published yet.
 type RawCertification = {
   name: string;
-  icon?: Image;
+  icon?: Image & { alt?: string };
   verificationUrl?: string;
 };
 
@@ -565,7 +595,7 @@ export async function getCertifications(): Promise<CertificationContent[]> {
       // logo-strip size did (see CertificationsSection.tsx), nowhere
       // near the 1600px `resolveImage` callers elsewhere in this file
       // use for full-width photography.
-      icon: doc.icon?.asset ? { url: urlForImage(doc.icon).width(200).url(), alt: doc.name } : null,
+      icon: doc.icon?.asset ? { url: urlForImage(doc.icon).width(200).url(), alt: overrideAlt(doc.icon.alt, doc.name) } : null,
       verificationUrl: doc.verificationUrl,
     }));
   } catch {
@@ -586,7 +616,7 @@ export async function getCertifications(): Promise<CertificationContent[]> {
 // there's no text fallback to show in its place).
 type RawCustomer = {
   name?: string;
-  logo?: Image;
+  logo?: Image & { alt?: string };
   // Real pixel dimensions of the uploaded file, straight from
   // Sanity's own asset metadata — not something this codebase
   // computes; needed so TrustedByRow.tsx can render every logo at a
@@ -629,7 +659,7 @@ export async function getCustomers(): Promise<CustomerContent[]> {
                 // left blank (a visual caption is optional; an accessible
                 // description isn't) — falls back to a generic label
                 // rather than an empty string.
-                alt: doc.name || "Company logo",
+                alt: overrideAlt(doc.logo.alt, doc.name || "Company logo"),
                 width: doc.logoDimensions.width,
                 height: doc.logoDimensions.height,
               }

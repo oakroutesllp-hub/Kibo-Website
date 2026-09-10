@@ -66,6 +66,15 @@ export const customerType = defineType({
       type: "image",
       options: { hotspot: true },
       validation: (rule) => rule.required(),
+      fields: [
+        defineField({
+          name: "alt",
+          title: "Alt text (optional)",
+          description:
+            "Added 10 Sep 2026 — overrides the automatic default (the Company name field above, or \"Company logo\" if that's blank too) whenever filled in. Leave blank to keep using Company name automatically.",
+          type: "string",
+        }),
+      ],
     }),
     defineField({
       name: "websiteUrl",

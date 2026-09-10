@@ -1,9 +1,14 @@
 import { Fragment } from "react";
 import Image from "next/image";
+import dynamic from "next/dynamic";
 import { LazyBackgroundVideo } from "@/components/LazyBackgroundVideo";
-import { MediaCarousel } from "@/components/MediaCarousel";
+import { LazyMount } from "@/components/LazyMount";
 import type { Media, OurStoryCopyContent } from "@/lib/content";
 import { TIRUPPUR_PHOTO } from "@/lib/tiruppurSection";
+
+// Genuinely deferred, 10 Sep 2026 (mobile performance pass) — see
+// WeStartedByListeningSection.tsx's own comment on this same component.
+const MediaCarousel = dynamic(() => import("@/components/MediaCarousel").then((m) => m.MediaCarousel));
 
 // "The Tiruppur Story" — second section of `/our-story`, directly below
 // We Started by Listening, at anchor `#tiruppur`.
@@ -297,10 +302,24 @@ export function TiruppurStorySection({
           <LazyBackgroundVideo
             src={media.url}
             poster={media.poster ?? undefined}
+            alt={media.alt}
             className="absolute inset-0 h-full w-full"
           />
         ) : media?.type === "carousel" ? (
-          <MediaCarousel images={media.images} sizes="100vw" intervalSeconds={carouselSeconds} />
+          <LazyMount
+            className="absolute inset-0 h-full w-full"
+            placeholder={
+              <Image
+                src={media.images[0].url}
+                alt={media.images[0].alt}
+                fill
+                sizes="100vw"
+                className="object-cover"
+              />
+            }
+          >
+            <MediaCarousel images={media.images} sizes="100vw" intervalSeconds={carouselSeconds} />
+          </LazyMount>
         ) : (
           <div
             aria-hidden="true"

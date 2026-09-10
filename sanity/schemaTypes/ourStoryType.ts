@@ -44,6 +44,17 @@ export const ourStoryType = defineType({
         "Optional — up to 6 images that scroll automatically. Used if the video above is empty; takes priority over the single image above if both are set.",
     }),
     defineField({
+      // Added 10 Sep 2026, part of the site-wide alt-text pass. One
+      // SHARED field per slot (image/video/carousel), same reasoning as
+      // homepageType.ts's own `heroAltText` — covers whichever of the
+      // three actually ends up showing.
+      name: "listeningAltText",
+      title: "We Started by Listening — alt text / description (optional)",
+      description:
+        'Describes this image, video, or carousel — whichever one is actually showing. Currently there\'s no automatic default at all (blank) if you leave this empty, so filling it in is the only way this slot gets a description. To deliberately confirm "no description, on purpose," type a single hyphen ( - ) instead of leaving it blank — same effect, but signals it was a choice, not an oversight.',
+      type: "string",
+    }),
+    defineField({
       name: "tiruppurMedia",
       title: "Where Apparel Runs Deep — image",
       type: "image",
@@ -68,6 +79,13 @@ export const ourStoryType = defineType({
         "Optional — up to 6 images that scroll automatically. Used if the video above is empty; takes priority over the single image above if both are set.",
     }),
     defineField({
+      name: "tiruppurAltText",
+      title: "Where Apparel Runs Deep — alt text / description (optional)",
+      description:
+        'Describes this image, video, or carousel — whichever one is actually showing. Currently there\'s no automatic default at all (blank) if you leave this empty, so filling it in is the only way this slot gets a description. To deliberately confirm "no description, on purpose," type a single hyphen ( - ) instead of leaving it blank — same effect, but signals it was a choice, not an oversight.',
+      type: "string",
+    }),
+    defineField({
       name: "founderMedia",
       title: "The Person Behind KIBO — image",
       type: "image",
@@ -90,6 +108,13 @@ export const ourStoryType = defineType({
       validation: (Rule) => Rule.max(6),
       description:
         "Optional — up to 6 images that scroll automatically. Used if the video above is empty; takes priority over the single image above if both are set.",
+    }),
+    defineField({
+      name: "founderAltText",
+      title: "The Person Behind KIBO — alt text / description (optional)",
+      description:
+        'Describes this image, video, or carousel — whichever one is actually showing. Currently there\'s no automatic default at all (blank) if you leave this empty, so filling it in is the only way this slot gets a description. To deliberately confirm "no description, on purpose," type a single hyphen ( - ) instead of leaving it blank — same effect, but signals it was a choice, not an oversight.',
+      type: "string",
     }),
   ],
   preview: {

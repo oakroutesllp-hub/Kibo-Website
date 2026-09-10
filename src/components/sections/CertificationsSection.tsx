@@ -1,6 +1,12 @@
 import { CertificationsRow } from "@/components/CertificationsRow";
 import type { CertificationContent } from "@/lib/content";
 
+// **Deliberately a plain static import, not `next/dynamic`** — see
+// TestimonialsSection.tsx's own comment for the full reasoning (tried
+// during the 10 Sep 2026 mobile performance pass, reverted the same
+// day: no real deferral benefit, and this section's real icon `alt`
+// text needs to stay in the initial HTML for indexing).
+
 // Certifications — new Home section, 4 Sep 2026, owner: "let's build
 // the certifications section" (bundled with Brands/Testimonials as
 // the day's main build). Hidden until both `showCertifications` (Site

@@ -1,6 +1,12 @@
 import { TrustedByRow } from "@/components/TrustedByRow";
 import type { CustomerContent } from "@/lib/content";
 
+// **Deliberately a plain static import, not `next/dynamic`** — see
+// TestimonialsSection.tsx's own comment for the full reasoning (tried
+// during the 10 Sep 2026 mobile performance pass, reverted the same
+// day: no real deferral benefit, and this section's real logo `alt`
+// text needs to stay in the initial HTML for indexing).
+
 // "Trusted by" — new Home section, 4 Sep 2026. Hidden until both
 // `showTrustedBy` (Site Settings) is on AND at least one real Customer
 // document exists — same "won't go live now" toggle pattern as Blog/

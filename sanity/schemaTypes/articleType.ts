@@ -34,6 +34,15 @@ export const articleType = defineType({
       title: "Cover image",
       type: "image",
       options: { hotspot: true },
+      fields: [
+        defineField({
+          name: "alt",
+          title: "Alt text (optional)",
+          description:
+            "Added 10 Sep 2026 — overrides the automatic default (this post's own Title, above) whenever filled in. Leave blank to keep using the title automatically.",
+          type: "string",
+        }),
+      ],
     }),
     defineField({
       name: "excerpt",

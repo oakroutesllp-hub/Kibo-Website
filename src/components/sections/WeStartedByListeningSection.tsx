@@ -1,8 +1,25 @@
 import Image from "next/image";
+import dynamic from "next/dynamic";
+import { LazyMount } from "@/components/LazyMount";
 import { MediaPlaceholder } from "@/components/MediaPlaceholder";
-import { MediaCarousel } from "@/components/MediaCarousel";
 import { BackToHomeLink } from "@/components/BackToHomeLink";
 import type { Media, OurStoryCopyContent } from "@/lib/content";
+
+// Genuinely deferred, 10 Sep 2026 (mobile performance pass) — unlike
+// Testimonials/TrustedBy/Certifications (see those sections' own
+// comments on why they were reverted to plain imports), this section
+// isn't the first thing on the page even when it IS the first "Our
+// Story" section (Hero always comes first), so a real
+// IntersectionObserver-gated lazy-mount pays off here. `LazyMount`
+// keeps a real, fully-formed image (the carousel's own first slide,
+// same alt text) in the initial HTML the whole time — only the extra
+// interactive chrome (arrows/dots/auto-advance) mounts once the visitor
+// actually scrolls near it, so nothing is missing for a crawler or a
+// no-JS visitor. `next/dynamic` here (no `ssr: false`, not allowed from
+// this Server Component) additionally keeps MediaCarousel's own code
+// out of the main bundle entirely until `LazyMount` decides to render
+// it.
+const MediaCarousel = dynamic(() => import("@/components/MediaCarousel").then((m) => m.MediaCarousel));
 
 // "We Started by Listening" — first section of the new `/our-story`
 // page, at anchor `#listening`. KIBO_Brand_and_Copy_Direction.md, "Our
@@ -344,13 +361,27 @@ export function WeStartedByListeningSection({
               <video
                 src={media.url}
                 poster={media.poster ?? undefined}
+                aria-label={media.alt || undefined}
                 muted
                 playsInline
                 preload="metadata"
                 className="h-full w-full object-cover"
               />
             ) : media?.type === "carousel" ? (
-              <MediaCarousel images={media.images} sizes="(min-width: 1024px) 577px, 100vw" intervalSeconds={carouselSeconds} />
+              <LazyMount
+                className="absolute inset-0 h-full w-full"
+                placeholder={
+                  <Image
+                    src={media.images[0].url}
+                    alt={media.images[0].alt}
+                    fill
+                    sizes="(min-width: 1024px) 577px, 100vw"
+                    className="object-cover"
+                  />
+                }
+              >
+                <MediaCarousel images={media.images} sizes="(min-width: 1024px) 577px, 100vw" intervalSeconds={carouselSeconds} />
+              </LazyMount>
             ) : media?.type === "image" ? (
               // `sizes` (2 Sep 2026, performance pass) — this panel is
               // `lg:w-[70%]` of one column of a 2-col grid inside

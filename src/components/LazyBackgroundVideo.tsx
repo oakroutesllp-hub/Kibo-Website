@@ -33,10 +33,14 @@ import { useEffect, useRef, useState } from "react";
 export function LazyBackgroundVideo({
   src,
   poster,
+  alt,
   className,
 }: {
   src: string;
   poster?: string;
+  // Added 10 Sep 2026, site-wide alt-text pass — passed through as the
+  // `<video>` element's `aria-label` (video has no native `alt`).
+  alt?: string;
   className?: string;
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -76,7 +80,7 @@ export function LazyBackgroundVideo({
   return (
     <div ref={containerRef} className={className}>
       {shouldLoad ? (
-        <video src={src} poster={poster} autoPlay muted loop playsInline className="h-full w-full object-cover" />
+        <video src={src} poster={poster} aria-label={alt || undefined} autoPlay muted loop playsInline className="h-full w-full object-cover" />
       ) : (
         // Poster shown as a plain background-image div while waiting to
         // intersect — same visual result as the video's own `poster`

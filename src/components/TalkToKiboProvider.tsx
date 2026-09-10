@@ -1,7 +1,21 @@
 "use client";
 
 import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from "react";
-import { TalkToKiboModal } from "@/components/TalkToKiboModal";
+import dynamic from "next/dynamic";
+
+// Code-split, 10 Sep 2026 (mobile performance pass) — the modal's own
+// JS (form fields, validation, submit handling) was previously bundled
+// into every page's initial load via this file's static import, even
+// though `{isOpen && <TalkToKiboModal ... />}` below never actually
+// renders it until a visitor clicks a "Get in touch" button somewhere.
+// `ssr: false` is safe (and the whole point) here — unlike the
+// Server-Component call sites elsewhere in this pass, this file is
+// already a Client Component ("use client" above), and the modal
+// itself has nothing to server-render: it doesn't exist until a click
+// creates it client-side.
+const TalkToKiboModal = dynamic(() => import("@/components/TalkToKiboModal").then((m) => m.TalkToKiboModal), {
+  ssr: false,
+});
 
 // Site-wide "Talk to KIBO" enquiry modal — shared open/close state so
 // every CTA that should open it (the secondary nudge on Products, and

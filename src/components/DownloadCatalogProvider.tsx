@@ -1,7 +1,14 @@
 "use client";
 
 import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from "react";
-import { DownloadCatalogModal } from "@/components/DownloadCatalogModal";
+import dynamic from "next/dynamic";
+
+// Code-split, 10 Sep 2026 (mobile performance pass) — see
+// TalkToKiboProvider.tsx's own comment; same reasoning, same pattern.
+const DownloadCatalogModal = dynamic(
+  () => import("@/components/DownloadCatalogModal").then((m) => m.DownloadCatalogModal),
+  { ssr: false },
+);
 
 // Site-wide "Download Catalog" modal — mirrors TalkToKiboProvider.tsx
 // exactly (same shared open/close context pattern), added 30 Aug 2026 as

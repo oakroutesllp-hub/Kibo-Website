@@ -79,6 +79,15 @@ export const certificationType = defineType({
       type: "image",
       options: { hotspot: true },
       validation: (rule) => rule.required(),
+      fields: [
+        defineField({
+          name: "alt",
+          title: "Alt text (optional)",
+          description:
+            'Added 10 Sep 2026, part of a site-wide pass adding an optional, owner-editable alt-text field to every image. Note specific to this one: the icon currently renders as purely decorative on the live page (the certification\'s name is already shown as real visible text right next to it, so a screen reader doesn\'t need the icon separately described — this matches standard accessibility practice for an icon+label pair). Filling this in is still fine for your own documentation/future reference, but it has no visible effect on the live site today.',
+          type: "string",
+        }),
+      ],
     }),
     defineField({
       name: "verificationUrl",

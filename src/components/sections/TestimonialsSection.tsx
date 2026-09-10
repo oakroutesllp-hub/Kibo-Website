@@ -2,6 +2,20 @@ import { TestimonialsCarousel } from "@/components/TestimonialsCarousel";
 import { TestimonialsDesktopCarousel } from "@/components/TestimonialsDesktopCarousel";
 import type { TestimonialContent } from "@/lib/content";
 
+// **Deliberately plain static imports, not `next/dynamic`** — tried
+// during the 10 Sep 2026 mobile performance pass and reverted the same
+// day: Turbopack already splits each `"use client"` component into its
+// own chunk automatically, so wrapping in `next/dynamic` (without
+// `ssr: false`, which isn't allowed from this Server Component) added
+// no real deferral — confirmed by inspecting the actual built chunk,
+// which contained the real component code, not a lazy-loader stub. A
+// genuine IntersectionObserver-based lazy-mount (see `LazyMount.tsx`,
+// used for MediaCarousel) WOULD defer this for real, but was
+// deliberately NOT applied here: these testimonials' real quote text is
+// exactly the kind of content that needs to be in the initial HTML for
+// a crawler to index, and a lazy-mount's placeholder swap risks that —
+// see `LazyMount.tsx`'s own comment for the full reasoning.
+
 // Desktop shows a plain static row for 3 or fewer testimonials, but
 // switches to TestimonialsDesktopCarousel's sliding window once there
 // are MORE than this — see that component's own comment for the full

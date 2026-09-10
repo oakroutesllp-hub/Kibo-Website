@@ -1,8 +1,15 @@
 import Image from "next/image";
 import Link from "next/link";
-import { MediaPlaceholder } from "@/components/MediaPlaceholder";
 import { MediaCarousel } from "@/components/MediaCarousel";
+import { MediaPlaceholder } from "@/components/MediaPlaceholder";
 import type { HomepageContent } from "@/lib/content";
+
+// **No lazy-mount here, unlike Our Story's 3 MediaCarousel call sites**
+// (see `LazyMount.tsx`) — Hero is the very first thing on the page, so
+// an IntersectionObserver watching it would just fire immediately on
+// load anyway, adding a placeholder-swap step for zero real deferral.
+// The lazy-mount treatment only pays off for content genuinely below
+// the fold.
 
 // Website Architecture §01 HERO, rebuilt taller/more immersive per
 // KIBO_Brand_and_Copy_Direction.md "Hero height & top nav treatment"
@@ -38,6 +45,7 @@ export function Hero({
           <video
             src={content.heroMedia.url}
             poster={content.heroMedia.poster ?? undefined}
+            aria-label={content.heroMedia.alt || undefined}
             className="h-full w-full object-cover"
             autoPlay
             muted

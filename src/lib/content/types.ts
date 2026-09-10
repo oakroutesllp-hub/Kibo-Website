@@ -25,8 +25,14 @@ export type ContentImage = {
 // or video, I would like to have an option where multiple pictures can
 // be scrolled, like a carousel... maybe five, six images") — a bare
 // array of up to 6 images, rendered by the new MediaCarousel component.
+// `alt` on the video variant added 10 Sep 2026, part of the site-wide
+// alt-text pass — used as the `<video>` element's `aria-label` (video
+// has no native `alt` concept the way `<img>` does). Comes from each
+// slot-family's own shared "Alt text / description" Sanity field (see
+// resolveMedia's own comment), same value that would've been the
+// image's alt had an image rendered instead.
 export type Media =
-  | { type: "video"; url: string; poster: string | null }
+  | { type: "video"; url: string; poster: string | null; alt: string }
   | { type: "carousel"; images: { url: string; alt: string }[] }
   | { type: "image"; url: string; alt: string }
   | null;

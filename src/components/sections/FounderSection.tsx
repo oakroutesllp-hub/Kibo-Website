@@ -1,7 +1,12 @@
 import Image from "next/image";
+import dynamic from "next/dynamic";
+import { LazyMount } from "@/components/LazyMount";
 import { MediaPlaceholder } from "@/components/MediaPlaceholder";
-import { MediaCarousel } from "@/components/MediaCarousel";
 import type { Media, OurStoryCopyContent } from "@/lib/content";
+
+// Genuinely deferred, 10 Sep 2026 (mobile performance pass) — see
+// WeStartedByListeningSection.tsx's own comment on this same component.
+const MediaCarousel = dynamic(() => import("@/components/MediaCarousel").then((m) => m.MediaCarousel));
 
 // "The Person Behind KIBO" — third section of `/our-story`, directly
 // below The Tiruppur Story, at anchor `#founder`.
@@ -251,13 +256,27 @@ export function FounderSection({
               <video
                 src={media.url}
                 poster={media.poster ?? undefined}
+                aria-label={media.alt || undefined}
                 muted
                 playsInline
                 preload="metadata"
                 className="h-full w-full object-cover"
               />
             ) : media?.type === "carousel" ? (
-              <MediaCarousel images={media.images} sizes="(min-width: 1024px) 577px, 100vw" intervalSeconds={carouselSeconds} />
+              <LazyMount
+                className="absolute inset-0 h-full w-full"
+                placeholder={
+                  <Image
+                    src={media.images[0].url}
+                    alt={media.images[0].alt}
+                    fill
+                    sizes="(min-width: 1024px) 577px, 100vw"
+                    className="object-cover"
+                  />
+                }
+              >
+                <MediaCarousel images={media.images} sizes="(min-width: 1024px) 577px, 100vw" intervalSeconds={carouselSeconds} />
+              </LazyMount>
             ) : media?.type === "image" ? (
               // `sizes` (2 Sep 2026, performance pass) — same panel
               // shape as WeStartedByListeningSection.tsx's own image

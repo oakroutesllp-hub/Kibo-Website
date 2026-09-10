@@ -52,6 +52,19 @@ export const homepageType = defineType({
         "Optional — up to 6 images that scroll automatically (visitors can also use the arrows/dots). Used if Hero video above is empty; takes priority over the single Hero image above if both are set.",
     }),
     defineField({
+      // Added 10 Sep 2026, part of the site-wide alt-text pass. One
+      // SHARED field for the whole Hero slot, not nested inside Hero
+      // image/video/carousel individually — because whichever of those
+      // three actually ends up showing (per the precedence rule above:
+      // video, then carousel, then image) is decided by what you've
+      // uploaded, and this one field covers all three automatically.
+      name: "heroAltText",
+      title: "Alt text / description (optional)",
+      description:
+        'Describes the Hero image, video, or carousel — whichever one is actually showing. Overrides the automatic default (currently just the page title, "KIBO") whenever filled in. Leave blank to keep using that default. To deliberately have NO description at all, type a single hyphen ( - ) instead of leaving it blank.',
+      type: "string",
+    }),
+    defineField({
       name: "seo",
       title: "SEO",
       type: "seo",
