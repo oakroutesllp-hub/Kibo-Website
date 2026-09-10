@@ -40,11 +40,30 @@ export function BlogGrid({ articles }: { articles: ArticleContent[] }) {
   }, [articles]);
 
   const [activeCategory, setActiveCategory] = useState("All");
+  // Search, 10 Sep 2026 (owner: "the one thing I would like to add to
+  // the blog section is search... people can search by keywords") —
+  // matches title OR excerpt, case-insensitive substring, combined
+  // with the category tabs (both filters apply together, not either/
+  // or) — a visitor on the "Company News" tab searching "certification"
+  // should still only see Company News posts that match, not jump back
+  // to "All". Client-side, same as the category filter already was —
+  // fine at blog-post volumes; would move server-side (or to a real
+  // search index) long before that stopped being true.
+  const [query, setQuery] = useState("");
 
-  const filtered =
+  const categoryFiltered =
     activeCategory === "All"
       ? articles
       : articles.filter((a) => (a.category || UNCATEGORIZED) === activeCategory);
+
+  const trimmedQuery = query.trim().toLowerCase();
+  const filtered = trimmedQuery
+    ? categoryFiltered.filter(
+        (a) =>
+          a.title.toLowerCase().includes(trimmedQuery) ||
+          (a.excerpt || "").toLowerCase().includes(trimmedQuery),
+      )
+    : categoryFiltered;
 
   // Tabs only make sense with something to filter between — a single
   // category (or zero posts) has nothing for "All" to differ from, so
@@ -53,6 +72,43 @@ export function BlogGrid({ articles }: { articles: ArticleContent[] }) {
 
   return (
     <div className="flex w-full flex-col items-center gap-10">
+      {/* Search input, same day as the tabs above — deliberately its
+          own row above the tabs (not squeezed alongside them): the
+          reference doc's Stanley/Stella layout paired search with a
+          3-column grid, same count this page already uses, so no
+          layout change needed there, only a new control. `max-w-sm`
+          keeps it from stretching full-width and looking like the
+          page's main input on a wide desktop viewport — it's a filter,
+          not the page's primary action. */}
+      <div className="w-full max-w-sm">
+        <label htmlFor="blog-search" className="sr-only">
+          Search posts
+        </label>
+        <div className="relative">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={2}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+            className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-charcoal/40"
+          >
+            <circle cx="11" cy="11" r="7" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+          </svg>
+          <input
+            id="blog-search"
+            type="search"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Search posts…"
+            className="w-full rounded-full border border-charcoal/15 bg-background py-2.5 pl-10 pr-4 text-support text-charcoal placeholder:text-charcoal/40 focus:border-sage-green focus:outline-none"
+          />
+        </div>
+      </div>
+
       {showTabs && (
         <div
           role="tablist"
@@ -74,7 +130,20 @@ export function BlogGrid({ articles }: { articles: ArticleContent[] }) {
                 // the four values this replaces). All three tabs share
                 // this one class string, so they stay matched to each
                 // other exactly, same as before.
-                className={`flex flex-col items-center gap-1.5 text-micro font-semibold uppercase tracking-[0.16em] transition-colors ${
+                //
+                // `uppercase` removed, 10 Sep 2026 (owner: "the text
+                // shouldn't be all caps because that's not what we have
+                // anywhere") — same standing rule Certifications'
+                // heading was corrected against earlier ("we don't have
+                // that [all-caps tracked label] typography design
+                // anywhere in the website"). `tracking-[0.16em]` (the
+                // letter-spacing) stays — that value was unified
+                // site-wide independent of case — but the transform
+                // that was actually rendering these as caps is gone;
+                // each category now shows exactly as typed in Sanity
+                // (sentence case, matching the field's own example
+                // text: "Company News", not "COMPANY NEWS").
+                className={`flex flex-col items-center gap-1.5 text-micro font-semibold tracking-[0.16em] transition-colors ${
                   active ? "text-charcoal" : "text-charcoal/50 hover:text-charcoal"
                 }`}
               >
@@ -91,7 +160,7 @@ export function BlogGrid({ articles }: { articles: ArticleContent[] }) {
 
       {filtered.length === 0 ? (
         <p className="py-10 text-center text-body text-charcoal/70">
-          No posts in this category yet.
+          {trimmedQuery ? `No posts match "${query.trim()}".` : "No posts in this category yet."}
         </p>
       ) : (
         <>
@@ -135,7 +204,23 @@ function BlogCard({ article }: { article: ArticleContent }) {
       href={`/blog/${article.slug}`}
       className="group flex flex-col overflow-hidden rounded-lg border border-charcoal/10 bg-background transition-colors hover:border-charcoal/25"
     >
-      <div className="relative aspect-[4/3] w-full overflow-hidden">
+      {/* `aspect-[4/3]` (landscape) → `aspect-square`, 10 Sep 2026
+          (owner: "I would want the image to be maybe sixty, seventy
+          percent of the tile and then text to be thirty to forty
+          percent") — measured live before changing anything: the old
+          4:3 image against this card's real text block (date + title
+          + 3-line excerpt) landed at 49% image / 51% text, genuinely
+          the ~half-and-half the owner was reacting to, not just a
+          feeling. A taller image aspect ratio is the real lever here —
+          the text block's own height is set by its content/line-clamp,
+          not by the image, so growing the image is what shifts the
+          balance. Paired with trimming the excerpt from 3 lines to 2
+          and `p-5` down to `p-4` (below) to keep the text side from
+          creeping back up as it would with a taller image alone —
+          together these land at ~65% image / 35% text, measured live
+          after the change (see this file's own git history for the
+          before/after numbers). */}
+      <div className="relative aspect-square w-full overflow-hidden">
         {article.coverImage ? (
           // `sizes` (2 Sep 2026, performance pass) — matches this
           // card's real width in the listing page's 3/2/1-column grid
@@ -172,13 +257,21 @@ function BlogCard({ article }: { article: ArticleContent }) {
         )}
       </div>
 
-      <div className="flex flex-col gap-2 p-5">
+      {/* `p-5` → `p-4`, `line-clamp-3` → `line-clamp-2` on the excerpt
+          below — paired with the image's own `aspect-square` change
+          above (that file comment has the full reasoning): a taller
+          image alone would have just pushed the text block down
+          without actually shrinking ITS share, since nothing here was
+          capping it. Trimming both the padding and the excerpt length
+          is what keeps this region from creeping back toward half the
+          tile as the image grows. */}
+      <div className="flex flex-col gap-2 p-4">
         {dateLabel && <p className="text-micro text-charcoal/50">{dateLabel}</p>}
         <h3 className="text-h3 font-semibold text-charcoal transition-colors group-hover:text-sage-green">
           {article.title}
         </h3>
         {article.excerpt && (
-          <p className="line-clamp-3 text-support text-charcoal/70">{article.excerpt}</p>
+          <p className="line-clamp-2 text-support text-charcoal/70">{article.excerpt}</p>
         )}
       </div>
     </Link>
