@@ -87,7 +87,13 @@ export function TestimonialsDesktopCarousel({
         {visible.map((testimonial, slot) => (
           <div
             key={slot}
-            className="flex w-[360px] flex-none flex-col rounded-lg border border-charcoal/10 bg-background p-6 sm:p-7"
+            // `border-charcoal/10` → `border-sage-green-deep/25`, 10 Sep
+            // 2026 — same change, same reasoning, as the static-grid
+            // card in TestimonialsSection.tsx (that file's own comment
+            // has the full context): this section's background went
+            // back to white, so the card border carries the definition
+            // instead.
+            className="flex w-[360px] flex-none flex-col rounded-lg border border-sage-green-deep/25 bg-background p-6 sm:p-7"
           >
             <span aria-hidden="true" className="mb-3 text-3xl leading-none text-sage-green">
               &ldquo;
@@ -112,10 +118,20 @@ export function TestimonialsDesktopCarousel({
                 in every state, not just within each individual row. */}
             {/* Compact-quote fallback (4 Sep 2026) — see
                 TestimonialsSection.tsx's own matching comment for the
-                min-height math behind the two size options. */}
+                min-height math behind the two size options.
+
+                `line-clamp-5`/`min-h-[120/101px]` → `line-clamp-4`/
+                `min-h-[96/81px]`, 10 Sep 2026 — same change, same
+                reasoning (real testimonial-length measurements, not
+                the old stress-test placeholder), see
+                TestimonialsSection.tsx's own comment for the full
+                numbers. Kept matched between the two — this component
+                only differs from that one in HOW it picks which 3
+                testimonials show (a sliding window vs. a fixed static
+                grid), not in the card itself. */}
             <p
-              className={`mb-5 line-clamp-5 text-charcoal/80 ${
-                compactQuote ? "min-h-[101px] text-support" : "min-h-[120px] text-body"
+              className={`mb-5 line-clamp-4 text-charcoal/80 ${
+                compactQuote ? "min-h-[81px] text-support" : "min-h-[96px] text-body"
               }`}
             >
               {testimonial.quote}

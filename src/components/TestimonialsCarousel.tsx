@@ -121,11 +121,16 @@ export function TestimonialsCarousel({
           word got visually cut by the button, not just close to it) —
           horizontal padding needs to clear the arrows specifically,
           vertical padding doesn't. */}
-      <div className="flex h-full flex-col rounded-lg border border-charcoal/10 bg-background px-11 py-6 sm:px-12 sm:py-7">
+      {/* `border-charcoal/10` → `border-sage-green-deep/25`, 10 Sep
+          2026 — same change as both desktop card variants (see
+          TestimonialsSection.tsx's own comment for the full context):
+          the section background went back to white, so the card
+          border carries the definition instead. */}
+      <div className="flex h-full flex-col rounded-lg border border-sage-green-deep/25 bg-background px-11 py-6 sm:px-12 sm:py-7">
         <span aria-hidden="true" className="mb-3 text-3xl leading-none text-sage-green">
           &ldquo;
         </span>
-        {/* `line-clamp-6` — one line more than the grid cards' `line-clamp-5`
+        {/* `line-clamp-6` — one line more than the grid cards' own cap
             (CustomSection.tsx's own precedent for length caps), since
             this view has no neighboring card forcing a shared row
             height — a little more room reads better alone.
@@ -134,14 +139,26 @@ export function TestimonialsCarousel({
             card's own height (and the arrow buttons' vertical
             position, since they're centered on the card) still jumped
             between a short quote and a long one as the mobile
-            carousel auto-advanced. */}
-        {/* Compact-quote fallback (4 Sep 2026) — 6 lines × 20.15px
-            (text-support's line-height) ≈ 120.9px, measured live as
-            121px at the boundary — see TestimonialsSection.tsx's own
+            carousel auto-advanced.
+
+            **`line-clamp-6`/`min-h-[144/121px]` → `line-clamp-5`/
+            `min-h-[120/101px]`, 10 Sep 2026** — the desktop cards'
+            own cap dropped from 5 lines to 4 the same day (see
+            TestimonialsSection.tsx's own comment for the real-quote
+            measurements behind that), so this one drops from 6 to 5
+            to preserve the same "+1 over desktop" relationship, not
+            picked independently. Coincidentally lands on the exact
+            pixel values desktop used to have (120px/101px) — a
+            genuine coincidence of the math, not the reasoning; this
+            view still gets its own dedicated extra line, same as
+            before. */}
+        {/* Compact-quote fallback (4 Sep 2026) — 5 lines × 20.15px
+            (text-support's line-height) ≈ 100.75px, measured live as
+            101px at the boundary — see TestimonialsSection.tsx's own
             matching comment for the full trade-off. */}
         <p
-          className={`mb-5 line-clamp-6 text-charcoal/80 ${
-            compactQuote ? "min-h-[121px] text-support" : "min-h-[144px] text-body"
+          className={`mb-5 line-clamp-5 text-charcoal/80 ${
+            compactQuote ? "min-h-[101px] text-support" : "min-h-[120px] text-body"
           }`}
         >
           {current.quote}

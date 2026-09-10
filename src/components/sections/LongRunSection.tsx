@@ -97,32 +97,32 @@ import type { LongRunSectionCopyContent } from "@/lib/content";
 // with CTANudgeSection.
 //
 // **Made conditional on `testimonialsVisible`, same day, later
-// follow-up** (owner: "when the testimonials aren't showing, you
-// build your market stays in white, built for the long run along
-// with have a requirement in mind... stays that sage green
-// background") — with Testimonials hidden (toggle off or zero
-// documents), this section sits directly above CTANudgeSection with
-// nothing tinted between them, and CTANudgeSection's own background
-// is a constant tint (see that file — never changed for this), so the
-// owner wants THIS section to pick up the tint in that state instead
-// of Supply, forming one continuous Long-Run→CTA band exactly the way
-// Supply→Testimonials→CTA does when Testimonials IS showing. `white
-// when visible, tinted when not` — the literal inverse of Supply's
-// own new conditional (see that file), by construction: exactly one
-// of {Supply, Long Run} carries the tint at any given time, never both,
-// never neither. `testimonialsVisible` computed once in `(site)/
-// page.tsx` (the same `showTestimonials && testimonials.length > 0`
-// check TestimonialsSection already applies internally) and passed to
-// both this section and Supply, so they can never disagree.
+// follow-up, then made UNCONDITIONAL again, 10 Sep 2026** — the
+// conditional read: `white when [Testimonials] visible, tinted when
+// not`, the inverse of Supply's own conditional, so exactly one of
+// {Supply, Long Run} ever carried the tint, never both. Reversed
+// because the owner's own live screenshot flagged the result as
+// "patchy": with Testimonials visible, Supply(green)→Long Run(white)
+// →Testimonials(green) put a plain, content-sparse white section
+// between two visually denser green ones, reading as an accidental
+// gap rather than a deliberate third chapter. Owner's own fix,
+// proposed live and agreed on: "what if we made You Build Your
+// Market/We Build the Supply AND Built for the Long Run green... one
+// big green patch... and What Our Partners Say [flips to] white...
+// with a sage border" (see TestimonialsSection.tsx's own comment for
+// that half). So Long Run is simply always tinted now, matching what
+// it already was in the OFF state (that case wasn't the problem, left
+// unchanged) — Supply's own conditional (see that file) is untouched
+// too, so Supply+Long Run merge into one continuous green band
+// whenever Testimonials is visible, and Long Run alone still covers
+// for Testimonials' absence exactly as before when it's off.
 export function LongRunSection({
   copy,
-  testimonialsVisible,
 }: {
   copy: LongRunSectionCopyContent;
-  testimonialsVisible: boolean;
 }) {
   return (
-    <section className={`w-full ${testimonialsVisible ? "bg-background" : "bg-sage-green/10"}`}>
+    <section className="w-full bg-sage-green/10">
       {/* Band height increased, same pass (owner: "increase the
           height... a little wider height wise... nice presence to it")
           — `py-10 sm:py-14` (40px/56px) → `py-20 sm:py-28` (80px/112px),

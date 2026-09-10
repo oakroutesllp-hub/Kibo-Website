@@ -111,7 +111,20 @@ export function SupplySection({
           exception to the shared rhythm value, not a silent drift from
           it — Supply's own `pt` and every other seam on the site keep
           the standard value. */}
-      <div className="mx-auto flex w-full max-w-[1728px] flex-col items-center gap-10 px-6 pt-16 pb-20 text-center sm:px-10 sm:pt-[5.6rem] sm:pb-24">
+      {/* `pb-20 sm:pb-24` → `pb-16 sm:pt-[5.6rem]` (80px/96px →
+          64px/89.6px), 10 Sep 2026 (owner: "I would like a horizontal
+          line above Built for the long run... the gap between the top
+          of the green patch and 'You build your market' [is] the same
+          as the gap between the bottom [of 'handled behind the
+          scenes'] and the horizontal [line]") — measured both live
+          before changing anything: section-top → heading-top was
+          89.6px (`pt-[5.6rem]`, confirming the value already in code);
+          card-row-bottom → section-bottom (the old `pb-24`) was 96px.
+          Matched the bottom to the top exactly rather than picking a
+          new number, so the new divider (below, right after this div
+          closes) sits exactly `pt`-distance below the cards — same
+          logic TrustedBySection's own dividers used (see that file). */}
+      <div className="mx-auto flex w-full max-w-[1728px] flex-col items-center gap-10 px-6 pt-16 pb-16 text-center sm:px-10 sm:pt-[5.6rem] sm:pb-[5.6rem]">
         {/* Headline + supporting line — centered (was right-hugging a
             central rule; that rule and the two-column grid it lived in
             are both gone now, see file comment). `text-h2` (30px)/
@@ -239,6 +252,28 @@ export function SupplySection({
           })}
         </div>
       </div>
+      {/* Divider above "Built for the long run," 10 Sep 2026 (owner:
+          "I would like a horizontal line above built for the long
+          run... this horizontal line should be the same length as...
+          the horizontal line we used for trusted by, the long
+          horizontal line") — same inset technique and exact width
+          (`mx-[116px] sm:mx-[217px]`) as TrustedBySection's own two
+          dividers, copied deliberately rather than reintroducing a
+          slightly different value. Conditional on `testimonialsVisible`
+          — this line only makes sense while Supply and Long Run are
+          actually merged into one continuous green band (see
+          LongRunSection.tsx's own comment); when Testimonials is
+          hidden, Supply goes back to plain white and Long Run alone
+          carries the tint, so the white→green color change at that
+          boundary already marks the seam on its own — a line there
+          would be redundant, not a second "this is separate" cue. Sits
+          as a section-level sibling AFTER the padded container above
+          (not a flex child inside it), so the gap above it is exactly
+          that container's own `pb-16 sm:pt-[5.6rem]` — see this file's
+          own comment on that padding for the exact math. */}
+      {testimonialsVisible && (
+        <div className="mx-[127px] h-px bg-charcoal/10 sm:mx-[279px]" />
+      )}
     </section>
   );
 }

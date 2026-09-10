@@ -125,10 +125,13 @@ export default async function Home() {
   const testimonials = await getTestimonials();
   // Shared visibility check (3 Sep 2026) — the exact same condition
   // TestimonialsSection applies internally to decide whether it
-  // renders anything, computed once here so CustomSection, SupplySection,
-  // and LongRunSection can each key their own background/spacing off
-  // it too (see those components' own comments) without ever risking
+  // renders anything, computed once here so CustomSection and
+  // SupplySection can each key their own background/spacing off it too
+  // (see those components' own comments) without ever risking
   // disagreement with each other or with TestimonialsSection itself.
+  // LongRunSection USED to key its own background off this too, until
+  // 10 Sep 2026 — see that component's own comment for why it's
+  // unconditional now.
   const testimonialsVisible = settings.showTestimonials && testimonials.length > 0;
   // Certifications (4 Sep 2026) — same "fetch regardless of the
   // toggle, let the section itself decide whether to render" pattern
@@ -153,7 +156,7 @@ export default async function Home() {
       <TrustedBySection customers={customers} show={settings.showTrustedBy} scrollSpeed={settings.trustedByScrollSpeed} />
       <CustomSection media={customSectionMedia} copy={customSectionCopy} testimonialsVisible={testimonialsVisible} />
       <SupplySection copy={supplySectionCopy} testimonialsVisible={testimonialsVisible} />
-      <LongRunSection copy={longRunSectionCopy} testimonialsVisible={testimonialsVisible} />
+      <LongRunSection copy={longRunSectionCopy} />
       {/* Testimonials, 3 Sep 2026 — placed here (between Long Run and
           the CTA nudge) per the owner's own reasoning: trust content
           right before the page's one conversion ask reads better than
@@ -166,7 +169,7 @@ export default async function Home() {
         mobileSpeed={settings.testimonialsMobileSpeed}
         compactQuote={settings.testimonialsCompactQuote}
       />
-      <CTANudgeSection copy={ctaNudgeCopy} />
+      <CTANudgeSection copy={ctaNudgeCopy} testimonialsVisible={testimonialsVisible} />
       <WeStartedByListeningSection media={ourStory.listeningMedia} copy={ourStoryCopy} carouselSeconds={settings.carouselIntervalSeconds} />
       <TiruppurStorySection media={ourStory.tiruppurMedia} copy={ourStoryCopy} carouselSeconds={settings.carouselIntervalSeconds} />
       <FounderSection media={ourStory.founderMedia} copy={ourStoryCopy} carouselSeconds={settings.carouselIntervalSeconds} />

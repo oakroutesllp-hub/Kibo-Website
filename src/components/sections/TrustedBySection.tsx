@@ -101,16 +101,23 @@ export function TrustedBySection({
           along with everything else when `show` is false — Products'
           own padding above is untouched, same as before). */}
       <div className="pt-4 sm:pt-[22px]">
-        {/* `mx-24` → `mx-[116px] sm:mx-[217px]`, 10 Sep 2026 (owner:
-            "reduce the horizontal line size... by about maybe twenty,
-            twenty five percent") — measured the line's own real
-            rendered width before changing anything (183px mobile,
-            1073px desktop), then picked an added inset that lands
-            inside that 20–25% band rather than an arbitrary-looking
-            round number: mobile 183px→143px (−21.9%), desktop
-            1073px→832px (−22.5%). Same divider used for both lines
-            below, so the width change applies to both automatically. */}
-        <div className="mx-[116px] h-px bg-charcoal/10 sm:mx-[217px]" />
+        {/* `mx-24` → `mx-[116px] sm:mx-[217px]` (183px→143px mobile,
+            1073px→832px desktop, −22ish%), 10 Sep 2026 (owner: "reduce
+            the horizontal line size... by about maybe twenty, twenty
+            five percent").
+            **Reduced again, same day** (owner, after seeing the Supply/
+            Long Run and CTA/Our Story dividers built to match this
+            same width: "this looks too long... reduce all of their
+            lengths by another fifteen percent... across the board") —
+            `mx-[116px] sm:mx-[217px]` → `mx-[127px] sm:mx-[279px]`,
+            143px→121px mobile, 831px→707px desktop, both within ~1px
+            of an exact 15% cut off the ALREADY-reduced width (not 15%
+            off the original). Same class, copied verbatim, now onto
+            FOUR dividers total — this pair, Supply/Long Run's (see
+            that file), and CTA/Our Story's (see CTANudgeSection.tsx) —
+            all four still deliberately identical, never drifting
+            independently. */}
+        <div className="mx-[127px] h-px bg-charcoal/10 sm:mx-[279px]" />
       </div>
       {/* `py-16 sm:py-20` (64px/80px, 7 Sep 2026 — see git history for
           that day's own full reasoning on why this section needed
@@ -156,7 +163,7 @@ export function TrustedBySection({
           `mx-[116px] sm:mx-[217px]` reduction (see that divider's own
           comment for the exact numbers) — same class, kept in sync
           deliberately, not two independently-tuned lines. */}
-      <div className="mx-[116px] h-px bg-charcoal/10 sm:mx-[217px]" />
+      <div className="mx-[127px] h-px bg-charcoal/10 sm:mx-[279px]" />
       {/* Spacer between this divider and Custom's own heading
           ("From reference to finished garment") — originally the
           plain 16px/22px left over once the top redistribution pass

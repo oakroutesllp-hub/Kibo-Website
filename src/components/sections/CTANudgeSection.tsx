@@ -85,7 +85,13 @@ import type { CtaNudgeCopyContent } from "@/lib/content";
 // this section's own tint now constant either way, it no longer needs
 // to know whether Testimonials is showing at all — back to a plain,
 // unconditional background, same as its very first version.
-export function CTANudgeSection({ copy }: { copy: CtaNudgeCopyContent }) {
+export function CTANudgeSection({
+  copy,
+  testimonialsVisible,
+}: {
+  copy: CtaNudgeCopyContent;
+  testimonialsVisible: boolean;
+}) {
   const { open } = useTalkToKibo();
 
   return (
@@ -112,7 +118,22 @@ export function CTANudgeSection({ copy }: { copy: CtaNudgeCopyContent }) {
     // → flat `bg-sage-green/10` at every breakpoint, the same token
     // Long Run and Supply already use, so mobile now matches
     // desktop/tablet instead of carrying its own darker shade.
-    <section className="w-full bg-sage-green/10">
+    //
+    // **Tint removed entirely, 10 Sep 2026** (owner, live screenshot,
+    // Testimonials now visible above this section: "that green band
+    // is looking like too flimsy a strip so that needs to go as
+    // well") — this section's own tint was ALWAYS built on the premise
+    // that it merges with a same-toned neighbor right above it (Long
+    // Run when Testimonials is hidden, Testimonials itself when
+    // visible — see this comment's own history above); now that
+    // Testimonials went back to plain white the same day (see
+    // TestimonialsSection.tsx's own comment), this section has no
+    // same-toned neighbor left in EITHER state — Supply/Long Run's own
+    // merged green band ends well above it now. A short, isolated
+    // tinted strip with nothing to blend into is exactly the "flimsy"
+    // read the owner flagged, so it goes back to plain white,
+    // unconditionally, matching Testimonials right above it.
+    <section className="w-full bg-background">
       {/* Bottom reverted, same day, after live review (owner: "give me
           more gap between talk to keyboard button and our story...
           keep it the same as the six thumbnails bottom line and you
@@ -135,7 +156,27 @@ export function CTANudgeSection({ copy }: { copy: CtaNudgeCopyContent }) {
           deliberate "give the band presence" choice (see Long Run's own
           `py-20 sm:py-28` → trimmed → this comment's history) — worth
           preserving rather than undoing for the sake of symmetry. */}
-      <div className="mx-auto flex w-full max-w-[1728px] flex-col items-center gap-5 px-6 pt-4 pb-16 text-center sm:px-10 sm:pt-5 sm:pb-[5.6rem]">
+      {/* `pb-16 sm:pb-[5.6rem]` (64px/89.6px) → `pb-[62px] sm:pb-[87px]`,
+          10 Sep 2026 (owner: "increase the gap between get in touch
+          and our story... one point three, one point four x... place
+          the horizontal band right in the center") — measured the
+          real total gap first (button-bottom → Our Story's heading
+          top): 92px mobile, 129px desktop. Target 1.35x (picked the
+          midpoint of the owner's own 1.3–1.4x range): 124px/174px.
+          Centering the new divider (below) means each half needs to
+          land on 62px/87px — this section's own existing bottom
+          padding was ALREADY almost exactly that (64/89.6 vs the
+          62/87 target, a ~2px difference), so trimmed down to the
+          exact value rather than adding a separate spacer on top of
+          an untouched one. Conditional on `testimonialsVisible` (new
+          prop, see this function's own signature) — same reasoning as
+          Supply/Long Run's own new divider (see SupplySection.tsx):
+          only relevant while this section and Our Story are both
+          plain white with nothing marking the seam, which is only
+          true when Testimonials is visible (Our Story's own top
+          padding never changes either way, so nothing here needs a
+          separate "off" case to maintain). */}
+      <div className="mx-auto flex w-full max-w-[1728px] flex-col items-center gap-5 px-6 pt-4 pb-[62px] text-center sm:px-10 sm:pt-5 sm:pb-[87px]">
         {/* Dash accent added, 30 Aug 2026 (owner, on a screenshot of the
             merged sage-green band with Long Run above: "[these] need to
             look like separate things, however the gap seems larger —
@@ -200,6 +241,30 @@ export function CTANudgeSection({ copy }: { copy: CtaNudgeCopyContent }) {
           {copy.buttonLabel}
         </button>
       </div>
+      {/* Divider between this section and Our Story, 10 Sep 2026 —
+          same width/inset as the other three dividers built the same
+          day (TrustedBySection.tsx, SupplySection.tsx — see either
+          for the shared `mx-[127px] sm:mx-[279px]` value's own math),
+          reused verbatim rather than picking a new one. Sits at the
+          exact center of the enlarged button→heading gap (this
+          section's own trimmed `pb` above gets it to the first half;
+          the spacer right below completes the second half, landing on
+          Our Story's own EXISTING top padding unchanged — see this
+          file's own comment on the `pb` change for the full numbers).
+          Conditional on `testimonialsVisible`, same as the trimmed
+          `pb` above — both are one decision, kept together. */}
+      {testimonialsVisible && (
+        <>
+          <div className="mx-[127px] h-px bg-charcoal/10 sm:mx-[279px]" />
+          {/* Completes the second half of the centered gap: target
+              62px/87px (mobile/desktop) minus Our Story's own existing
+              top padding (28px/39.2px, WeStartedByListeningSection.tsx
+              — deliberately left untouched since that component is
+              also used standalone on `/our-story`, where this whole
+              concept doesn't apply) = 34px/48px. */}
+          <div className="h-[34px] sm:h-[48px]" aria-hidden="true" />
+        </>
+      )}
     </section>
   );
 }

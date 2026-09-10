@@ -88,20 +88,21 @@ export function TestimonialsSection({
   if (visible.length === 0) return null;
 
   return (
-    // `bg-background` → `bg-sage-green/10`, 3 Sep 2026 (owner: "the
-    // next section, which is 'what our partners say,' that along with
-    // 'get in touch'... needs to be the sage green gray background")
-    // — same token Long Run used to carry (see LongRunSection.tsx's
-    // own comment), forming one continuous tinted band with
-    // CTANudgeSection right below it. CTANudgeSection's own background
-    // needs NO change for this to work — it already darkens itself
-    // slightly on mobile (`bg-sage-green/20`) specifically to stay
-    // visually distinct from whatever same-tinted section precedes it,
-    // a mechanism built for exactly this "two tinted sections back to
-    // back" case (originally written for Long Run, now applies to
-    // Testimonials instead by the same construction, no change needed
-    // on CTA's side).
-    <section className="w-full bg-sage-green/10">
+    // `bg-background` → `bg-sage-green/10` (3 Sep 2026) → back to
+    // `bg-background`, 10 Sep 2026 (owner, live screenshot: Supply→Long
+    // Run→Testimonials read as green-white-green, "does this look too
+    // patchy to you?" — then, own proposal: "what if we made [Supply
+    // and Long Run both] green... one big green patch... and Testimonials
+    // white... with a sage border"). Supply and Long Run now merge into
+    // one continuous green band instead (see LongRunSection.tsx's own
+    // comment) — Testimonials goes back to plain white, and picks up
+    // its own definition from the card border below instead of a
+    // section-wide tint (`border-charcoal/10` → a sage-tinted border,
+    // same change applied to the two carousel components' own matching
+    // cards — TestimonialsDesktopCarousel.tsx, TestimonialsCarousel.tsx).
+    // CTANudgeSection right below is unaffected either way — it's
+    // always tinted regardless of what precedes it.
+    <section className="w-full bg-background">
       {/* Heading→tile gap `gap-10` → `gap-14` (40px → 56px, 3 Sep 2026,
           owner: "increase the gap between 'what our partners say' and
           the top of the tile... need some space") — measured live
@@ -138,7 +139,15 @@ export function TestimonialsSection({
             {visible.map((testimonial) => (
               <div
                 key={testimonial.authorName + testimonial.authorRole}
-                className="flex w-[360px] flex-none flex-col rounded-lg border border-charcoal/10 bg-background p-6 sm:p-7"
+                // `border-charcoal/10` → `border-sage-green-deep/25`, 10
+                // Sep 2026 — this section's own background went back to
+                // plain white the same day (see this file's own
+                // top-level comment); the card border carries the
+                // definition now instead, in the same "dark gray green
+                // sage" token (`sage-green-deep`) Certifications' icons
+                // already use, at a subtle opacity so it reads as an
+                // accent, not a heavy outline.
+                className="flex w-[360px] flex-none flex-col rounded-lg border border-sage-green-deep/25 bg-background p-6 sm:p-7"
               >
                 <span aria-hidden="true" className="mb-3 text-3xl leading-none text-sage-green">
                   &ldquo;
@@ -146,13 +155,38 @@ export function TestimonialsSection({
                 {/* Compact-quote fallback (4 Sep 2026) — `min-h` value
                     changes with the font swap since `text-support`'s
                     line-height (20.15px) differs from `text-body`'s
-                    (24px); 5 lines × 20.15px ≈ 100.75px, measured live
-                    as 101px at the 5-line boundary — see
+                    (24px); at the time, 5 lines × 20.15px ≈ 100.75px,
+                    measured live as 101px at the 5-line boundary — see
                     siteSettingsType.ts's own field description for the
-                    full character-count trade-off this toggle makes. */}
+                    full character-count trade-off this toggle makes.
+
+                    `line-clamp-5`/`min-h-[120px]`/`min-h-[101px]` →
+                    `line-clamp-4`/`min-h-[96px]`/`min-h-[81px]`, 10 Sep
+                    2026 (owner: "do you think the testimonial cards are
+                    too large?") — measured 4 REALISTIC testimonial
+                    lengths (not the stress-test placeholder text) at
+                    this card's real width before picking a number: a
+                    short one needed 3 lines/72px, a solid single-
+                    sentence one needed exactly 4 lines/96px, a longer
+                    one needed 5/120px, a genuinely long one needed
+                    7/168px (already past the old cap either way). 4
+                    lines matches the realistic TYPICAL case, not the
+                    short outlier or the rare long one — keeps the
+                    "every card is the same height" guarantee (min still
+                    equals the clamp cap, so no new variance introduced)
+                    while roughly halving the worst-case dead space a
+                    short quote used to leave (was 120−72=48px, now
+                    96−72=24px). Width was checked too, same
+                    conversation, and left alone — the real column
+                    (302px) already wraps realistic quotes at 35–39
+                    characters/line, under the standard 45–75 comfortable-
+                    reading range, so narrowing it further would only
+                    make wrapping choppier, not fix anything. Compact
+                    value recomputed the same way: 20.15px × 4 ≈ 80.6px,
+                    81px. */}
                 <p
-                  className={`mb-5 line-clamp-5 text-charcoal/80 ${
-                    compactQuote ? "min-h-[101px] text-support" : "min-h-[120px] text-body"
+                  className={`mb-5 line-clamp-4 text-charcoal/80 ${
+                    compactQuote ? "min-h-[81px] text-support" : "min-h-[96px] text-body"
                   }`}
                 >
                   {testimonial.quote}
