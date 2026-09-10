@@ -234,11 +234,20 @@ export function TiruppurStorySection({
           desktop, matching `sm:pb-5` exactly), then moved to the next
           step up on the spacing scale, same "slight bump = next named
           token" rule used elsewhere on this site, rather than an
-          arbitrary pixel value. `pt-7 sm:pt-[2.45rem]` above (the OTHER
-          side of this banner, matching Listening's own top gap) is
-          untouched — this owner note was specifically about the
+          arbitrary pixel value.
+
+          **`pb-8 sm:pb-6` → `pb-16 sm:pb-12` (32px/24px → 64px/48px),
+          same day, later** (owner: "2X the gap... below where apparel
+          runs deep and the top edge of the... video placeholder for
+          Tiruppur") — measured the real live gap first (32px mobile,
+          24px desktop, confirming the earlier "slight bump" landed
+          exactly where the comment above says), then doubled each.
+          Both land cleanly on existing named tokens (`pb-16`/`pb-12`),
+          no arbitrary value needed. `pt-7 sm:pt-[2.45rem]` above (the
+          OTHER side of this banner, matching Listening's own top gap)
+          is untouched — both owner notes were specifically about the
           bottom edge only. */}
-      <div className="mx-auto flex w-full max-w-[1728px] flex-col items-center gap-4 px-6 pt-7 pb-8 text-center sm:px-10 sm:pt-[2.45rem] sm:pb-6">
+      <div className="mx-auto flex w-full max-w-[1728px] flex-col items-center gap-4 px-6 pt-7 pb-16 text-center sm:px-10 sm:pt-[2.45rem] sm:pb-12">
         {/* Single line (30 Aug 2026, owner: "where apparel runs deep
             needs to be a single line") — was two hard-`block` lines
             (matching the old in-panel layout's narrower column, where
