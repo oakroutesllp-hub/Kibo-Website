@@ -121,11 +121,24 @@ export const sampleSiteSettings: SiteSettingsContent = {
 // published posts) had nothing to demonstrate; one real post per
 // category shows the tabs actually filtering, not just rendering an
 // "All" tab alone.
+//
+// **Cover images + a 3rd sample post added 10 Sep 2026** (owner: "add
+// some placeholder images in the blog so I can see what it looks
+// like... and can you add a third card... so I can see what it looks
+// like when the entire row is filled") — these three cover photos are
+// reused from elsewhere on the site (Our Story / Custom section
+// photography, already licensed for KIBO's own use), not new stock
+// sourced just for this, and not final blog photography either — they
+// exist purely so this fallback state previews with real images
+// instead of gray boxes. All three (title, excerpt, image, category)
+// disappear automatically the moment a single real post exists in
+// Sanity — `getArticles()` only ever falls back to this array when the
+// real query returns zero documents.
 export const sampleArticles: ArticleContent[] = [
   {
     title: "Why We Started by Listening to the African Market",
     slug: "why-we-started-by-listening",
-    coverImage: null,
+    coverImage: { url: "/our-story/listening-placeholder.jpg", alt: "Why We Started by Listening to the African Market" },
     excerpt:
       "Before building a range, KIBO commissioned market research to understand what African importers actually need.",
     body: [
@@ -147,7 +160,7 @@ export const sampleArticles: ArticleContent[] = [
   {
     title: "What Working With an Indian Apparel Manufacturer Actually Looks Like",
     slug: "sourcing-from-india-what-to-expect",
-    coverImage: null,
+    coverImage: { url: "/custom-section/process-production.jpg", alt: "What Working With an Indian Apparel Manufacturer Actually Looks Like" },
     excerpt:
       "A plain-language walkthrough of the sourcing process, from first sample to final shipment.",
     body: [
@@ -163,6 +176,28 @@ export const sampleArticles: ArticleContent[] = [
       },
     ],
     publishedAt: "2026-07-15T00:00:00.000Z",
+    category: "Sourcing & Manufacturing",
+    seo: {},
+  },
+  {
+    title: "A Look Inside Our Manufacturing Partners in Tiruppur",
+    slug: "inside-our-tiruppur-partners",
+    coverImage: { url: "/our-story/tiruppur-photo-2.jpg", alt: "A Look Inside Our Manufacturing Partners in Tiruppur" },
+    excerpt:
+      "Tiruppur produces a huge share of India's knitwear exports — here's what that ecosystem actually looks like on the ground.",
+    body: [
+      {
+        _type: "block",
+        style: "normal",
+        children: [
+          {
+            _type: "span",
+            text: "Sample article body — replace via the Studio at /studio.",
+          },
+        ],
+      },
+    ],
+    publishedAt: "2026-06-20T00:00:00.000Z",
     category: "Sourcing & Manufacturing",
     seo: {},
   },

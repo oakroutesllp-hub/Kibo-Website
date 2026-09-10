@@ -257,22 +257,40 @@ function BlogCard({ article }: { article: ArticleContent }) {
         )}
       </div>
 
-      {/* `p-5` → `p-4`, `line-clamp-3` → `line-clamp-2` on the excerpt
-          below — paired with the image's own `aspect-square` change
-          above (that file comment has the full reasoning): a taller
-          image alone would have just pushed the text block down
-          without actually shrinking ITS share, since nothing here was
-          capping it. Trimming both the padding and the excerpt length
-          is what keeps this region from creeping back toward half the
-          tile as the image grows. */}
+      {/* Title + excerpt share ONE flexible clamp budget (not two
+          independent caps) — 10 Sep 2026, owner tried the independent-
+          caps alternative (title max 4 lines own "…", excerpt max 2
+          lines own "…"), then: "what you had built earlier is fine" —
+          back to this version, which is what actually eliminates blank
+          space at a card's bottom: a short title hands its unused
+          lines to the excerpt instead of reserving empty space in its
+          own box. `line-clamp-6` on this wrapping div (title's own
+          reference max, ~4 lines, + a steady 2-line excerpt = 6) clips
+          across BOTH the title and excerpt `span`s as one continuous
+          flow, since `line-clamp` counts rendered lines through nested
+          `block` children, not just direct text.
+          `min-h-[Npx]` reserves that same height even when title+
+          excerpt together are short of the full 6 lines, so every
+          card in a row is genuinely the same height. Value re-measured
+          live after the title font-size bump-down just below (a
+          smaller title has a shorter line-height, so the old 164px
+          from the `text-h3` version no longer applied as-is). */}
       <div className="flex flex-col gap-2 p-4">
         {dateLabel && <p className="text-micro text-charcoal/50">{dateLabel}</p>}
-        <h3 className="text-h3 font-semibold text-charcoal transition-colors group-hover:text-sage-green">
-          {article.title}
-        </h3>
-        {article.excerpt && (
-          <p className="line-clamp-2 text-support text-charcoal/70">{article.excerpt}</p>
-        )}
+        <div className="line-clamp-6 min-h-[145px] text-charcoal">
+          {/* `text-h3` → `text-body` (18px → 15px), 10 Sep 2026, owner:
+              "bump down the blog title text size by one" — per the
+              standing "bump up/down always lands on the next named
+              token" rule, one step down from `text-h3` on the type
+              scale (h1 40 / h2 30 / h3 18 / body 15 / support 13 /
+              micro 11) is `text-body`, not an arbitrary size. */}
+          <span className="block text-body font-semibold transition-colors group-hover:text-sage-green">
+            {article.title}
+          </span>
+          {article.excerpt && (
+            <span className="mt-1 block text-support text-charcoal/70">{article.excerpt}</span>
+          )}
+        </div>
       </div>
     </Link>
   );
