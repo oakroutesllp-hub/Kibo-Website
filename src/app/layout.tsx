@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Montserrat } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 import { SITE_URL } from "@/lib/siteUrl";
 import { getSiteSettings } from "@/lib/content";
@@ -122,6 +123,17 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             dashboard (not visible on the site itself); nothing to wire
             up in Sanity, this isn't owner-editable content. */}
         <Analytics />
+        {/* Vercel Speed Insights, 11 Sep 2026 (owner: real-user
+            confirmation of the 10 Sep 2026 mobile speed fix, without
+            waiting on Google's Core Web Vitals/PageSpeed field data,
+            which needs a ~28-day rolling window of real Chrome traffic
+            before it reports anything). Same free-on-this-plan,
+            cookieless, "just works, nothing to wire up in Sanity"
+            pattern as Analytics above — a separate package/component,
+            but the same category of tool. See
+            OWNER-OPERATIONS-GUIDE.md §4a for what it actually shows and
+            where to look. */}
+        <SpeedInsights />
       </body>
     </html>
   );
